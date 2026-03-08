@@ -1,0 +1,56 @@
+---
+description: App identity, language, domain context, and features for Anusim
+alwaysApply: true
+---
+
+# App Identity
+
+## What This App Is
+A **web app for a local synagogue**, targeted at its members. The name *Anusim* (ענוסים) refers to forced converts / crypto-Jews.
+
+## Language
+**The entire app is in Portuguese (PT-BR).** This includes:
+- All UI text, labels, buttons, placeholders, error messages, and headings
+- All user-facing strings — never write English copy in components
+- Code itself (variables, functions, comments) stays in English
+
+```tsx
+// ❌ BAD
+<button>Submit</button>
+<p>Loading...</p>
+
+// ✅ GOOD
+<button>Enviar</button>
+<p>Carregando...</p>
+```
+
+## Core Features
+These are the planned features — always keep them in mind when designing new components or data models:
+
+| Feature | Description |
+|---|---|
+| **Calendário de Eventos** | Synagogue event calendar with Jewish holidays |
+| **Zmanim** | Daily Jewish prayer times based on location |
+| **Doações** | Member donation tracking and contribution management |
+| **Estudo** | Torah study materials, parasha of the week, learning resources |
+
+## Authentication
+- Members log in with accounts (via Supabase Auth)
+- Role model: `member` (base) and `admin` (synagogue staff)
+- Protected routes require authentication — redirect unauthenticated users to `/login`
+- Public pages (e.g. landing, about) are accessible without login
+
+## Domain Vocabulary (PT)
+Use consistent Portuguese terms throughout the app:
+
+| Concept | PT term to use |
+|---|---|
+| Synagogue | Sinagoga |
+| Member | Membro |
+| Prayer times | Horários de oração / Zmanim |
+| Donation | Doação |
+| Event | Evento |
+| Torah portion | Parashá |
+| Jewish calendar | Calendário judaico |
+| Login | Entrar |
+| Register | Cadastrar-se |

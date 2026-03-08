@@ -1,0 +1,78 @@
+---
+description: UI design system — mobile-first, modern clean style for Anusim
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# UI Design System
+
+## Style Direction
+**Modern & clean** — minimal, generous whitespace, calm neutral palette with one warm accent color. Feels trustworthy and welcoming for a religious community app.
+
+## Mobile-First (Required)
+Always write Tailwind classes mobile-first and layer up:
+
+```tsx
+// ❌ BAD — desktop-first
+<div className="grid-cols-3 sm:grid-cols-1">
+
+// ✅ GOOD — mobile-first
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+```
+
+- Base styles target small screens (≤ 640px)
+- Use `sm:`, `md:`, `lg:` to progressively enhance for larger screens
+- Test layouts at 375px width as the baseline
+
+## Touch Targets
+All interactive elements must be comfortably tappable:
+
+```tsx
+// ✅ Minimum touch target
+<button className="min-h-[44px] min-w-[44px] px-4 py-3">
+  Entrar
+</button>
+```
+
+- Minimum 44×44px for buttons, links, and icons
+- Add sufficient padding — never rely on text alone as the tap area
+- No hover-only interactions; all states must work on touch
+
+## Layout Patterns
+
+```tsx
+// Page wrapper
+<main className="mx-auto max-w-2xl px-4 py-6">
+
+// Card
+<div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+
+// Section heading
+<h2 className="text-xl font-semibold text-neutral-900">Próximos Eventos</h2>
+```
+
+## Typography
+- Headings: `font-semibold` or `font-bold`, `text-neutral-900`
+- Body: `text-neutral-700`, `text-base` or `text-sm`
+- Muted / secondary: `text-neutral-500`
+- Line height: prefer `leading-relaxed` for body text
+
+## Color Palette (Tailwind)
+| Role | Class |
+|---|---|
+| Primary accent | `blue-700` / `blue-600` (or a warm gold once brand is defined) |
+| Background | `neutral-50` or `white` |
+| Surface (cards) | `white` with `border-neutral-200` |
+| Text primary | `neutral-900` |
+| Text secondary | `neutral-500` |
+| Destructive | `red-600` |
+| Success | `green-600` |
+
+## Navigation on Mobile
+- Use a **bottom navigation bar** on mobile for primary routes
+- Top navbar reserved for page title + secondary actions (back, settings)
+
+## Accessibility
+- Always include `aria-label` on icon-only buttons
+- Use semantic HTML: `<nav>`, `<main>`, `<header>`, `<section>`, `<article>`
+- Ensure sufficient color contrast (WCAG AA minimum)

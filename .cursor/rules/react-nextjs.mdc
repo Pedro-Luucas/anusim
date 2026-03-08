@@ -1,0 +1,59 @@
+---
+description: React and Next.js component patterns for Anusim
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# React & Next.js Patterns
+
+## Server vs. Client Components
+- Default to **Server Components** — only add `"use client"` when the component needs interactivity, browser APIs, or React hooks
+- Keep client components as small/leaf-level as possible
+
+```tsx
+// ✅ server component (no directive needed)
+export default async function UserProfile({ id }: { id: string }) {
+  const user = await fetchUser(id)
+  return <div>{user.name}</div>
+}
+
+// ✅ client component — only when needed
+"use client"
+export function Toggle() {
+  const [on, setOn] = useState(false)
+  return <button onClick={() => setOn(!on)}>{on ? "On" : "Off"}</button>
+}
+```
+
+## Component Structure
+- One component per file; filename matches component name
+- Props type defined directly above the component
+
+```tsx
+type CardProps = {
+  title: string
+  children: React.ReactNode
+}
+
+export function Card({ title, children }: CardProps) {
+  return (
+    <div className="rounded-xl border p-4">
+      <h2 className="text-lg font-semibold">{title}</h2>
+      {children}
+    </div>
+  )
+}
+```
+
+## Styling
+- Use Tailwind utility classes exclusively — no inline styles, no CSS modules
+- Prefer semantic HTML elements (`<nav>`, `<main>`, `<section>`, `<article>`)
+
+## Data Fetching
+- Server components: fetch directly in the component body (async/await)
+- Client components: use `useEffect` + `useState`, or a dedicated hook in `@/hooks/`
+
+## File Placement
+- Page components: `src/app/pages/[name]/page.tsx`
+- Shared UI components: `src/components/[name].tsx`
+- Custom hooks: `src/hooks/use-[name].ts`

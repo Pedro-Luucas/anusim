@@ -1,0 +1,76 @@
+---
+description: Supabase conventions — client usage, auth, and database patterns for Anusim
+alwaysApply: true
+---
+
+# Supabase Conventions
+
+## Client Setup
+- Use the `@supabase/ssr` package for Next.js App Router (not `@supabase/supabase-js` directly on the server)
+- Create two clients:
+  - `src/lib/supabase/client.ts` — browser client (for client components)
+  - `src/lib/supabase/server.ts` — server client using cookies (for server components and API routes)
+
+```ts
+// src/lib/supabase/server.ts
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
+
+export function createClient() {
+  const cookieStore = cookies()
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll(), setAll: (c) => c.forEach(({ name, value, options }) => cookieStore.set(name, value, options)) } }
+  )
+}
+```
+
+## Environment Variables
+Required in `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=   # server-only, never expose to client
+```
+
+## Authentication
+- Auth is handled by Supabase Auth (email/password for members)
+- Session is managed via cookies (SSR-compatible)
+- Always check auth in Server Components / middleware — never trust client-side only
+- Roles stored in `profiles` table: `role: "member" | "admin"`
+
+```ts
+// Protect a server component
+const supabase = createClient()
+const { data: { user } } = await supabase.auth.getUser()
+if (!user) redirect("/login")
+```
+
+## Database Conventions
+- Table names: `snake_case`, plural (e.g. `events`, `donations`, `profiles`)
+- Always use Row Level Security (RLS) — never disable it
+- Members can only read/write their own rows unless `role = 'admin'`
+- Use Supabase-generated TypeScript types from `supabase gen types typescript`; store in `src/types/supabase.ts`
+
+## Planned Tables
+
+| Table | Purpose |
+|---|---|
+| `profiles` | Extended user info (name, role, membership status) |
+| `events` | Synagogue events and Jewish holidays |
+| `donations` | Member donation records |
+| `study_materials` | Torah study content and parasha resources |
+
+## Query Patterns
+- Prefer server-side queries in Server Components over client-side fetching
+- Always handle Supabase errors explicitly — never ignore `error` from queries
+
+```ts
+// ✅ GOOD
+const { data, error } = await supabase.from("events").select("*")
+if (error) {
+  console.error("[events] query failed:", error.message)
+  return null
+}
+```

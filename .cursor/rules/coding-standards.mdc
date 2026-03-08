@@ -1,0 +1,46 @@
+---
+description: General coding standards for the Anusim project
+alwaysApply: true
+---
+
+# Coding Standards
+
+## TypeScript
+- Enable strict mode — no `any`, no type assertions unless truly necessary
+- Prefer `type` over `interface` for object shapes; use `interface` only for extension
+- Export types alongside the code that uses them
+
+```ts
+// ❌ BAD
+const data: any = await fetch(...)
+
+// ✅ GOOD
+type ApiResponse = { message: string; timestamp: string }
+const data: ApiResponse = await res.json()
+```
+
+## Imports
+- Always use the `@/` path alias — no relative `../` chains
+- Group imports: external libraries → internal modules → types
+
+```ts
+// ✅ GOOD
+import { NextResponse } from "next/server"
+import { formatDate } from "@/lib/utils"
+import type { ApiResponse } from "@/types"
+```
+
+## Naming
+- Files/folders: `kebab-case`
+- Components: `PascalCase`
+- Functions and variables: `camelCase`
+- Constants: `SCREAMING_SNAKE_CASE`
+
+## Formatting
+- No semicolons in TSX/JSX files (follow project ESLint config)
+- 2-space indentation
+- Prefer `const` over `let`; never use `var`
+
+## Comments
+- No comments that narrate the code (e.g., `// fetch data`, `// return result`)
+- Only comment non-obvious intent, trade-offs, or constraints

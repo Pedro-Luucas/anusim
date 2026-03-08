@@ -1,0 +1,43 @@
+---
+description: Project overview, tech stack, and folder structure for Anusim
+alwaysApply: true
+---
+
+# Anusim — Project Overview
+
+## What this app is
+Anusim (ענוסים — Hebrew for "forced ones") is a Next.js web application currently in early development. Domain logic is not yet built; the codebase is a clean scaffold.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 — App Router |
+| Language | TypeScript 5 |
+| UI | React 19 |
+| Styling | Tailwind CSS v4 |
+| Linting | ESLint 9 |
+
+## Folder Structure
+
+```
+src/
+└── app/
+    ├── layout.tsx          # Root layout (metadata, global styles)
+    ├── page.tsx            # Home page
+    ├── globals.css         # Global styles — only `@import "tailwindcss"`
+    ├── pages/              # UI page routes (App Router)
+    │   └── [route]/
+    │       └── page.tsx
+    └── api/                # API route handlers
+        └── [route]/
+            └── route.ts
+```
+
+## Path Alias
+`@/*` maps to `src/*` — always use it for imports (never relative `../../`).
+
+## Key Conventions
+- All new pages go under `src/app/pages/[name]/page.tsx`
+- All new API routes go under `src/app/api/[name]/route.ts`
+- Keep `globals.css` minimal — use Tailwind utility classes instead

@@ -1,0 +1,54 @@
+---
+description: API route handler conventions for Anusim
+globs: src/app/api/**/*.ts
+alwaysApply: false
+---
+
+# API Route Conventions
+
+## File Location
+All API routes live under `src/app/api/[name]/route.ts` following Next.js App Router conventions.
+
+## Handler Structure
+- Export one named function per HTTP method (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`)
+- Always return a typed `NextResponse`
+- Define request/response types at the top of the file
+
+```ts
+import { NextRequest, NextResponse } from "next/server"
+
+type ResponseBody = {
+  data: string
+  timestamp: string
+}
+
+export async function GET(_req: NextRequest): Promise<NextResponse<ResponseBody>> {
+  return NextResponse.json({
+    data: "result",
+    timestamp: new Date().toISOString(),
+  })
+}
+```
+
+## Error Handling
+- Always return structured error responses with an appropriate HTTP status
+- Never let errors bubble up unhandled
+
+```ts
+// ✅ GOOD
+try {
+  const result = await doSomething()
+  return NextResponse.json({ data: result })
+} catch (err) {
+  console.error("[api/route] failed:", err)
+  return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+}
+```
+
+## Validation
+- Validate request body/params before processing — reject early with `400`
+- Prefer a lightweight validation approach (zod or manual checks)
+
+## Security
+- Never expose raw error messages or stack traces to the client
+- Validate and sanitize all user-provided input
