@@ -24,6 +24,8 @@
   --color-accent-900: #44330d;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-cinzel: var(--font-cinzel), "Trajan Pro", "Times New Roman", serif;
+  --font-lora: var(--font-lora), Georgia, serif;
 }
 
 body {

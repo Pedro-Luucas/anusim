@@ -19,10 +19,11 @@ export function Header() {
         </Link>
 
         <Link
-          href="/pages/login"
-          className="min-h-[44px] min-w-[44px] rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-600 active:bg-primary-800 flex items-center justify-center"
+          href="/pages/calendario"
+          className="min-h-[44px] rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-600 active:bg-primary-800 flex items-center justify-center gap-2"
         >
-          Entrar
+          <span aria-hidden="true">📅</span>
+          Calendário
         </Link>
       </div>
     </header>

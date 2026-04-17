@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Header } from "@/components/header"
 import { ZmanimSection } from "@/components/zmanim-section"
 import { fetchZmanim, fetchParasha, getMainZmanim } from "@/lib/hebcal"
@@ -31,6 +32,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-2xl px-4 py-6 flex flex-col gap-5">
         <WelcomeSection date={formatPortugueseDate(today)} />
+        <CalendarBanner />
         <QuoteSection text={quote.text} source={quote.source} />
         <ParashaSection parasha={parasha} />
         <ZmanimSection
@@ -39,6 +41,26 @@ export default async function Home() {
         />
       </main>
     </div>
+  )
+}
+
+function CalendarBanner() {
+  return (
+    <Link
+      href="/pages/calendario"
+      className="flex items-center justify-between rounded-2xl border border-primary-200 bg-white px-5 py-4 shadow-sm hover:border-primary-400 hover:shadow-md transition-all group"
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-700 text-lg">
+          📅
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-primary-800">Calendário Judaico</p>
+          <p className="text-xs text-neutral-500">Ver datas, Yom Tov e eventos</p>
+        </div>
+      </div>
+      <span className="text-primary-400 group-hover:text-primary-600 transition-colors text-lg">→</span>
+    </Link>
   )
 }
 
