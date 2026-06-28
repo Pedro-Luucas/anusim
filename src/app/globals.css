@@ -1,34 +1,204 @@
 @import "tailwindcss";
 
+/* ─── Fonts: Cormorant Garamond (display) + Frank Ruhl Libre (hebraico) + Inter (corpo) ─── */
 @theme {
-  --color-primary-50: #e8eef6;
-  --color-primary-100: #c5d4e8;
-  --color-primary-200: #9eb8d8;
-  --color-primary-300: #7799c5;
-  --color-primary-400: #5a82b7;
-  --color-primary-500: #3d6ba8;
-  --color-primary-600: #2c5282;
-  --color-primary-700: #1e3a5f;
-  --color-primary-800: #152d4a;
-  --color-primary-900: #0d1f35;
+  /* Gold palette — champagne, warm, luminous */
+  --color-gold-50: #fdf8ea;
+  --color-gold-100: #faedc3;
+  --color-gold-200: #f4dc8e;
+  --color-gold-300: #ecc660;
+  --color-gold-400: #ddb13d;
+  --color-gold-500: #c9a253; /* brand gold */
+  --color-gold-600: #a8842f;
+  --color-gold-700: #806323;
+  --color-gold-800: #5a441a;
+  --color-gold-900: #3a2c11;
 
-  --color-accent-50: #fdf6e3;
-  --color-accent-100: #f9e8b8;
-  --color-accent-200: #f3d580;
-  --color-accent-300: #e6c04e;
-  --color-accent-400: #d4a84b;
-  --color-accent-500: #c9992a;
-  --color-accent-600: #b08420;
-  --color-accent-700: #8c691a;
-  --color-accent-800: #684e13;
-  --color-accent-900: #44330d;
+  /* Off-white warm backgrounds */
+  --color-cream-50: #fdfbf5;
+  --color-cream-100: #faf6ef; /* page background */
+  --color-cream-200: #f3ead7;
+  --color-cream-300: #e9dab3;
 
+  /* Deep text on cream */
+  --color-ink-50: #f8f3e7;
+  --color-ink-100: #e8dcc0;
+  --color-ink-300: #a8956d;
+  --color-ink-500: #6b5a3a;
+  --color-ink-700: #3a2f1c;
+  --color-ink-900: #2a2418; /* primary text on cream */
+
+  /* Subtle wine accent for special highlights */
+  --color-wine-500: #8b2742;
+  --color-wine-700: #5e1828;
+
+  /* Hebrew/legacy accents */
+  --color-pomegranate-500: #c0392b;
+
+  /* Typography tokens */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", "Frank Ruhl Libre", Georgia, serif;
+  --font-hebrew: var(--font-frank-ruhl), "Frank Ruhl Libre", "SBL Hebrew", "Times New Roman", serif;
   --font-cinzel: var(--font-cinzel), "Trajan Pro", "Times New Roman", serif;
   --font-lora: var(--font-lora), Georgia, serif;
 }
 
-body {
-  background-color: #f8fafc;
-  color: #1a202c;
+@layer base {
+  :root {
+    --gold: #c9a253;
+    --gold-deep: #a8842f;
+    --cream: #faf6ef;
+    --ink: #2a2418;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-feature-settings: "kern", "liga", "calt";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Hebrew text rendering */
+  [dir="rtl"] {
+    font-family: var(--font-hebrew);
+    letter-spacing: 0;
+  }
+
+  ::selection {
+    background-color: var(--gold);
+    color: var(--cream);
+  }
 }
+
+@layer utilities {
+  /* Gold gradient text */
+  .text-gold-shimmer {
+    background: linear-gradient(135deg, #c9a253 0%, #ecc660 45%, #a8842f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Gold hairline divider */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--gold) 20%,
+      var(--gold) 80%,
+      transparent 100%
+    );
+  }
+
+  /* Ornamental backdrop — soft cream noise */
+  .bg-parchment {
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(201, 162, 83, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(201, 162, 83, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(168, 132, 47, 0.03) 0%, transparent 60%);
+  }
+
+  /* Subtle judaic geometric pattern (diamond grid) */
+  .bg-judaic-pattern {
+    background-image:
+      linear-gradient(45deg, rgba(201, 162, 83, 0.08) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(201, 162, 83, 0.08) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(201, 162, 83, 0.08) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(201, 162, 83, 0.08) 75%);
+    background-size: 24px 24px;
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  }
+
+  /* Reveal animation utility */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hebrew ornamental large character */
+  .hebrew-ornament {
+    font-family: var(--font-hebrew);
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.9;
+    color: var(--gold);
+    opacity: 0.85;
+    user-select: none;
+  }
+
+  /* Editorial cap label */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gold-deep);
+  }
+
+  /* Display heading */
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ─── Animations ─── */
+@keyframes shimmer {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 83, 0.4); }
+  50% { box-shadow: 0 0 0 16px rgba(201, 162, 83, 0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-float {
+  animation: float-soft 5s ease-in-out infinite;
+}
+.animate-glow {
+  animation: glow-pulse 2.4s ease-out infinite;
+}
+
+/* Stagger helper */
+.stagger > * {
+  opacity: 0;
+  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.18s; }
+.stagger > *:nth-child(3) { animation-delay: 0.32s; }
+.stagger > *:nth-child(4) { animation-delay: 0.46s; }
+.stagger > *:nth-child(5) { animation-delay: 0.6s; }
+.stagger > *:nth-child(6) { animation-delay: 0.74s; }
+.stagger > *:nth-child(7) { animation-delay: 0.88s; }
+.stagger > *:nth-child(8) { animation-delay: 1.02s; }
