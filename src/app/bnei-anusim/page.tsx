@@ -44,13 +44,15 @@ export default function BneiAnusimPage() {
             <span className="float-left mr-3 mt-2 font-display text-7xl font-medium leading-none text-gold-500 md:text-8xl">
               A
             </span>
-            palavra <em>anusim</em> aparece na própria Torá. Em{" "}
-            <span className="italic text-gold-700">Deuteronômio 22:25</span>, a
-            Torá distingue entre aquele que peca voluntariamente e aquele que é
-            coagido — <em>anus</em>. Os grandes comentaristas medievais
-            aplicaram esse conceito àqueles que, sob ameaça de morte, foram
-            obrigados a renunciar publicamente à sua fé judaica, mantendo-a em
-            segredo.
+            palavra <em>anusim</em> vem da raiz hebraica de <em>ones</em>{" "}
+            (אונס) — coação. A própria Torá já distingue entre quem peca por
+            vontade própria e quem age sob coação: é do episódio da jovem
+            forçada, em{" "}
+            <span className="italic text-gold-700">Deuteronômio 22:25–27</span>,
+            que a tradição rabínica deriva o princípio de que o coagido é
+            isento. Séculos depois, os grandes comentaristas medievais aplicaram
+            esse conceito àqueles que, sob ameaça de morte, foram obrigados a
+            renunciar publicamente à sua fé judaica, mantendo-a em segredo.
           </p>
 
           <p className="mt-10 font-display text-2xl leading-snug text-ink-900 md:text-3xl">
@@ -82,7 +84,7 @@ export default function BneiAnusimPage() {
               cabeceira, mesmo quando ninguém está olhando.&rdquo;
             </p>
             <p className="mt-4 text-xs uppercase tracking-[0.32em] text-gold-200">
-              Tradição oral das famílias de Belmonte, Brasil
+              Sobre as famílias que guardaram a fé em segredo
             </p>
           </div>
         </div>
@@ -153,18 +155,18 @@ export default function BneiAnusimPage() {
               {[
                 {
                   title: "Belmonte",
-                  state: "Paraíba · desde 2001",
-                  body: "A primeira comunidade Bnei Anusim a retornar publicamente à fé, guiada pelo Rabino Nilton Bonder.",
+                  state: "Portugal · retorno em 1996",
+                  body: "A mais célebre comunidade cripto-judaica a sobreviver à Inquisição. Reconhecida oficialmente em 1989, inaugurou sua sinagoga, a Bet Eliahu, em 1996.",
                 },
                 {
-                  title: "Recife e Olinda",
-                  state: "Pernambuco · séculos XVI–",
-                  body: "Sinagogas do Kahal Zur Israel e Kahal Kodesh Zur Israel. Comércio açucareiro e criptojudaísmo.",
+                  title: "Recife",
+                  state: "Pernambuco · 1630–1654",
+                  body: "No Brasil holandês ergueu-se a Kahal Zur Israel, a primeira sinagoga das Américas, onde se podia orar abertamente. Com o retorno dos portugueses em 1654, voltou o segredo.",
                 },
                 {
                   title: "Salvador",
                   state: "Bahia · séculos XVI–XVII",
-                  body: "Cripto-judeus ligados ao tráfico do Atlântico Sul e às plantações de cana. Memória preservada.",
+                  body: "Primeira capital da colônia e principal alvo das visitações do Santo Ofício (1591 e 1618). Cristãos-novos da lavoura açucareira foram denunciados por judaizar.",
                 },
                 {
                   title: "Criciúma",
@@ -229,7 +231,7 @@ export default function BneiAnusimPage() {
 
             <blockquote className="my-12 border-l-4 border-gold-500 pl-8">
               <p className="font-display text-2xl italic leading-snug text-ink-900 md:text-3xl">
-                &ldquo;Não somos convertidos. Somos犹太人 que voltaram. A
+                &ldquo;Não somos convertidos. Somos judeus que voltaram. A
                 diferença é tudo.&rdquo;
               </p>
               <footer className="mt-3 text-xs uppercase tracking-[0.32em] text-ink-500">
@@ -314,15 +316,15 @@ function Timeline() {
     },
     {
       year: "séc. XVI–XVIII",
-      title: "Brasil-colônia",
+      title: "Brasil-colônia: refúgio e vigilância",
       body:
-        "Cristãos-novos chegam ao Brasil, especialmente ao Nordeste. Praticam a fé em segredo: acendem velas na sexta, jejuam em Iom Kipur, comem matsá na Pessach.",
+        "Cristãos-novos chegam ao Brasil, sobretudo ao Nordeste, e praticam a fé em segredo: velas na sexta-feira, jejum de Iom Kipur, matsá na Pessach. A Inquisição nunca teve tribunal aqui, mas enviou visitações (a primeira em 1591) e julgava os acusados em Lisboa.",
     },
     {
       year: "1773",
-      title: "Inquisição no Brasil",
+      title: "Pombal abole a distinção",
       body:
-        "A Inquisição atua ativamente em Salvador e Recife. Autos-de-fé, confiscos, execuções. A fé é empurrada ainda mais para dentro.",
+        "O Marquês de Pombal extingue por lei a distinção entre cristãos-novos e cristãos-velhos e proíbe até o uso do termo. A perseguição legal aos conversos chega ao fim.",
     },
     {
       year: "1821",
@@ -337,10 +339,10 @@ function Timeline() {
         "Sobretudo a partir dos anos 1970, com a abertura política e o contato com comunidades judaicas estabelecidas, descendentes começam a buscar a fé abertamente.",
     },
     {
-      year: "2001",
-      title: "Belmonte",
+      year: "1989–1996",
+      title: "Belmonte (Portugal)",
       body:
-        "A comunidade Bnei Anusim de Belmonte (PB) é publicamente reconhecida e guiada pelo Rabino Nilton Bonder. Marco simbólico do retorno coletivo.",
+        "A comunidade cripto-judaica de Belmonte, que guardou a fé em segredo por quase 500 anos, é reconhecida oficialmente (1989) e inaugura a sinagoga Bet Eliahu (1996). Tornou-se o símbolo mais célebre do retorno dos Bnei Anusim.",
     },
     {
       year: "hoje",
