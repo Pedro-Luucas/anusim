@@ -101,15 +101,15 @@ export default function ContatoPage() {
                   <ul className="mt-4 space-y-2 text-sm text-ink-700">
                     <li className="flex justify-between">
                       <span>Kabalat Shabat</span>
-                      <span className="font-medium text-ink-900">sexta · 19h</span>
+                      <span className="font-medium text-ink-900">sexta · 19:00</span>
                     </li>
                     <li className="flex justify-between">
                       <span>Shacharit</span>
-                      <span className="font-medium text-ink-900">sábado · 9h</span>
+                      <span className="font-medium text-ink-900">sábado · 9:00</span>
                     </li>
                     <li className="flex justify-between">
-                      <span>Estudos</span>
-                      <span className="font-medium text-ink-900">dias úteis · à noite</span>
+                      <span>Arvit/Havdalah</span>
+                      <span className="font-medium text-ink-900">sábado · 17:55</span>
                     </li>
                   </ul>
                 </div>

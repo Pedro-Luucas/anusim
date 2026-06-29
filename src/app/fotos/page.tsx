@@ -130,31 +130,6 @@ export default function FotosPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden py-24">
-        <div className="mx-auto max-w-3xl px-5 text-center md:px-10">
-          <OrnametalDivider symbol="star" />
-          <h2 className="display-xl mt-8 text-4xl text-ink-900 md:text-5xl">
-            Venha fazer parte
-            <br />
-            <span className="italic text-gold-shimmer">da próxima foto.</span>
-          </h2>
-          <p className="mt-6 text-lg text-ink-700">
-            Toda imagem aqui foi feita dentro da nossa sinagoga, com pessoas
-            reais. A próxima pode incluir você.
-          </p>
-          <a
-            href="https://wa.me/554899231358"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-ink-900 px-7 py-4 text-sm font-semibold text-cream-50 transition-colors hover:bg-gold-700"
-          >
-            <StarOfDavid className="h-4 w-4 text-gold-300" />
-            Agendar visita
-          </a>
-        </div>
-      </section>
-
       <SiteFooter />
     </main>
   )

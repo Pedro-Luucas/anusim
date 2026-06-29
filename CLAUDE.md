@@ -101,7 +101,6 @@ public/
 **Horários:**
 - Kabalat Shabat: sexta 19h
 - Shacharit: sábado 9h
-- Estudos: dias úteis à noite
 
 **Diretrizes editoriais:**
 - O WhatsApp é o canal **oficial** para agendar visita — sempre pré-preencher a mensagem com "Shalom Rabino Malachy!..."
