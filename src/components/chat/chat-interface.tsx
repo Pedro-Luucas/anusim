@@ -142,17 +142,17 @@ export function ChatInterface() {
               throw new Error(event.message)
             }
           }
+        }
+      }
 
-          if (done && buffer.trim()) {
-            try {
-              const event = JSON.parse(buffer)
-              if (event.type === "error") {
-                throw new Error(event.message)
-              }
-            } catch (err) {
-              console.error("[Chat] Failed to parse final buffer:", buffer, err)
-            }
+      if (buffer.trim()) {
+        try {
+          const event = JSON.parse(buffer)
+          if (event.type === "error") {
+            throw new Error(event.message)
           }
+        } catch (err) {
+          console.error("[Chat] Failed to parse final buffer:", buffer, err)
         }
       }
     } catch (err) {
