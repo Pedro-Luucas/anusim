@@ -258,17 +258,34 @@ export async function fetchAllSegments(
         return
       }
 
-      const enVersion = textResponse.versions.find(
+      const enVersions = textResponse.versions.filter(
         (v: { language: string; license: string }) => v.language === "en" && isLicenseAllowed(v.license)
       )
+
+      if (enVersions.length === 0) {
+        return
+      }
+
+      let enVersion: { language: string; license: string; versionTitle: string; text: unknown }
+      if (title.startsWith("Rashi on")) {
+        enVersion = enVersions.find((v: { versionTitle: string }) => 
+          v.versionTitle.includes("Rosenbaum") || v.versionTitle.includes("Silbermann")
+        ) || enVersions[0]
+      } else {
+        enVersion = enVersions.reduce((best: { text: unknown }, v: { text: unknown }) => {
+          const vTextCount = Array.isArray(v.text) 
+            ? JSON.stringify(v.text).length 
+            : String(v.text || "").length
+          const bestTextCount = Array.isArray(best.text) 
+            ? JSON.stringify(best.text).length 
+            : String(best.text || "").length
+          return vTextCount > bestTextCount ? v : best
+        }, enVersions[0])
+      }
 
       const heVersion = textResponse.versions.find(
         (v: { language: string; license: string }) => v.language === "he" && isLicenseAllowed(v.license)
       )
-
-      if (!enVersion) {
-        return
-      }
 
       const enTexts = Array.isArray(enVersion.text) ? enVersion.text : [enVersion.text]
       const heTexts = heVersion && Array.isArray(heVersion.text) 
