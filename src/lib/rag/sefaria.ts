@@ -277,24 +277,41 @@ export async function fetchAllSegments(
           ? [heVersion.text] 
           : []
 
-      enTexts.forEach((enText: unknown, idx: number) => {
-        if (typeof enText !== 'string' || !enText || stripHtml(enText).trim().length === 0) return
+      function processTextAtDepth(
+        texts: unknown[],
+        heTexts: unknown[],
+        baseRef: string,
+        depth: number
+      ): void {
+        texts.forEach((text: unknown, idx: number) => {
+          if (Array.isArray(text)) {
+            const subRef = depth === 0 
+              ? `${baseRef}:${idx + 1}`
+              : `${baseRef}:${idx + 1}`
+            const heSubTexts = Array.isArray(heTexts[idx]) ? heTexts[idx] as unknown[] : []
+            processTextAtDepth(text, heSubTexts, subRef, depth + 1)
+          } else if (typeof text === 'string' && text && stripHtml(text).trim().length > 0) {
+            const segmentRef = depth === 0 
+              ? (texts.length > 1 ? `${baseRef}:${idx + 1}` : baseRef)
+              : `${baseRef}:${idx + 1}`
+            
+            const heText = heTexts[idx]
+            const heTextStr = typeof heText === "string" ? heText : ""
 
-        const segmentRef = enTexts.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef
-
-        const heText = heTexts[idx]
-        const heTextStr = typeof heText === "string" ? heText : ""
-
-        segments.push({
-          ref: segmentRef,
-          heRef: textResponse.heRef,
-          text: stripHtml(enText),
-          heText: heTextStr ? stripHtml(heTextStr) : "",
-          versionTitle: enVersion.versionTitle,
-          license: enVersion.license || "Unknown",
-          categories: textResponse.categories || [],
+            segments.push({
+              ref: segmentRef,
+              heRef: textResponse.heRef,
+              text: stripHtml(text),
+              heText: heTextStr ? stripHtml(heTextStr) : "",
+              versionTitle: enVersion.versionTitle,
+              license: enVersion.license || "Unknown",
+              categories: textResponse.categories || [],
+            })
+          }
         })
-      })
+      }
+
+      processTextAtDepth(enTexts, heTexts, sectionRef, 0)
     } catch (error) {
       if ((error as Error).name === 'AbortError') {
         console.warn(`[fetchAllSegments] Timeout for ${sectionRef}`)
