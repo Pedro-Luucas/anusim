@@ -11,7 +11,12 @@ async function* createMockTextStream(chunks: string[]) {
 async function streamToEvents(stream: ReadableStream<Uint8Array>) {
   const reader = stream.getReader()
   const decoder = new TextDecoder()
-  const events: any[] = []
+  const events: Array<{
+    type: string
+    delta?: string
+    items?: Array<{ ref: string; [key: string]: unknown }>
+    message?: string
+  }> = []
   
   let buffer = ""
   let done = false
@@ -107,9 +112,9 @@ describe("Citation Stream Assembly", () => {
     const citationEvents = events.filter((e) => e.type === "citations")
     expect(citationEvents).toHaveLength(1)
 
-    const citations = citationEvents[0].items
+    const citations = citationEvents[0].items || []
     expect(citations.length).toBeGreaterThanOrEqual(1)
-    expect(citations.map((c: any) => c.ref)).toContain("Genesis 1:1")
+    expect(citations.map((c) => c.ref)).toContain("Genesis 1:1")
 
     const doneEvents = events.filter((e) => e.type === "done")
     expect(doneEvents).toHaveLength(1)
@@ -134,12 +139,11 @@ describe("Citation Stream Assembly", () => {
     const events = await streamToEvents(stream)
 
     const citationEvents = events.filter((e) => e.type === "citations")
-    const citations = citationEvents[0]?.items || []
-
+    const citations = citationEvents[0].items || []
     expect(citations).toHaveLength(2)
-    expect(citations.map((c: any) => c.ref)).toContain("Genesis 1:1")
-    expect(citations.map((c: any) => c.ref)).toContain("Exodus 20:1")
-    expect(citations.map((c: any) => c.ref)).not.toContain("Leviticus 19:18")
+    expect(citations.map((c) => c.ref)).toContain("Genesis 1:1")
+    expect(citations.map((c) => c.ref)).toContain("Exodus 20:1")
+    expect(citations.map((c) => c.ref)).not.toContain("Leviticus 19:18")
   })
 
   it("should emit no citation event when model cites nothing", async () => {
@@ -178,7 +182,7 @@ describe("Citation Stream Assembly", () => {
     const events = await streamToEvents(stream)
 
     const citationEvents = events.filter((e) => e.type === "citations")
-    const citation = citationEvents[0]?.items[0]
+    const citation = citationEvents[0]?.items?.[0]
 
     expect(citation).toMatchObject({
       ref: "Genesis 1:1",
@@ -188,7 +192,8 @@ describe("Citation Stream Assembly", () => {
       license: "CC-BY",
     })
     
-    expect(citation.excerpt).toBeTruthy()
-    expect(citation.excerpt.length).toBeLessThanOrEqual(200)
+    expect(citation?.excerpt).toBeTruthy()
+    const excerpt = citation?.excerpt as string | undefined
+    expect(excerpt?.length).toBeLessThanOrEqual(200)
   })
 })
