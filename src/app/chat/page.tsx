@@ -3,9 +3,9 @@ import { ChatInterface } from "@/components/chat/chat-interface"
 import { SiteHeader } from "@/components/landing/site-header"
 
 export const metadata: Metadata = {
-  title: "Assistente de Estudos | Anussim Brasil Criciúma",
+  title: "Pergunte",
   description:
-    "Assistente de estudos judaicos baseado em fontes sagradas para a comunidade Bnei Anusim de Criciúma, Santa Catarina.",
+    "Tire dúvidas sobre textos judaicos com fontes citadas do Sefaria.",
 }
 
 export default function ChatPage() {
