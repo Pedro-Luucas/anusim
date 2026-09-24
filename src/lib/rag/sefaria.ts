@@ -44,6 +44,8 @@ export function stripHtml(text: string): string {
     return String(text || '')
   }
   return text
+    .replace(/<sup[^>]*class="footnote-marker"[^>]*>.*?<\/sup>/gi, "")
+    .replace(/<i[^>]*class="footnote"[^>]*>.*?<\/i>/gi, "")
     .replace(/<[^>]+>/g, "")
     .replace(/\s+/g, " ")
     .trim()
