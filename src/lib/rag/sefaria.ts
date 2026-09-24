@@ -128,7 +128,9 @@ export async function fetchSefariaText(
 
   const params = new URLSearchParams({
     context: context.toString(),
+    version: 'english',
   })
+  params.append('version', 'hebrew')
 
   const url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(ref)}?${params}`
 

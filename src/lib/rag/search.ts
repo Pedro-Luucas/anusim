@@ -1,6 +1,6 @@
 import { generateText } from "ai"
 import { searchChunks } from "./db"
-import { searchSefaria, fetchSefariaText, isLicenseAllowed } from "./sefaria"
+import { searchSefaria, fetchSefariaText, isLicenseAllowed, stripHtml } from "./sefaria"
 import { embedText } from "./embeddings"
 import type { SefariaChunk } from "./db"
 
@@ -145,16 +145,20 @@ export async function searchForQuery(
         const textData = await fetchSefariaText(result.ref)
 
         if (textData && textData.versions && textData.versions.length > 0) {
-          const enVersion = textData.versions.find(
+          const enVersions = textData.versions.filter(
             (v) => v.language === "en" && isLicenseAllowed(v.license)
           )
+
+          const primaryEnVersion = enVersions.find(
+            (v) => !v.versionTitle.toLowerCase().includes('english explanation')
+          ) || enVersions[0]
 
           const heVersion = textData.versions.find(
             (v) => v.language === "he" && isLicenseAllowed(v.license)
           )
 
-          if (enVersion) {
-            const enText = Array.isArray(enVersion.text) ? enVersion.text.join(" ") : enVersion.text
+          if (primaryEnVersion) {
+            const enText = Array.isArray(primaryEnVersion.text) ? primaryEnVersion.text.join(" ") : primaryEnVersion.text
             const heText = heVersion && (Array.isArray(heVersion.text) ? heVersion.text.join(" ") : heVersion.text)
 
             chunks.push({
@@ -164,11 +168,11 @@ export async function searchForQuery(
               book: textData.ref.split(" ")[0],
               category: textData.categories?.[0] || null,
               language: "en",
-              version_title: enVersion.versionTitle,
-              license: enVersion.license || null,
+              version_title: primaryEnVersion.versionTitle,
+              license: primaryEnVersion.license || null,
               sefaria_url: `https://www.sefaria.org/${textData.ref.replace(/\s+/g, "_").replace(/:/g, ".")}`,
-              text_content: typeof enText === 'string' ? enText : String(enText),
-              he_text: heText && typeof heText === 'string' ? heText : (heText ? String(heText) : null),
+              text_content: typeof enText === 'string' ? stripHtml(enText) : stripHtml(String(enText)),
+              he_text: heText && typeof heText === 'string' ? stripHtml(heText) : (heText ? stripHtml(String(heText)) : null),
             })
           }
         }
