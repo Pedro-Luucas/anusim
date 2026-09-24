@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.117.1",
     "ai": "^7.0.114",
     "next": "16.1.6",
+    "p-limit": "^7.3.3",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

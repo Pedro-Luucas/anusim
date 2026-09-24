@@ -30,6 +30,10 @@ const DRY_RUN = process.env.DRY_RUN === "true"
 const BATCH_SIZE = 10
 const DELAY_MS = 1000
 
+const args = process.argv.slice(2)
+const limitArg = args.find(arg => arg.startsWith('--limit='))
+const LIMIT_TITLES = limitArg ? limitArg.split('=')[1].split(',').map(t => t.trim()) : null
+
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -185,9 +189,17 @@ async function main() {
 
   console.log(`Titles to ingest: ${SEFARIA_TITLES.length}\n`)
 
+  const titlesToProcess = LIMIT_TITLES 
+    ? SEFARIA_TITLES.filter(t => LIMIT_TITLES.includes(t))
+    : SEFARIA_TITLES
+
+  if (LIMIT_TITLES) {
+    console.log(`Filtering to ${titlesToProcess.length} titles: ${titlesToProcess.join(', ')}\n`)
+  }
+
   let totalInserted = 0
 
-  for (const title of SEFARIA_TITLES) {
+  for (const title of titlesToProcess) {
     const inserted = await ingestTitle(title)
     totalInserted += inserted
     await sleep(DELAY_MS)

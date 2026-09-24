@@ -21,6 +21,7 @@ export type SefariaShapeResponse = {
   shape: Array<number | Array<number>>
   section_names: string[]
   address_types: string[]
+  categories?: string[]
 }
 
 const ALLOWED_LICENSES = [
@@ -39,6 +40,9 @@ export function isLicenseAllowed(license: string | undefined): boolean {
 }
 
 export function stripHtml(text: string): string {
+  if (typeof text !== 'string') {
+    return String(text || '')
+  }
   return text
     .replace(/<[^>]+>/g, "")
     .replace(/\s+/g, " ")
@@ -162,26 +166,39 @@ export async function fetchSefariaText(
 }
 
 export async function fetchBookShape(title: string): Promise<SefariaShapeResponse | null> {
-  const url = `https://www.sefaria.org/api/shape/${encodeURIComponent(title)}`
+  const shapeUrl = `https://www.sefaria.org/api/shape/${encodeURIComponent(title)}`
+  const indexUrl = `https://www.sefaria.org/api/v2/index/${encodeURIComponent(title)}`
 
-  const response = await fetch(url)
+  const [shapeResponse, indexResponse] = await Promise.all([
+    fetch(shapeUrl),
+    fetch(indexUrl)
+  ])
 
-  if (!response.ok) {
+  if (!shapeResponse.ok) {
     return null
   }
 
-  const data = await response.json()
-  
-  const bookData = Array.isArray(data) ? data[0] : data
+  const shapeData = await shapeResponse.json()
+  const bookData = Array.isArray(shapeData) ? shapeData[0] : shapeData
   
   if (!bookData) {
     return null
+  }
+
+  let categories: string[] = []
+  let addressTypes: string[] = []
+
+  if (indexResponse.ok) {
+    const indexData = await indexResponse.json()
+    categories = indexData.categories || []
+    addressTypes = indexData.addressTypes || []
   }
   
   return {
     shape: bookData.chapters || [bookData.length] || [],
     section_names: bookData.sectionNames || [],
-    address_types: bookData.addressTypes || [],
+    address_types: addressTypes,
+    categories,
   }
 }
 
@@ -214,55 +231,73 @@ export async function fetchAllSegments(
     categories: string[]
   }> = []
 
+  const REQUEST_TIMEOUT_MS = 30000
+  const CONCURRENCY_LIMIT = 5
+
   async function fetchAndParseSection(sectionRef: string) {
-    const url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(sectionRef)}?version=english&version=hebrew`
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
     
-    const response = await fetch(url)
-    if (!response.ok) return
+    try {
+      const url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(sectionRef)}?version=english&version=hebrew`
+      
+      const response = await fetch(url, { signal: controller.signal })
+      clearTimeout(timeoutId)
+      
+      if (!response.ok) return
 
-    const textResponse = await response.json()
+      const textResponse = await response.json()
 
-    if (!textResponse || !textResponse.versions) {
-      return
-    }
+      if (!textResponse || !textResponse.versions) {
+        return
+      }
 
-    const enVersion = textResponse.versions.find(
-      (v: { language: string; license: string }) => v.language === "en" && isLicenseAllowed(v.license)
-    )
+      const enVersion = textResponse.versions.find(
+        (v: { language: string; license: string }) => v.language === "en" && isLicenseAllowed(v.license)
+      )
 
-    const heVersion = textResponse.versions.find(
-      (v: { language: string; license: string }) => v.language === "he" && isLicenseAllowed(v.license)
-    )
+      const heVersion = textResponse.versions.find(
+        (v: { language: string; license: string }) => v.language === "he" && isLicenseAllowed(v.license)
+      )
 
-    if (!enVersion) {
-      return
-    }
+      if (!enVersion) {
+        return
+      }
 
-    const enTexts = Array.isArray(enVersion.text) ? enVersion.text : [enVersion.text]
-    const heTexts = heVersion && Array.isArray(heVersion.text) 
-      ? heVersion.text 
-      : heVersion 
-        ? [heVersion.text] 
-        : []
+      const enTexts = Array.isArray(enVersion.text) ? enVersion.text : [enVersion.text]
+      const heTexts = heVersion && Array.isArray(heVersion.text) 
+        ? heVersion.text 
+        : heVersion 
+          ? [heVersion.text] 
+          : []
 
-    enTexts.forEach((enText: string, idx: number) => {
-      if (!enText || stripHtml(enText).trim().length === 0) return
+      enTexts.forEach((enText: string | any, idx: number) => {
+        if (typeof enText !== 'string' || !enText || stripHtml(enText).trim().length === 0) return
 
-      const segmentRef = enTexts.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef
+        const segmentRef = enTexts.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef
 
-      const heText = heTexts[idx]
-      const heTextStr = typeof heText === "string" ? heText : ""
+        const heText = heTexts[idx]
+        const heTextStr = typeof heText === "string" ? heText : ""
 
-      segments.push({
-        ref: segmentRef,
-        heRef: textResponse.heRef,
-        text: stripHtml(enText),
-        heText: heTextStr ? stripHtml(heTextStr) : "",
-        versionTitle: enVersion.versionTitle,
-        license: enVersion.license || "Unknown",
-        categories: textResponse.categories || [],
+        segments.push({
+          ref: segmentRef,
+          heRef: textResponse.heRef,
+          text: stripHtml(enText),
+          heText: heTextStr ? stripHtml(heTextStr) : "",
+          versionTitle: enVersion.versionTitle,
+          license: enVersion.license || "Unknown",
+          categories: textResponse.categories || [],
+        })
       })
-    })
+    } catch (error) {
+      if ((error as Error).name === 'AbortError') {
+        console.warn(`[fetchAllSegments] Timeout for ${sectionRef}`)
+      } else {
+        console.error(`[fetchAllSegments] Error fetching ${sectionRef}:`, error)
+      }
+    } finally {
+      clearTimeout(timeoutId)
+    }
   }
 
   if (!shape.shape || shape.shape.length === 0) {
@@ -272,23 +307,35 @@ export async function fetchAllSegments(
   const isTorah = title === "Genesis" || title === "Exodus" || title === "Leviticus" || 
                   title === "Numbers" || title === "Deuteronomy"
   
+  const isTalmud = shape.categories?.includes("Talmud") || 
+                   (shape.address_types && shape.address_types[0] === "Talmud")
+  
+  const pLimit = (await import('p-limit')).default
+  const limit = pLimit(CONCURRENCY_LIMIT)
+  const promises: Promise<void>[] = []
+  
   if (isTorah) {
     const chapters = shape.shape
     for (let chapter = 1; chapter <= chapters.length; chapter++) {
-      await fetchAndParseSection(`${title} ${chapter}`)
+      promises.push(limit(() => fetchAndParseSection(`${title} ${chapter}`)))
     }
-  } else if (shape.address_types && shape.address_types[0] === "Talmud") {
-    const chapters = Array.isArray(shape.shape) ? shape.shape.length : 
-                     typeof shape.shape[0] === "number" ? shape.shape[0] : 0
-    for (let i = 2; i <= chapters + 1; i++) {
-      await fetchAndParseSection(`${title} ${i}a`)
-      await fetchAndParseSection(`${title} ${i}b`)
+  } else if (isTalmud) {
+    const numAmudim = (shape.shape as { length?: number }).length || 
+                      (Array.isArray(shape.shape) ? shape.shape.length : 0)
+    
+    for (let i = 2; i < numAmudim; i++) {
+      const dafNum = Math.floor(i / 2) + 1
+      const side = i % 2 === 0 ? 'a' : 'b'
+      const dafRef = `${title} ${dafNum}${side}`
+      promises.push(limit(() => fetchAndParseSection(dafRef)))
     }
   } else if (Array.isArray(shape.shape)) {
     for (let chapter = 1; chapter <= shape.shape.length; chapter++) {
-      await fetchAndParseSection(`${title} ${chapter}`)
+      promises.push(limit(() => fetchAndParseSection(`${title} ${chapter}`)))
     }
   }
+
+  await Promise.all(promises)
 
   return segments
 }
