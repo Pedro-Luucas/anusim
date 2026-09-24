@@ -19,7 +19,7 @@ export type VerifiedCitation = {
 }
 
 export async function createChatStream(
-  fullStream: AsyncIterable<{ type: string; textDelta?: string; error?: unknown; [key: string]: unknown }>,
+  fullStream: AsyncIterable<{ type: string; text?: string; error?: unknown; [key: string]: unknown }>,
   fullText: string | Promise<string> | PromiseLike<string>,
   retrievedChunks: SefariaChunk[]
 ): Promise<ReadableStream<Uint8Array>> {
@@ -32,9 +32,9 @@ export async function createChatStream(
         let fullTextContent = ""
 
         for await (const part of fullStream) {
-          if (part.type === "text-delta" && part.textDelta) {
-            const sanitized = sanitizeDashes(part.textDelta)
-            fullTextContent += part.textDelta
+          if (part.type === "text-delta" && part.text) {
+            const sanitized = sanitizeDashes(part.text)
+            fullTextContent += part.text
             const event: StreamEvent = { type: "text", delta: sanitized }
             controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
           } else if (part.type === "error") {

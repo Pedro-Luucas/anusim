@@ -151,8 +151,8 @@ describe("Chat API Route", () => {
       capturedMessages = messages
 
       async function* mockFullStream() {
-        yield { type: "text-delta", textDelta: "Genesis 1:1 " }
-        yield { type: "text-delta", textDelta: "says God created." }
+        yield { type: "text-delta", id: "t0", text: "Genesis 1:1 " }
+        yield { type: "text-delta", id: "t1", text: "says God created." }
       }
 
       return {

@@ -2,9 +2,9 @@ import { describe, it, expect } from "vitest"
 import { createChatStream } from "../src/lib/rag/stream"
 import type { SefariaChunk } from "../src/lib/rag/db"
 
-async function* createMockFullStream(chunks: string[]) {
-  for (const chunk of chunks) {
-    yield { type: "text-delta", textDelta: chunk }
+async function* createMockFullStream(chunks: string[]): AsyncGenerator<{ type: string; id: string; text: string }> {
+  for (let i = 0; i < chunks.length; i++) {
+    yield { type: "text-delta", id: `t${i}`, text: chunks[i] }
   }
 }
 
@@ -195,8 +195,8 @@ describe("Citation Stream Assembly", () => {
   })
 
   it("should emit error event on mid-stream error part", async () => {
-    async function* errorStream() {
-      yield { type: "text-delta", textDelta: "Some text " }
+    async function* errorStream(): AsyncGenerator<{ type: string; id?: string; text?: string; error?: Error }> {
+      yield { type: "text-delta", id: "t0", text: "Some text " }
       yield { type: "error", error: new Error("Model failed") }
     }
 
