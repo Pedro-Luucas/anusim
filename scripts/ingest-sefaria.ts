@@ -50,11 +50,33 @@ function chunkSegments(
   }>,
   minLength = 50
 ): typeof segments {
+  const sorted = segments.slice().sort((a, b) => {
+    const aParts = a.ref.split(/[\s:]+/)
+    const bParts = b.ref.split(/[\s:]+/)
+    
+    for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
+      const aVal = parseInt(aParts[i]) || aParts[i]
+      const bVal = parseInt(bParts[i]) || bParts[i]
+      
+      if (aVal !== bVal) {
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return aVal - bVal
+        }
+        return String(aVal).localeCompare(String(bVal))
+      }
+    }
+    
+    return aParts.length - bParts.length
+  })
+
   const chunked: typeof segments = []
   let buffer: typeof segments[0] | null = null
 
-  for (const segment of segments) {
-    if (segment.text.length < minLength && buffer) {
+  for (const segment of sorted) {
+    const segmentSection = segment.ref.split(/[:\s]+/).slice(0, -1).join(" ")
+    const bufferSection = buffer ? buffer.ref.split(/[:\s]+/).slice(0, -1).join(" ") : null
+    
+    if (segment.text.length < minLength && buffer && segmentSection === bufferSection) {
       buffer.text += " " + segment.text
       buffer.heText += " " + segment.heText
       const refParts = segment.ref.split(/[\s:]+/)
