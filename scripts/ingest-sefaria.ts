@@ -55,8 +55,23 @@ function chunkSegments(
     const bParts = b.ref.split(/[\s:]+/)
     
     for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
-      const aVal = parseInt(aParts[i]) || aParts[i]
-      const bVal = parseInt(bParts[i]) || bParts[i]
+      let aVal: string | number = aParts[i]
+      let bVal: string | number = bParts[i]
+      
+      const aDafMatch = aParts[i].match(/^(\d+)([ab])$/)
+      const bDafMatch = bParts[i].match(/^(\d+)([ab])$/)
+      
+      if (aDafMatch && bDafMatch) {
+        const aDafNum = parseInt(aDafMatch[1])
+        const bDafNum = parseInt(bDafMatch[1])
+        if (aDafNum !== bDafNum) {
+          return aDafNum - bDafNum
+        }
+        return aDafMatch[2].localeCompare(bDafMatch[2])
+      }
+      
+      aVal = parseInt(aParts[i]) || aParts[i]
+      bVal = parseInt(bParts[i]) || bParts[i]
       
       if (aVal !== bVal) {
         if (typeof aVal === 'number' && typeof bVal === 'number') {
