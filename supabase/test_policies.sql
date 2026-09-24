@@ -50,3 +50,14 @@ SELECT public.is_admin();
 SET LOCAL "request.jwt.claims" TO '{"sub": "user-1-uuid"}';
 SELECT public.is_admin();
 -- Expected: false
+
+-- Test 10: Direct SQL update (postgres role) creates first admin
+-- This simulates running UPDATE in SQL Editor as postgres user
+RESET role;
+-- Assumes a user exists with this email
+UPDATE public.profiles SET role = 'admin' WHERE email = 'first-admin@example.com';
+-- Expected: SUCCESS (auth.uid() is NULL, trigger allows it)
+
+-- Test 11: Verify first admin was created
+SELECT id, email, role FROM public.profiles WHERE email = 'first-admin@example.com';
+-- Expected: role = 'admin'

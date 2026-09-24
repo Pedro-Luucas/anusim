@@ -61,8 +61,10 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- Allow service role to do anything
-  IF current_setting('role', true) = 'service_role' THEN
+  -- Allow direct SQL (postgres role) or service role
+  IF auth.uid() IS NULL 
+     OR current_setting('request.jwt.claim.role', true) = 'service_role'
+     OR current_setting('role', true) = 'service_role' THEN
     RETURN NEW;
   END IF;
 
