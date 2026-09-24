@@ -68,7 +68,7 @@ export function MembersTab({ profiles }: MembersTabProps) {
             {profiles.map((profile) => (
               <tr key={profile.id} className="hover:bg-gold-50/30 transition-colors">
                 <td className="px-6 py-4 text-sm font-medium text-ink-900">
-                  {profile.name || "—"}
+                  {profile.name || "-"}
                 </td>
                 <td className="px-6 py-4 text-sm text-ink-700">{profile.email}</td>
                 <td className="px-6 py-4">

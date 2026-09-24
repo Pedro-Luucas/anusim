@@ -165,7 +165,7 @@ function LoginForm() {
               Área de Membros
             </h1>
             <p className="text-ink-600">
-              Sinagoga Anussim Brasil — Criciúma
+              Sinagoga Anussim Brasil, Criciúma
             </p>
           </div>
 
