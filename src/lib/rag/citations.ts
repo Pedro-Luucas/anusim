@@ -27,13 +27,25 @@ export function verifyCitations(
 
   for (const chunk of retrievedChunks) {
     const chunkNormalized = normalizeRef(chunk.ref)
-    const refVariants = [
+    
+    const refParts = chunk.ref.split(/\s+/)
+    const bookPart = refParts.slice(0, -1).join(" ").toLowerCase()
+    const citationPart = refParts[refParts.length - 1]
+    
+    const refPatterns = [
       chunk.ref.toLowerCase(),
       chunkNormalized,
-      chunk.ref.toLowerCase().replace(/\s+/g, ""),
+      `${bookPart} ${citationPart}`,
+      `${bookPart}${citationPart}`,
     ]
 
-    if (refVariants.some((variant) => normalizedText.includes(variant))) {
+    const chunkSegment = citationPart.split(":")[0]
+    const refPrefix = bookPart + " " + chunkSegment
+    
+    if (refPatterns.some((pattern) => {
+      const regex = new RegExp(`(?:^|\\s)${pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$|[,.:;!?])`, 'i')
+      return regex.test(normalizedText)
+    }) || normalizedText.includes(refPrefix)) {
       if (!citedRefs.has(chunkNormalized)) {
         citedRefs.add(chunkNormalized)
         verified.push(chunk.ref)
