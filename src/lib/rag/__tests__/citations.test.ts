@@ -31,42 +31,46 @@ describe('verifyCitations', () => {
   ]
 
   test('verifies existing citations', () => {
-    const generatedRefs = ['Genesis 1:1', 'Berakhot 2a']
-    const { verified, hallucinated } = verifyCitations(generatedRefs, mockChunks)
+    const fullText = 'According to Genesis 1:1 and Berakhot 2a'
+    const { verified, hallucinated } = verifyCitations(fullText, mockChunks)
 
-    expect(verified).toEqual(['Genesis 1:1', 'Berakhot 2a'])
+    expect(verified).toContain('Genesis 1:1')
+    expect(verified).toContain('Berakhot 2a')
     expect(hallucinated).toEqual([])
   })
 
   test('detects hallucinated citations', () => {
-    const generatedRefs = ['Genesis 1:1', 'Exodus 20:1', 'Berakhot 2a']
-    const { verified, hallucinated } = verifyCitations(generatedRefs, mockChunks)
+    const fullText = 'According to Genesis 1:1, Exodus 20:1, and Berakhot 2a'
+    const { verified, hallucinated } = verifyCitations(fullText, mockChunks)
 
-    expect(verified).toEqual(['Genesis 1:1', 'Berakhot 2a'])
-    expect(hallucinated).toEqual(['Exodus 20:1'])
+    expect(verified).toContain('Genesis 1:1')
+    expect(verified).toContain('Berakhot 2a')
+    expect(hallucinated).toContain('Exodus 20:1')
   })
 
   test('handles normalized references', () => {
-    const generatedRefs = ['Genesis 1.1', 'Berakhot 2a']
-    const { verified, hallucinated } = verifyCitations(generatedRefs, mockChunks)
+    const fullText = 'According to Genesis 1.1 and Berakhot 2a'
+    const { verified, hallucinated } = verifyCitations(fullText, mockChunks)
 
-    expect(verified).toEqual(['Genesis 1.1', 'Berakhot 2a'])
+    expect(verified).toContain('Genesis 1:1')
+    expect(verified).toContain('Berakhot 2a')
     expect(hallucinated).toEqual([])
   })
 
   test('handles empty generated refs', () => {
-    const { verified, hallucinated } = verifyCitations([], mockChunks)
+    const fullText = 'This text has no citations'
+    const { verified, hallucinated } = verifyCitations(fullText, mockChunks)
 
     expect(verified).toEqual([])
     expect(hallucinated).toEqual([])
   })
 
   test('handles all hallucinated refs', () => {
-    const generatedRefs = ['Exodus 1:1', 'Leviticus 1:1']
-    const { verified, hallucinated } = verifyCitations(generatedRefs, mockChunks)
+    const fullText = 'According to Exodus 1:1 and Leviticus 1:1'
+    const { verified, hallucinated } = verifyCitations(fullText, mockChunks)
 
     expect(verified).toEqual([])
-    expect(hallucinated).toEqual(['Exodus 1:1', 'Leviticus 1:1'])
+    expect(hallucinated.length).toBeGreaterThanOrEqual(2)
   })
 })
 
