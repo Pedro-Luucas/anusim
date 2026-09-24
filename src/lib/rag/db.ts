@@ -11,6 +11,7 @@ export type SefariaChunk = {
   license: string | null
   sefaria_url: string
   text_content: string
+  he_text?: string | null
   embedding?: number[]
   similarity?: number
   text_rank?: number
@@ -89,6 +90,7 @@ export async function upsertChunk(chunk: Omit<SefariaChunk, "id">) {
         license: chunk.license,
         sefaria_url: chunk.sefaria_url,
         text_content: chunk.text_content,
+        he_text: chunk.he_text,
         embedding: chunk.embedding,
       } as never,
       { onConflict: "ref,version_title,language" }

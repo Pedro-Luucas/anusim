@@ -15,7 +15,6 @@ describe("Citation Verification Filtering", () => {
       license: "CC-BY",
       sefaria_url: "https://www.sefaria.org/Genesis.1.1",
       text_content: "In the beginning God created heaven and earth",
-      created_at: new Date().toISOString(),
     },
     {
       id: 2,
@@ -28,7 +27,6 @@ describe("Citation Verification Filtering", () => {
       license: "CC-BY-NC",
       sefaria_url: "https://www.sefaria.org/Berakhot.2a",
       text_content: "From what time may one recite the Shema in the evening?",
-      created_at: new Date().toISOString(),
     },
     {
       id: 3,
@@ -41,7 +39,6 @@ describe("Citation Verification Filtering", () => {
       license: "CC0",
       sefaria_url: "https://www.sefaria.org/Mishneh_Torah,_Laws_of_Shabbat.1.1",
       text_content: "Resting on the seventh day is a positive commandment",
-      created_at: new Date().toISOString(),
     },
   ]
 

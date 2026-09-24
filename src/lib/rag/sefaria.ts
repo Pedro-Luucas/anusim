@@ -8,12 +8,19 @@ export type SefariaSearchResult = {
 export type SefariaTextResponse = {
   ref: string
   heRef: string
-  text: string | string[]
-  he: string | string[]
-  versionTitle?: string
-  versionTitleInHebrew?: string
-  license?: string
+  versions: Array<{
+    text: string | string[]
+    language: string
+    versionTitle: string
+    license: string
+  }>
   categories?: string[]
+}
+
+export type SefariaShapeResponse = {
+  shape: Array<number | Array<number>>
+  section_names: string[]
+  address_types: string[]
 }
 
 const ALLOWED_LICENSES = [
@@ -111,7 +118,7 @@ export async function fetchSefariaText(
     context?: number
   } = {}
 ): Promise<SefariaTextResponse | null> {
-  const { context = 1 } = options
+  const { context = 0 } = options
 
   const params = new URLSearchParams({
     context: context.toString(),
@@ -132,31 +139,35 @@ export async function fetchSefariaText(
 
   const data = await response.json()
 
-  const textArray = Array.isArray(data.text) ? data.text : [data.text]
-  const heArray = Array.isArray(data.he) ? data.he : [data.he]
-
-  const text = textArray.map(stripHtml).join(" ")
-  const he = heArray.map(stripHtml).join(" ")
+  if (!data.versions || !Array.isArray(data.versions)) {
+    return null
+  }
 
   return {
     ref: data.ref || ref,
     heRef: data.heRef || "",
-    text,
-    he,
-    versionTitle: data.versionTitle,
-    versionTitleInHebrew: data.versionTitleInHebrew,
-    license: data.license,
+    versions: data.versions.map((v: {
+      text: string | string[]
+      language: string
+      versionTitle: string
+      license: string
+    }) => ({
+      text: v.text,
+      language: v.language,
+      versionTitle: v.versionTitle,
+      license: v.license,
+    })),
     categories: data.categories,
   }
 }
 
-export async function fetchBookIndex(title: string) {
-  const url = `https://www.sefaria.org/api/v2/index/${encodeURIComponent(title)}`
+export async function fetchBookShape(title: string): Promise<SefariaShapeResponse | null> {
+  const url = `https://www.sefaria.org/api/shape/${encodeURIComponent(title)}`
 
   const response = await fetch(url)
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch index for ${title}: ${response.statusText}`)
+    return null
   }
 
   return response.json()
@@ -169,66 +180,92 @@ export async function fetchAllSegments(
     ref: string
     heRef: string
     text: string
+    heText: string
     versionTitle: string
     license: string
     categories: string[]
   }>
 > {
-  const index = await fetchBookIndex(title)
+  const shape = await fetchBookShape(title)
 
-  const lengths = index.lengths || []
-  const schema = index.schema
+  if (!shape) {
+    throw new Error(`Failed to fetch shape for ${title}`)
+  }
 
   const segments: Array<{
     ref: string
     heRef: string
     text: string
+    heText: string
     versionTitle: string
     license: string
     categories: string[]
   }> = []
 
-  async function fetchSection(sectionRef: string) {
-    const text = await fetchSefariaText(sectionRef, { context: 0 })
+  async function fetchAndParseSection(sectionRef: string) {
+    const textResponse = await fetchSefariaText(sectionRef, { context: 0 })
 
-    if (
-      !text ||
-      !text.versionTitle ||
-      !isLicenseAllowed(text.license)
-    ) {
+    if (!textResponse || !textResponse.versions) {
       return
     }
 
-    const textContent = text.text
+    const enVersion = textResponse.versions.find(
+      (v) => v.language === "en" && isLicenseAllowed(v.license)
+    )
 
-    const textArray = Array.isArray(textContent)
-      ? textContent
-      : [textContent]
+    const heVersion = textResponse.versions.find(
+      (v) => v.language === "he" && isLicenseAllowed(v.license)
+    )
 
-    textArray.forEach((segment, idx) => {
-      if (!segment || segment.trim().length === 0) return
+    if (!enVersion) {
+      return
+    }
 
-      const segmentRef =
-        textArray.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef
+    const enTexts = Array.isArray(enVersion.text) ? enVersion.text : [enVersion.text]
+    const heTexts = heVersion && Array.isArray(heVersion.text) 
+      ? heVersion.text 
+      : heVersion 
+        ? [heVersion.text] 
+        : []
+
+    enTexts.forEach((enText, idx) => {
+      if (!enText || stripHtml(enText).trim().length === 0) return
+
+      const segmentRef = enTexts.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef
+
+      const heText = heTexts[idx]
+      const heTextStr = typeof heText === "string" ? heText : ""
 
       segments.push({
         ref: segmentRef,
-        heRef: text.heRef,
-        text: stripHtml(segment),
-        versionTitle: text.versionTitle || "Unknown",
-        license: text.license || "Unknown",
-        categories: text.categories || [],
+        heRef: textResponse.heRef,
+        text: stripHtml(enText),
+        heText: heTextStr ? stripHtml(heTextStr) : "",
+        versionTitle: enVersion.versionTitle,
+        license: enVersion.license || "Unknown",
+        categories: textResponse.categories || [],
       })
     })
   }
 
-  if (schema?.sectionNames?.length === 1) {
-    for (let i = 1; i <= lengths[0]; i++) {
-      await fetchSection(`${title} ${i}`)
+  const shapeArray = Array.isArray(shape.shape[0]) ? shape.shape : [shape.shape]
+  
+  if (shape.section_names.length === 1) {
+    const firstElement = shapeArray[0]
+    const maxSection = typeof firstElement === "number" 
+      ? firstElement 
+      : Array.isArray(firstElement) 
+        ? firstElement[0] 
+        : 0
+    
+    if (typeof maxSection === "number") {
+      for (let i = 1; i <= maxSection; i++) {
+        await fetchAndParseSection(`${title} ${i}`)
+      }
     }
-  } else if (schema?.sectionNames?.length === 2) {
-    for (let chapter = 1; chapter <= lengths[0]; chapter++) {
-      await fetchSection(`${title} ${chapter}`)
+  } else if (shape.section_names.length === 2) {
+    for (let chapter = 1; chapter <= shapeArray.length; chapter++) {
+      await fetchAndParseSection(`${title} ${chapter}`)
     }
   }
 

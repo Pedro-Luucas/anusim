@@ -1,6 +1,6 @@
 import { generateText } from "ai"
 import { searchChunks } from "./db"
-import { searchSefaria, fetchSefariaText } from "./sefaria"
+import { searchSefaria, fetchSefariaText, isLicenseAllowed } from "./sefaria"
 import { embedText } from "./embeddings"
 import type { SefariaChunk } from "./db"
 
@@ -126,19 +126,25 @@ export async function searchForQuery(
       for (const result of results.slice(0, matchCount)) {
         const textData = await fetchSefariaText(result.ref)
 
-        if (textData && textData.versionTitle) {
-          chunks.push({
-            id: 0,
-            ref: textData.ref,
-            he_ref: textData.heRef,
-            book: textData.ref.split(" ")[0],
-            category: textData.categories?.[0] || null,
-            language: result.lang,
-            version_title: textData.versionTitle,
-            license: textData.license || null,
-            sefaria_url: `https://www.sefaria.org/${textData.ref.replace(/\s+/g, "_").replace(/:/g, ".")}`,
-            text_content: result.text,
-          })
+        if (textData && textData.versions && textData.versions.length > 0) {
+          const enVersion = textData.versions.find(
+            (v) => v.language === "en" && isLicenseAllowed(v.license)
+          )
+
+          if (enVersion) {
+            chunks.push({
+              id: 0,
+              ref: textData.ref,
+              he_ref: textData.heRef,
+              book: textData.ref.split(" ")[0],
+              category: textData.categories?.[0] || null,
+              language: result.lang,
+              version_title: enVersion.versionTitle,
+              license: enVersion.license || null,
+              sefaria_url: `https://www.sefaria.org/${textData.ref.replace(/\s+/g, "_").replace(/:/g, ".")}`,
+              text_content: result.text,
+            })
+          }
         }
       }
 

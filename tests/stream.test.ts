@@ -54,7 +54,6 @@ describe("Citation Stream Assembly", () => {
       license: "CC-BY",
       sefaria_url: "https://www.sefaria.org/Genesis.1.1",
       text_content: "In the beginning God created the heaven and the earth",
-      created_at: new Date().toISOString(),
     },
     {
       id: 2,
@@ -67,7 +66,6 @@ describe("Citation Stream Assembly", () => {
       license: "CC-BY-NC",
       sefaria_url: "https://www.sefaria.org/Berakhot.2a",
       text_content: "From what time may one recite the Shema in the evening?",
-      created_at: new Date().toISOString(),
     },
     {
       id: 3,
@@ -80,7 +78,6 @@ describe("Citation Stream Assembly", () => {
       license: "CC-BY",
       sefaria_url: "https://www.sefaria.org/Exodus.20.1",
       text_content: "And God spoke all these words",
-      created_at: new Date().toISOString(),
     },
   ]
 

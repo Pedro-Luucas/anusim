@@ -39,6 +39,7 @@ function chunkSegments(
     ref: string
     heRef: string
     text: string
+    heText: string
     versionTitle: string
     license: string
     categories: string[]
@@ -51,7 +52,12 @@ function chunkSegments(
   for (const segment of segments) {
     if (segment.text.length < minLength && buffer) {
       buffer.text += " " + segment.text
-      buffer.ref = `${buffer.ref}-${segment.ref.split(" ").pop()}`
+      buffer.heText += " " + segment.heText
+      const refParts = segment.ref.split(/[\s:]+/)
+      const lastPart = refParts[refParts.length - 1]
+      const bufferParts = buffer.ref.split("-")
+      const startRef = bufferParts[0]
+      buffer.ref = `${startRef}-${lastPart}`
     } else {
       if (buffer) {
         chunked.push(buffer)
