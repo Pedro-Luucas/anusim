@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
+import { ShabbatSection } from "@/components/landing/shabbat-section"
 import {
   OrnametalDivider,
   StarOfDavid,
@@ -159,6 +160,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ─── SHABAT ─── */}
+      <ShabbatSection />
 
       {/* ─── ESSÊNCIA — SOBRE EM 3 BLOCOS ─── */}
       <section className="relative py-24 md:py-32">
