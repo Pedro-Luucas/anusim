@@ -1,4 +1,6 @@
 -- Update search function to return he_text
+drop function if exists search_sefaria_chunks(vector, text, double precision, integer, double precision);
+
 create or replace function search_sefaria_chunks(
   query_embedding vector(768),
   query_text text,
