@@ -1,16 +1,79 @@
 ---
-description: UI design system — mobile-first, modern clean style for Anusim
+description: UI design system — padrão branco + dourado da landing Anussim Brasil
 globs: **/*.tsx
 alwaysApply: false
 ---
 
-# UI Design System
+# UI Design System — Anussim Brasil Criciúma
 
 ## Style Direction
-**Modern & clean** — minimal, generous whitespace, calm neutral palette with one warm accent color. Feels trustworthy and welcoming for a religious community app.
+**Warm, editorial, premium** — paleta branca + dourado champagne, tipografia serifada (Cormorant Garamond), sem dark mode. Identidade visual inspirada em sinagogas tradicionais: tons de ouro, creme e tinta escura, símbolos judaicos discretos, generoso espaçamento.
+
+## Color Palette (Tailwind v4 @theme tokens)
+
+| Token | Hex | Uso |
+|---|---|---|
+| `cream-50` | `#fdfbf5` | cards, superfícies |
+| `cream-100` | `#faf6ef` | **fundo principal** (`bg-parchment`) |
+| `cream-200` | `#f3ead7` | hover suave |
+| `gold-100` | `#faedc3` | highlights claros |
+| `gold-300` | `#ecc660` | bordas hover |
+| `gold-500` | `#c9a253` | **dourado principal (brand)** |
+| `gold-600` | `#a8842f` | dourado profundo |
+| `gold-700` | `#806323` | hover/texto sobre cream |
+| `ink-500` | `#6b5a3a` | texto secundário |
+| `ink-700` | `#3a2f1c` | texto terciário |
+| `ink-900` | `#2a2418` | **texto principal** |
+| `wine-500` | `#8b2742` | raramente, só destaques |
+
+**NUNCA usar `bg-white` puro** — usar `bg-cream-50` ou `bg-parchment`.
+**NUNCA implementar dark mode** — o usuário foi explícito sobre isso.
+
+## Typography
+
+- **Display/Headings:** Cormorant Garamond (variável `--font-cormorant`), usar classe `font-display`
+- **Hebraico:** Frank Ruhl Libre (variável `--font-frank-ruhl`), usar classe `font-hebrew` + `dir="rtl"`
+- **Corpo:** Inter 400 (variável `--font-inter`), padrão do `<body>`
+
+Classes utilitárias importantes:
+- `eyebrow` — label editorial uppercase tracking-[0.32em]
+- `display-xl` — heading display gigante
+- `text-gold-shimmer` — gradient text dourado
+- `divider-gold` — linha fina com fade nas pontas
+- `bg-parchment` — fundo creme com radial gradients dourados sutis
+- `hebrew-ornament` — caractere hebraico grande decorativo
+
+## Layout Patterns
+
+```tsx
+// Page wrapper (landing pages)
+<main className="bg-parchment text-ink-900">
+  <SiteHeader />
+  {/* conteúdo */}
+  <SiteFooter />
+</main>
+
+// Contêiner padrão
+<div className="mx-auto max-w-7xl px-5 md:px-10">
+
+// Section heading
+<p className="eyebrow">Label editorial</p>
+<h2 className="display-xl mt-4 text-4xl text-ink-900 md:text-5xl">
+  Título com <span className="italic text-gold-shimmer">destaque</span>
+</h2>
+
+// Card
+<div className="rounded-2xl border border-gold-200 bg-cream-50 p-6 md:p-8">
+```
+
+## Components
+
+- **Header:** `SiteHeader` (sticky, com menu mobile collapsible + CTA WhatsApp)
+- **Footer:** `SiteFooter` (editorial, links de navegação, endereço, redes sociais)
+- **Símbolos judaicos:** `judaic-symbols.tsx` (Estrela de Davi, Menorá, Shofar, Romã, Selo)
 
 ## Mobile-First (Required)
-Always write Tailwind classes mobile-first and layer up:
+Sempre escrever classes Tailwind mobile-first e expandir progressivamente:
 
 ```tsx
 // ❌ BAD — desktop-first
@@ -20,12 +83,12 @@ Always write Tailwind classes mobile-first and layer up:
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 ```
 
-- Base styles target small screens (≤ 640px)
-- Use `sm:`, `md:`, `lg:` to progressively enhance for larger screens
-- Test layouts at 375px width as the baseline
+- Base styles target ≤640px
+- Use `sm:`, `md:`, `lg:` para telas maiores
+- Teste layouts em 390px (mobile) e 1440px (desktop)
 
 ## Touch Targets
-All interactive elements must be comfortably tappable:
+Todos elementos interativos devem ter no mínimo **44×44px**:
 
 ```tsx
 // ✅ Minimum touch target
@@ -34,45 +97,34 @@ All interactive elements must be comfortably tappable:
 </button>
 ```
 
-- Minimum 44×44px for buttons, links, and icons
-- Add sufficient padding — never rely on text alone as the tap area
-- No hover-only interactions; all states must work on touch
-
-## Layout Patterns
-
-```tsx
-// Page wrapper
-<main className="mx-auto max-w-2xl px-4 py-6">
-
-// Card
-<div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-
-// Section heading
-<h2 className="text-xl font-semibold text-neutral-900">Próximos Eventos</h2>
-```
-
-## Typography
-- Headings: `font-semibold` or `font-bold`, `text-neutral-900`
-- Body: `text-neutral-700`, `text-base` or `text-sm`
-- Muted / secondary: `text-neutral-500`
-- Line height: prefer `leading-relaxed` for body text
-
-## Color Palette (Tailwind)
-| Role | Class |
-|---|---|
-| Primary accent | `blue-700` / `blue-600` (or a warm gold once brand is defined) |
-| Background | `neutral-50` or `white` |
-| Surface (cards) | `white` with `border-neutral-200` |
-| Text primary | `neutral-900` |
-| Text secondary | `neutral-500` |
-| Destructive | `red-600` |
-| Success | `green-600` |
-
-## Navigation on Mobile
-- Use a **bottom navigation bar** on mobile for primary routes
-- Top navbar reserved for page title + secondary actions (back, settings)
-
 ## Accessibility
-- Always include `aria-label` on icon-only buttons
-- Use semantic HTML: `<nav>`, `<main>`, `<header>`, `<section>`, `<article>`
-- Ensure sufficient color contrast (WCAG AA minimum)
+- Sempre incluir `aria-label` em botões só com ícone
+- Menu mobile: `aria-expanded`, `aria-controls`, `tabIndex={-1}` quando fechado
+- Usar `aria-current="page"` em links de navegação ativos
+- Incluir skip link no topo (`href="#main-content"`)
+- Adicionar `id="main-content"` no `<main>` de cada página
+- Dialogs: `role="dialog"`, `aria-modal="true"`, focus trap
+- Respeitar `prefers-reduced-motion` (já configurado no `globals.css`)
+- Elementos decorativos: `aria-hidden="true"`
+- Usar HTML semântico: `<nav>`, `<main>`, `<header>`, `<section>`, `<article>`
+- Garantir contraste WCAG AA (mínimo 4.5:1 para texto)
+
+## Images
+- Sempre usar `<Image>` do Next.js
+- Imagens `fill`: sempre incluir atributo `sizes`
+- Usar `priority` apenas em hero images acima da dobra
+- Sempre incluir `alt` descritivo
+
+## Iframes (YouTube/Maps)
+- Sempre incluir `loading="lazy"` (exceto acima da dobra)
+- Sempre incluir `title` descritivo
+
+## Animations
+- Preferir CSS-only (classes `animate-fade-up`, `animate-float`, `stagger`)
+- `prefers-reduced-motion` já configurado no `globals.css` — não adicionar libs
+
+## What NOT to do
+- Não usar `bg-white` puro (quebra o calor visual)
+- Não adicionar dark mode
+- Não usar cores frias (blue, purple) — paleta é quente (gold, cream, ink, wine)
+- Não adicionar bibliotecas de UI/animação — tudo é React + Tailwind + SVG inline

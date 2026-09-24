@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function BneiAnusimPage() {
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       {/* ─── HEADER ─── */}
@@ -74,6 +74,7 @@ export default function BneiAnusimPage() {
             src="/shulphotos/pessach5.jpg"
             alt="Mesa de Pessach preparada na comunidade"
             fill
+            sizes="100vw"
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-ink-900/10 to-transparent" />

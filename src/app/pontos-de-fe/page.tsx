@@ -65,7 +65,7 @@ const PRINCIPLES = [
 
 export default function PontosDeFePage() {
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       <section className="relative pt-32 pb-16 md:pt-44 md:pb-24">

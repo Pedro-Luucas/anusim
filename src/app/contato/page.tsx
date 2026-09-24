@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function ContatoPage() {
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       {/* HEADER */}
@@ -164,6 +164,7 @@ export default function ContatoPage() {
               title="Anussim Brasil — Transmissão ao vivo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              loading="lazy"
               className="absolute inset-0 h-full w-full"
             />
           </div>
