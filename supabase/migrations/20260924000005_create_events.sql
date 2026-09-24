@@ -24,34 +24,19 @@ CREATE POLICY "Anyone can read events"
 CREATE POLICY "Admins can insert events"
   ON public.events
   FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  WITH CHECK (public.is_admin());
 
 -- Policies: only admins can update
 CREATE POLICY "Admins can update events"
   ON public.events
   FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Policies: only admins can delete
 CREATE POLICY "Admins can delete events"
   ON public.events
   FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Updated_at trigger
 CREATE TRIGGER events_updated_at

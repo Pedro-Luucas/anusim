@@ -23,34 +23,19 @@ CREATE POLICY "Authenticated users can read materials"
 CREATE POLICY "Admins can insert materials"
   ON public.materials
   FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  WITH CHECK (public.is_admin());
 
 -- Policies: only admins can update
 CREATE POLICY "Admins can update materials"
   ON public.materials
   FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Policies: only admins can delete
 CREATE POLICY "Admins can delete materials"
   ON public.materials
   FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Updated_at trigger
 CREATE TRIGGER materials_updated_at

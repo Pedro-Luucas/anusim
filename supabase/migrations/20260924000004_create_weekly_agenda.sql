@@ -24,34 +24,19 @@ CREATE POLICY "Anyone can read weekly agenda"
 CREATE POLICY "Admins can insert weekly agenda"
   ON public.weekly_agenda
   FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  WITH CHECK (public.is_admin());
 
 -- Policies: only admins can update
 CREATE POLICY "Admins can update weekly agenda"
   ON public.weekly_agenda
   FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Policies: only admins can delete
 CREATE POLICY "Admins can delete weekly agenda"
   ON public.weekly_agenda
   FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Updated_at trigger
 CREATE TRIGGER weekly_agenda_updated_at

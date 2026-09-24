@@ -33,6 +33,10 @@ export async function PATCH(request: Request) {
   const body = await request.json()
   const { profileId, role } = body
 
+  if (role !== "membro" && role !== "admin") {
+    return NextResponse.json({ error: "Invalid role" }, { status: 400 })
+  }
+
   const adminClient = createAdminClient()
 
   if (!adminClient) {
@@ -40,6 +44,21 @@ export async function PATCH(request: Request) {
       { error: "Cliente admin não configurado" },
       { status: 503 }
     )
+  }
+
+  // Prevent admin from removing their own admin role if they're the only admin
+  if (profileId === user.id && role === "membro") {
+    const { count } = await adminClient
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "admin")
+
+    if (count === 1) {
+      return NextResponse.json(
+        { error: "Não é possível remover o único administrador" },
+        { status: 400 }
+      )
+    }
   }
 
   const { error } = await adminClient

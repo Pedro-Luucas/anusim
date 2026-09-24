@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
+  const next = requestUrl.searchParams.get("next")
   const origin = requestUrl.origin
 
   if (code) {
@@ -13,5 +14,10 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/membro`)
+  let redirectTo = "/membro"
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    redirectTo = next
+  }
+
+  return NextResponse.redirect(`${origin}${redirectTo}`)
 }

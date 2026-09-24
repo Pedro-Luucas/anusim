@@ -21,34 +21,19 @@ CREATE POLICY "Authenticated users can read announcements"
 CREATE POLICY "Admins can insert announcements"
   ON public.announcements
   FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  WITH CHECK (public.is_admin());
 
 -- Policies: only admins can update
 CREATE POLICY "Admins can update announcements"
   ON public.announcements
   FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Policies: only admins can delete
 CREATE POLICY "Admins can delete announcements"
   ON public.announcements
   FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Updated_at trigger
 CREATE TRIGGER announcements_updated_at

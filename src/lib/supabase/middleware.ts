@@ -38,14 +38,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = "/login"
-    return NextResponse.redirect(url)
+  const isAuthRoute = request.nextUrl.pathname.startsWith("/auth/")
+  const isLoginRoute = request.nextUrl.pathname === "/entrar"
+  const isProtectedRoute =
+    request.nextUrl.pathname.startsWith("/membro") ||
+    request.nextUrl.pathname.startsWith("/admin")
+
+  if (!user && isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = "/entrar"
+    redirectUrl.searchParams.set("next", request.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
   }
 
   return supabaseResponse
