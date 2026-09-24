@@ -102,11 +102,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { messages } = body
 
-    if (
-      !Array.isArray(messages) ||
-      messages.length === 0 ||
-      messages.length > MAX_MESSAGES_PER_REQUEST
-    ) {
+    if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(
         JSON.stringify({ error: "Mensagens inválidas" }),
         {
@@ -116,15 +112,36 @@ export async function POST(request: Request) {
       )
     }
 
-    const lastMessage = messages[messages.length - 1]
+    const validatedMessages: Array<{ role: "user" | "assistant"; content: string }> = []
 
-    if (
-      !lastMessage ||
-      lastMessage.role !== "user" ||
-      typeof lastMessage.content !== "string"
-    ) {
+    for (const msg of messages.slice(-9)) {
+      if (
+        typeof msg.role !== "string" ||
+        (msg.role !== "user" && msg.role !== "assistant")
+      ) {
+        continue
+      }
+
+      if (typeof msg.content !== "string") {
+        continue
+      }
+
+      const trimmedContent = msg.content.trim()
+      const maxLength = msg.role === "user" ? 500 : 4000
+
+      if (trimmedContent.length === 0 || trimmedContent.length > maxLength) {
+        continue
+      }
+
+      validatedMessages.push({
+        role: msg.role as "user" | "assistant",
+        content: trimmedContent,
+      })
+    }
+
+    if (validatedMessages.length === 0) {
       return new Response(
-        JSON.stringify({ error: "Última mensagem deve ser do usuário" }),
+        JSON.stringify({ error: "Nenhuma mensagem válida fornecida" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -132,11 +149,11 @@ export async function POST(request: Request) {
       )
     }
 
-    if (lastMessage.content.length > MAX_MESSAGE_LENGTH) {
+    const lastMessage = validatedMessages[validatedMessages.length - 1]
+
+    if (lastMessage.role !== "user") {
       return new Response(
-        JSON.stringify({
-          error: `Mensagem muito longa (máximo ${MAX_MESSAGE_LENGTH} caracteres)`,
-        }),
+        JSON.stringify({ error: "Última mensagem deve ser do usuário" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },

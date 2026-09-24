@@ -39,6 +39,8 @@ export function ChatInterface() {
     }
 
     const newMessages = [...messages, userMessage]
+    const messagesToSend = newMessages.slice(-9)
+    
     setMessages(newMessages)
     setInput("")
     setIsLoading(true)
@@ -52,12 +54,12 @@ export function ChatInterface() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messages: newMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-        }),
+              body: JSON.stringify({
+                messages: messagesToSend.map((m) => ({
+                  role: m.role,
+                  content: m.content,
+                })),
+              }),
         signal: abortControllerRef.current.signal,
       })
 
