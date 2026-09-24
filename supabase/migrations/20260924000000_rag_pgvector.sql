@@ -19,7 +19,7 @@ create table if not exists public.sefaria_chunks (
 );
 
 -- Index for vector similarity search using HNSW
--- Using 768 dimensions for gemini-embedding-001 with reduced output dimensionality
+-- Using 768 dimensions (constant defined in src/lib/rag/config.ts)
 create index if not exists sefaria_chunks_embedding_idx
   on public.sefaria_chunks
   using hnsw (embedding vector_cosine_ops)

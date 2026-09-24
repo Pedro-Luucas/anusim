@@ -39,8 +39,21 @@ export function stripHtml(text: string): string {
 }
 
 export function buildSefariaUrl(ref: string): string {
-  const normalized = ref.replace(/\s+/g, "_").replace(/:/g, ".")
-  return `https://www.sefaria.org/${normalized}`
+  const parts = ref.trim().split(/\s+/)
+  
+  if (parts.length < 2) {
+    return `https://www.sefaria.org/${ref.replace(/\s+/g, "_")}`
+  }
+  
+  const lastPart = parts[parts.length - 1]
+  
+  if (/^\d+/.test(lastPart)) {
+    const bookName = parts.slice(0, -1).join("_")
+    const citation = lastPart.replace(/:/g, ".")
+    return `https://www.sefaria.org/${bookName}.${citation}`
+  }
+  
+  return `https://www.sefaria.org/${ref.replace(/\s+/g, "_").replace(/:/g, ".")}`
 }
 
 export async function searchSefaria(
@@ -74,11 +87,21 @@ export async function searchSefaria(
   const data = await response.json()
   const hits = data.hits?.hits || []
 
-  return hits.map((hit: Record<string, unknown>) => ({
-    ref: hit._source?.ref || "",
-    heRef: hit._source?.heRef || "",
-    text: stripHtml((hit._source?.exact || hit._source?.naive_lemmatizer || "") as string),
-    lang: (hit._source?.lang || "en") as string,
+  type SefariaSearchHit = {
+    _source?: {
+      ref?: string
+      heRef?: string
+      exact?: string
+      naive_lemmatizer?: string
+      lang?: string
+    }
+  }
+
+  return hits.map((hit: SefariaSearchHit) => ({
+    ref: (hit._source?.ref || "") as string,
+    heRef: (hit._source?.heRef || "") as string,
+    text: stripHtml(((hit._source?.exact || hit._source?.naive_lemmatizer || "") as string)),
+    lang: ((hit._source?.lang || "en") as string),
   }))
 }
 

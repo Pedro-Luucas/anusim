@@ -71,7 +71,7 @@ async function ingestTitle(title: string): Promise<number> {
   console.log(`\n[${title}] Fetching segments...`)
 
   try {
-    const segments = await fetchAllSegments(title, "en")
+    const segments = await fetchAllSegments(title)
 
     console.log(
       `[${title}] Found ${segments.length} segments (before chunking)`

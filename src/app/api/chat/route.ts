@@ -1,8 +1,8 @@
 import { streamText } from "ai"
-import { google } from "@ai-sdk/google"
-import { openai } from "@ai-sdk/openai"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
+import { createOpenAI } from "@ai-sdk/openai"
 import { searchForQuery } from "@/lib/rag/search"
-import { chunksToCitations } from "@/lib/rag/citations"
+import { chunksToCitations, verifyCitations, extractRefsFromText } from "@/lib/rag/citations"
 
 const MAX_MESSAGE_LENGTH = 500
 const MAX_MESSAGES_PER_REQUEST = 10
@@ -34,13 +34,34 @@ function checkRateLimit(ip: string): boolean {
 }
 
 function getChatModel() {
-  const modelName = process.env.CHAT_MODEL || "gemini-2.0-flash-exp"
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY
+  const modelId = process.env.CHAT_MODEL || "google/gemini-2.5-flash-latest"
 
-  if (modelName.startsWith("gpt-")) {
-    return openai(modelName)
+  if (!gatewayKey) {
+    throw new Error(
+      "AI_GATEWAY_API_KEY is required. Set it in your environment variables."
+    )
   }
 
-  return google(modelName)
+  if (modelId.startsWith("google/")) {
+    const google = createGoogleGenerativeAI({
+      apiKey: gatewayKey,
+      baseURL: "https://gateway.ai.cloudflare.com/v1",
+    })
+    return google(modelId.replace("google/", ""))
+  }
+
+  if (modelId.startsWith("openai/")) {
+    const openai = createOpenAI({
+      apiKey: gatewayKey,
+      baseURL: "https://gateway.ai.cloudflare.com/v1",
+    })
+    return openai(modelId.replace("openai/", ""))
+  }
+
+  throw new Error(
+    `Unknown chat model provider for: ${modelId}. Use google/ or openai/ prefix.`
+  )
 }
 
 const SYSTEM_PROMPT = `Você é um assistente de estudos judaicos para a Sinagoga Anussim Brasil em Criciúma, Santa Catarina. Sua função é responder perguntas baseando-se EXCLUSIVAMENTE nos textos sagrados e fontes judaicas fornecidas.
@@ -130,6 +151,8 @@ export async function POST(request: Request) {
 
     const searchResult = await searchForQuery(lastMessage.content, {
       matchCount: 8,
+      useDatabase: true,
+      useFallback: true,
     })
 
     const citations = chunksToCitations(searchResult.chunks)
@@ -162,11 +185,54 @@ export async function POST(request: Request) {
       model,
       messages: enhancedMessages,
       temperature: 0.3,
+      onFinish: async ({ text }) => {
+        const generatedRefs = extractRefsFromText(text)
+        const { verified, hallucinated } = verifyCitations(
+          generatedRefs,
+          searchResult.chunks
+        )
+
+        if (hallucinated.length > 0) {
+          console.warn(
+            `[Chat] Warning: Model generated ${hallucinated.length} unverified citations:`,
+            hallucinated
+          )
+        }
+
+        console.log(
+          `[Chat] Citation verification: ${verified.length} verified, ${hallucinated.length} hallucinated`
+        )
+      },
     })
 
-    return result.toTextStreamResponse()
+    return result.toTextStreamResponse({
+      headers: {
+        "X-Citations": JSON.stringify(
+          citations.map((c) => ({
+            ref: c.ref,
+            url: c.url,
+            versionTitle: c.versionTitle,
+          }))
+        ),
+      },
+    })
   } catch (error) {
     console.error("[Chat API] Error:", error)
+
+    if (
+      error instanceof Error &&
+      error.message.includes("AI_GATEWAY_API_KEY")
+    ) {
+      return new Response(
+        JSON.stringify({
+          error: "Assistente não configurado. Configure as chaves de API.",
+        }),
+        {
+          status: 503,
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+    }
 
     return new Response(
       JSON.stringify({

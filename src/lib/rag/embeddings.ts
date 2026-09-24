@@ -1,6 +1,7 @@
-import { google } from "@ai-sdk/google"
-import { openai } from "@ai-sdk/openai"
-import { embed } from "ai"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
+import { createOpenAI } from "@ai-sdk/openai"
+import { embed, embedMany } from "ai"
+import { EMBEDDING_DIMENSIONS } from "./config"
 
 export type EmbedResult = {
   embedding: number[]
@@ -8,13 +9,36 @@ export type EmbedResult = {
 }
 
 function getEmbeddingModel() {
-  const modelName = process.env.EMBEDDING_MODEL || "gemini-embedding-001"
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY
+  const modelId = process.env.EMBEDDING_MODEL || "google/gemini-embedding-004"
 
-  if (modelName.startsWith("text-embedding")) {
-    return openai.embedding(modelName)
+  if (!gatewayKey) {
+    throw new Error(
+      "AI_GATEWAY_API_KEY is required. Set it in your environment variables."
+    )
   }
 
-  return google.textEmbeddingModel(modelName)
+  if (modelId.startsWith("google/")) {
+    const google = createGoogleGenerativeAI({
+      apiKey: gatewayKey,
+      baseURL: "https://gateway.ai.cloudflare.com/v1",
+    })
+    
+    return google.textEmbeddingModel(modelId.replace("google/", ""))
+  }
+
+  if (modelId.startsWith("openai/")) {
+    const openai = createOpenAI({
+      apiKey: gatewayKey,
+      baseURL: "https://gateway.ai.cloudflare.com/v1",
+    })
+    
+    return openai.embedding(modelId.replace("openai/", ""))
+  }
+
+  throw new Error(
+    `Unknown embedding model provider for: ${modelId}. Use google/ or openai/ prefix.`
+  )
 }
 
 export async function embedText(text: string): Promise<EmbedResult> {
@@ -25,6 +49,12 @@ export async function embedText(text: string): Promise<EmbedResult> {
     value: text,
   })
 
+  if (embedding.length !== EMBEDDING_DIMENSIONS) {
+    throw new Error(
+      `Embedding dimension mismatch: expected ${EMBEDDING_DIMENSIONS}, got ${embedding.length}`
+    )
+  }
+
   return {
     embedding,
     model: model.modelId,
@@ -34,12 +64,25 @@ export async function embedText(text: string): Promise<EmbedResult> {
 export async function embedBatch(
   texts: string[]
 ): Promise<Array<EmbedResult>> {
-  const results: Array<EmbedResult> = []
+  if (texts.length === 0) return []
 
-  for (const text of texts) {
-    const result = await embedText(text)
-    results.push(result)
-  }
+  const model = getEmbeddingModel()
 
-  return results
+  const { embeddings } = await embedMany({
+    model,
+    values: texts,
+  })
+
+  embeddings.forEach((embedding, idx) => {
+    if (embedding.length !== EMBEDDING_DIMENSIONS) {
+      throw new Error(
+        `Embedding dimension mismatch at index ${idx}: expected ${EMBEDDING_DIMENSIONS}, got ${embedding.length}`
+      )
+    }
+  })
+
+  return embeddings.map((embedding) => ({
+    embedding,
+    model: model.modelId,
+  }))
 }

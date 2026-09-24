@@ -1,3 +1,5 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
+import { generateText } from "ai"
 import { searchChunks } from "./db"
 import { searchSefaria, fetchSefariaText } from "./sefaria"
 import { embedText } from "./embeddings"
@@ -13,30 +15,72 @@ export type SearchResult = {
 export async function translateQueryToSearchTerms(
   portugueseQuery: string
 ): Promise<string> {
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY
+
+  if (!gatewayKey) {
+    return fallbackTranslation(portugueseQuery)
+  }
+
+  try {
+    const google = createGoogleGenerativeAI({
+      apiKey: gatewayKey,
+      baseURL: "https://gateway.ai.cloudflare.com/v1",
+    })
+
+    const model = google("gemini-2.5-flash-latest")
+
+    const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).
+
+Portuguese question: "${portugueseQuery}"
+
+Return ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).
+
+Example input: "O que é Shabat?"
+Example output: shabbat sabbath שבת rest holy day seventh
+
+Your translation:`
+
+    const { text } = await generateText({
+      model,
+      prompt,
+      temperature: 0.3,
+    })
+
+    return text.trim() || fallbackTranslation(portugueseQuery)
+  } catch (error) {
+    console.warn("[Search] Model translation failed, using fallback:", error)
+    return fallbackTranslation(portugueseQuery)
+  }
+}
+
+function fallbackTranslation(portugueseQuery: string): string {
   const commonTerms: Record<string, string> = {
-    "shabat": "shabbat sabbath",
-    "sábado": "shabbat sabbath",
-    "torá": "torah",
-    "torah": "torah",
-    "kashrut": "kashrut kosher",
-    "kosher": "kashrut kosher",
-    "tefilá": "tefillah prayer",
-    "oração": "tefillah prayer",
-    "talmud": "talmud gemara",
-    "mishná": "mishnah",
-    "mishnah": "mishnah",
-    "halacá": "halacha halakhah",
-    "halachá": "halacha halakhah",
-    "mitzvá": "mitzvah commandment",
-    "mandamento": "mitzvah commandment",
-    "pessach": "pesach passover",
-    "páscoa judaica": "pesach passover",
-    "rosh hashaná": "rosh hashanah new year",
-    "yom kipur": "yom kippur",
-    "sucot": "sukkot",
-    "chanucá": "chanukah hanukkah",
-    "purim": "purim",
-    "shavuot": "shavuot",
+    "shabat": "shabbat sabbath שבת",
+    "sábado": "shabbat sabbath שבת",
+    "torá": "torah תורה",
+    "torah": "torah תורה",
+    "kashrut": "kashrut kosher כשרות",
+    "kosher": "kashrut kosher כשרות",
+    "tefilá": "tefillah prayer תפילה",
+    "oração": "tefillah prayer תפילה",
+    "talmud": "talmud gemara תלמוד",
+    "mishná": "mishnah משנה",
+    "mishnah": "mishnah משנה",
+    "halacá": "halacha halakhah הלכה",
+    "halachá": "halacha halakhah הלכה",
+    "mitzvá": "mitzvah commandment מצוה",
+    "mandamento": "mitzvah commandment מצוה",
+    "pessach": "pesach passover פסח",
+    "páscoa judaica": "pesach passover פסח",
+    "rosh hashaná": "rosh hashanah new year ראש השנה",
+    "yom kipur": "yom kippur יום כיפור",
+    "sucot": "sukkot סוכות",
+    "chanucá": "chanukah hanukkah חנוכה",
+    "purim": "purim פורים",
+    "shavuot": "shavuot שבועות",
+    "teshuvá": "teshuvah repentance תשובה",
+    "tzedaká": "tzedakah charity צדקה",
+    "caridade": "tzedakah charity צדקה",
   }
 
   let translated = portugueseQuery.toLowerCase()
@@ -46,7 +90,7 @@ export async function translateQueryToSearchTerms(
     translated = translated.replace(regex, en)
   }
 
-  return translated
+  return translated || portugueseQuery
 }
 
 export async function searchForQuery(
@@ -85,6 +129,10 @@ export async function searchForQuery(
       }
     } catch (error) {
       console.error("[RAG] Database search failed:", error)
+      
+      if (error instanceof Error && error.message.includes("AI_GATEWAY_API_KEY")) {
+        console.log("[RAG] Gateway not configured, skipping database search")
+      }
     }
   }
 
