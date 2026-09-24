@@ -27,7 +27,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             {message.content}
           </p>
         ) : (
-          <div className="prose prose-sm max-w-none">
+          <div className="max-w-none">
             <FormattedResponse content={message.content} />
           </div>
         )}

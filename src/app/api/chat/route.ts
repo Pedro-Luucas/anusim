@@ -18,6 +18,12 @@ function checkRateLimit(ip: string): boolean {
   const now = Date.now()
   const record = rateLimitMap.get(ip)
 
+  for (const [key, value] of rateLimitMap.entries()) {
+    if (now > value.resetAt) {
+      rateLimitMap.delete(key)
+    }
+  }
+
   if (!record || now > record.resetAt) {
     rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW })
     return true
@@ -99,7 +105,19 @@ export async function POST(request: Request) {
       )
     }
 
-    const body = await request.json()
+    let body
+    try {
+      body = await request.json()
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "JSON inválido" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+    }
+
     const { messages } = body
 
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -129,7 +147,21 @@ export async function POST(request: Request) {
       const trimmedContent = msg.content.trim()
       const maxLength = msg.role === "user" ? 500 : 4000
 
-      if (trimmedContent.length === 0 || trimmedContent.length > maxLength) {
+      if (trimmedContent.length === 0) {
+        continue
+      }
+
+      if (msg.role === "user" && trimmedContent.length > 500) {
+        return new Response(
+          JSON.stringify({ error: "Mensagem muito longa (máximo 500 caracteres)" }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+      }
+
+      if (trimmedContent.length > maxLength) {
         continue
       }
 
@@ -189,6 +221,7 @@ ${contextText}`
       system: instructions,
       messages: validatedMessages,
       temperature: 0.3,
+      abortSignal: request.signal,
     })
 
     const stream = await createChatStream(

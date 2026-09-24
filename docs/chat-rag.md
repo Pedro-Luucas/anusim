@@ -216,9 +216,9 @@ Comportamento esperado:
 
 Adicione testes para:
 
-- `buildSefariaUrl()` — conversão de ref para URL
-- `verifyCitations()` — detecção de refs alucinadas
-- `translateQueryToSearchTerms()` — tradução PT→EN/HE
+- `buildSefariaUrl()` - conversão de ref para URL
+- `verifyCitations()` - detecção de refs alucinadas
+- `translateQueryToSearchTerms()` - tradução PT→EN/HE
 
 Exemplo com Vitest:
 

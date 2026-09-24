@@ -79,16 +79,17 @@ export async function createChatStream(
         controller.enqueue(encoder.encode(JSON.stringify(doneEvent) + "\n"))
         controller.close()
       } catch (error) {
+        console.error("[Stream] Error during streaming:", error)
         const errorEvent: StreamEvent = {
           type: "error",
-          message:
-            error instanceof Error
-              ? error.message
-              : "Erro ao processar sua pergunta.",
+          message: "Erro ao processar sua pergunta. Tente novamente.",
         }
         controller.enqueue(encoder.encode(JSON.stringify(errorEvent) + "\n"))
         controller.close()
       }
+    },
+    cancel() {
+      console.log("[Stream] Client cancelled the stream")
     },
   })
 }

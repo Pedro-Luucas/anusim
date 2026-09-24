@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { MessageList } from "./message-list"
 import { ChatInput } from "./chat-input"
 
@@ -27,6 +27,11 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -111,28 +116,41 @@ export function ChatInterface() {
           for (const line of lines) {
             if (!line.trim()) continue
 
+            let event
             try {
-              const event = JSON.parse(line)
+              event = JSON.parse(line)
+            } catch (err) {
+              console.error("[Chat] Failed to parse event:", line, err)
+              continue
+            }
 
-              if (event.type === "text") {
-                assistantMessage.content += event.delta
-                setMessages((prev) => {
-                  const updated = [...prev]
-                  updated[updated.length - 1] = { ...assistantMessage }
-                  return updated
-                })
-              } else if (event.type === "citations") {
-                assistantMessage.citations = event.items
-                setMessages((prev) => {
-                  const updated = [...prev]
-                  updated[updated.length - 1] = { ...assistantMessage }
-                  return updated
-                })
-              } else if (event.type === "error") {
+            if (event.type === "text") {
+              assistantMessage.content += event.delta
+              setMessages((prev) => {
+                const updated = [...prev]
+                updated[updated.length - 1] = { ...assistantMessage }
+                return updated
+              })
+            } else if (event.type === "citations") {
+              assistantMessage.citations = event.items
+              setMessages((prev) => {
+                const updated = [...prev]
+                updated[updated.length - 1] = { ...assistantMessage }
+                return updated
+              })
+            } else if (event.type === "error") {
+              throw new Error(event.message)
+            }
+          }
+
+          if (done && buffer.trim()) {
+            try {
+              const event = JSON.parse(buffer)
+              if (event.type === "error") {
                 throw new Error(event.message)
               }
             } catch (err) {
-              console.error("[Chat] Failed to parse event:", line, err)
+              console.error("[Chat] Failed to parse final buffer:", buffer, err)
             }
           }
         }
@@ -170,6 +188,7 @@ export function ChatInterface() {
       </div>
 
       <MessageList messages={messages} isLoading={isLoading} />
+      <div ref={messagesEndRef} />
 
       {error && (
         <div className="mx-4 mb-4 rounded-lg border border-wine-500/30 bg-wine-500/5 p-4">
