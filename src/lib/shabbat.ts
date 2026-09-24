@@ -49,26 +49,36 @@ export type ShabbatTimes = {
   parasha: ParashaOrHoliday | null
 }
 
-const DAY_NAMES_PT: Record<number, string> = {
-  0: "domingo",
-  1: "segunda",
-  2: "terça",
-  3: "quarta",
-  4: "quinta",
-  5: "sexta",
-  6: "sábado",
-}
-
 function formatBrazilianDate(isoDate: string): string {
   const date = new Date(isoDate)
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    timeZone: "America/Sao_Paulo",
+  })
+  const month = date.toLocaleDateString("pt-BR", {
+    month: "2-digit",
+    timeZone: "America/Sao_Paulo",
+  })
   return `${day}/${month}`
 }
 
 function getDayName(isoDate: string): string {
   const date = new Date(isoDate)
-  return DAY_NAMES_PT[date.getDay()] || ""
+  const formatter = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    timeZone: "America/Sao_Paulo",
+  })
+  const weekdayFull = formatter.format(date)
+  const shortMap: Record<string, string> = {
+    "domingo": "domingo",
+    "segunda-feira": "segunda",
+    "terça-feira": "terça",
+    "quarta-feira": "quarta",
+    "quinta-feira": "quinta",
+    "sexta-feira": "sexta",
+    "sábado": "sábado",
+  }
+  return shortMap[weekdayFull] || weekdayFull
 }
 
 export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
@@ -96,13 +106,20 @@ export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
     )
 
     const candleLighting: CandleLightingEvent[] = candleLightingItems.map(
-      (item) => ({
-        date: item.date,
-        time: extractTime(item.date),
-        dayName: getDayName(item.date),
-        dateFormatted: formatBrazilianDate(item.date),
-        occasion: item.memo,
-      })
+      (item, index) => {
+        const isSaturdayEvening = getDayName(item.date) === "sábado" && index > 0
+        let occasion = item.memo
+        if (isSaturdayEvening && occasion) {
+          occasion = `${occasion}, após o anoitecer`
+        }
+        return {
+          date: item.date,
+          time: extractTime(item.date),
+          dayName: getDayName(item.date),
+          dateFormatted: formatBrazilianDate(item.date),
+          occasion,
+        }
+      }
     )
 
     const havdalah: HavdalahEvent | null = havdalahItem
@@ -158,5 +175,6 @@ function extractTime(isoTimestamp: string): string {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
+    timeZone: "America/Sao_Paulo",
   })
 }

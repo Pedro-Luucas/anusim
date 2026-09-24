@@ -49,7 +49,7 @@ export async function ShabbatSection() {
                     {candle.dayName}, {candle.dateFormatted}
                   </p>
                   {candle.occasion && (
-                    <p className="text-xs text-gold-700 mt-0.5">{candle.occasion}</p>
+                    <p className="text-xs text-gold-700 mt-0.5 font-hebrew" dir="rtl">{candle.occasion}</p>
                   )}
                   <p className="mt-1 font-mono text-3xl font-bold text-gold-600 tabular-nums">
                     {candle.time}
