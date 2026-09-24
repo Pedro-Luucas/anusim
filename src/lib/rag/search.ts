@@ -119,13 +119,16 @@ export async function searchForQuery(
     try {
       const keywords = translatedQuery.split(/\s+/).filter((k) => k.length > 2)
       
-      const primaryQuery = keywords.slice(0, 3).join(" ")
-      const hebrewTerms = keywords.filter((k) => /[\u0590-\u05FF]/.test(k)).slice(0, 2).join(" ")
+      const englishTerms = keywords.filter((k) => !/[\u0590-\u05FF]/.test(k))
+      const hebrewTerms = keywords.filter((k) => /[\u0590-\u05FF]/.test(k))
+      
+      const primaryEnglish = englishTerms.slice(0, 1).join(" ")
+      const primaryHebrew = hebrewTerms.slice(0, 1).join(" ")
       
       const queries = [
-        primaryQuery,
-        hebrewTerms && hebrewTerms !== primaryQuery ? hebrewTerms : null,
-      ].filter(Boolean) as string[]
+        primaryEnglish,
+        primaryHebrew,
+      ].filter(Boolean)
 
       const allResults = await Promise.all(
         queries.map((q) => searchSefaria(q, { limit: Math.ceil(matchCount / queries.length) }))
@@ -146,18 +149,26 @@ export async function searchForQuery(
             (v) => v.language === "en" && isLicenseAllowed(v.license)
           )
 
+          const heVersion = textData.versions.find(
+            (v) => v.language === "he" && isLicenseAllowed(v.license)
+          )
+
           if (enVersion) {
+            const enText = Array.isArray(enVersion.text) ? enVersion.text.join(" ") : enVersion.text
+            const heText = heVersion && (Array.isArray(heVersion.text) ? heVersion.text.join(" ") : heVersion.text)
+
             chunks.push({
               id: 0,
               ref: textData.ref,
               he_ref: textData.heRef,
               book: textData.ref.split(" ")[0],
               category: textData.categories?.[0] || null,
-              language: result.lang,
+              language: "en",
               version_title: enVersion.versionTitle,
               license: enVersion.license || null,
               sefaria_url: `https://www.sefaria.org/${textData.ref.replace(/\s+/g, "_").replace(/:/g, ".")}`,
-              text_content: result.text,
+              text_content: typeof enText === 'string' ? enText : String(enText),
+              he_text: heText && typeof heText === 'string' ? heText : (heText ? String(heText) : null),
             })
           }
         }

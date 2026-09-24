@@ -80,6 +80,8 @@ export async function searchSefaria(
     query,
     size: limit,
     type: "text",
+    field: "naive_lemmatizer",
+    source_proj: true,
     filters: filters.length > 0 ? filters : undefined,
   }
 
