@@ -167,7 +167,7 @@ export async function POST(request: Request) {
       useFallback: true,
     })
 
-    const context =
+    const contextText =
       searchResult.chunks.length > 0
         ? searchResult.chunks
             .map(
@@ -177,22 +177,17 @@ export async function POST(request: Request) {
             .join("\n\n")
         : "Nenhuma fonte encontrada. Informe o usuário que não há informação suficiente."
 
-    const enhancedMessages = [
-      {
-        role: "system" as const,
-        content: SYSTEM_PROMPT,
-      },
-      {
-        role: "system" as const,
-        content: `CONTEXTO (fontes judaicas relevantes para a pergunta):\n\n${context}`,
-      },
-      ...validatedMessages.slice(0, -1),
-    ]
+    const instructions = `${SYSTEM_PROMPT}
+
+CONTEXTO (fontes judaicas relevantes para a pergunta):
+
+${contextText}`
 
     const modelId = getChatModelId()
     const result = await streamText({
       model: modelId,
-      messages: enhancedMessages,
+      system: instructions,
+      messages: validatedMessages,
       temperature: 0.3,
     })
 
