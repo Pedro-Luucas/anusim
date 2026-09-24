@@ -17,7 +17,7 @@ export async function translateQueryToSearchTerms(
   try {
     const modelId = process.env.CHAT_MODEL || "google/gemini-3.5-flash"
 
-    const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).n\nPortuguese question: "${portugueseQuery}"\n\nReturn ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).\n\nExample input: "O que é Shabat?"\nExample output: shabbat sabbath שבת rest holy day seventh\n\nYour translation:`
+    const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).\n\nPortuguese question: "${portugueseQuery}"\n\nReturn ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).\n\nExample input: "O que é Shabat?"\nExample output: shabbat sabbath שבת rest holy day seventh\n\nYour translation:`
 
     const { text } = await generateText({
       model: modelId,
@@ -117,13 +117,28 @@ export async function searchForQuery(
 
   if (useFallback) {
     try {
-      const results = await searchSefaria(translatedQuery, {
-        limit: matchCount,
-      })
+      const keywords = translatedQuery.split(/\s+/).filter((k) => k.length > 2)
+      
+      const primaryQuery = keywords.slice(0, 3).join(" ")
+      const hebrewTerms = keywords.filter((k) => /[\u0590-\u05FF]/.test(k)).slice(0, 2).join(" ")
+      
+      const queries = [
+        primaryQuery,
+        hebrewTerms && hebrewTerms !== primaryQuery ? hebrewTerms : null,
+      ].filter(Boolean) as string[]
+
+      const allResults = await Promise.all(
+        queries.map((q) => searchSefaria(q, { limit: Math.ceil(matchCount / queries.length) }))
+      )
+
+      const flatResults = allResults.flat()
+      const uniqueResults = Array.from(
+        new Map(flatResults.map((r) => [r.ref, r])).values()
+      )
 
       const chunks: SefariaChunk[] = []
 
-      for (const result of results.slice(0, matchCount)) {
+      for (const result of uniqueResults.slice(0, matchCount)) {
         const textData = await fetchSefariaText(result.ref)
 
         if (textData && textData.versions && textData.versions.length > 0) {
