@@ -130,8 +130,13 @@ export async function fetchSefariaText(
 
   const params = new URLSearchParams({
     context: context.toString(),
-    version: 'english',
   })
+  
+  if (ref.startsWith('Rashi on ')) {
+    params.append('version', 'english|Pentateuch with Rashi\'s commentary by M. Rosenbaum and A.M. Silbermann, 1929-1934')
+  } else {
+    params.append('version', 'english')
+  }
   params.append('version', 'hebrew')
 
   const url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(ref)}?${params}`
@@ -245,7 +250,13 @@ export async function fetchAllSegments(
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
     
     try {
-      const url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(sectionRef)}?version=english&version=hebrew`
+      let url: string
+      if (title.startsWith("Rashi on")) {
+        const versionParam = encodeURIComponent("Pentateuch with Rashi's commentary by M. Rosenbaum and A.M. Silbermann, 1929-1934")
+        url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(sectionRef)}?version=english|${versionParam}&version=hebrew`
+      } else {
+        url = `https://www.sefaria.org/api/v3/texts/${encodeURIComponent(sectionRef)}?version=english&version=hebrew`
+      }
       
       const response = await fetch(url, { signal: controller.signal })
       clearTimeout(timeoutId)
@@ -267,10 +278,17 @@ export async function fetchAllSegments(
       }
 
       let enVersion: { language: string; license: string; versionTitle: string; text: unknown }
+      
       if (title.startsWith("Rashi on")) {
-        enVersion = enVersions.find((v: { versionTitle: string }) => 
-          v.versionTitle.includes("Rosenbaum") || v.versionTitle.includes("Silbermann")
-        ) || enVersions[0]
+        enVersion = enVersions[0]
+        
+        const hasText = Array.isArray(enVersion.text) 
+          ? JSON.stringify(enVersion.text).length > 100
+          : String(enVersion.text || "").length > 10
+          
+        if (!hasText && enVersions.length > 1) {
+          enVersion = enVersions[1]
+        }
       } else {
         enVersion = enVersions.reduce((best: { text: unknown }, v: { text: unknown }) => {
           const vTextCount = Array.isArray(v.text) 
