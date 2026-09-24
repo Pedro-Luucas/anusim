@@ -273,7 +273,7 @@ export async function fetchAllSegments(
           ? [heVersion.text] 
           : []
 
-      enTexts.forEach((enText: string | any, idx: number) => {
+      enTexts.forEach((enText: unknown, idx: number) => {
         if (typeof enText !== 'string' || !enText || stripHtml(enText).trim().length === 0) return
 
         const segmentRef = enTexts.length > 1 ? `${sectionRef}:${idx + 1}` : sectionRef

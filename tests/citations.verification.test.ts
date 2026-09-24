@@ -18,8 +18,8 @@ describe("Citation Verification Filtering", () => {
     },
     {
       id: 2,
-      ref: "Talmud Berakhot 2a",
-      he_ref: "תלמוד ברכות ב׳ א",
+      ref: "Berakhot 2a",
+      he_ref: "ברכות ב׳ א",
       book: "Berakhot",
       category: "Talmud",
       language: "en",
@@ -49,7 +49,7 @@ describe("Citation Verification Filtering", () => {
 
     expect(verified).toHaveLength(2)
     expect(verified).toContain("Genesis 1:1")
-    expect(verified).toContain("Talmud Berakhot 2a")
+    expect(verified).toContain("Berakhot 2a")
 
     expect(hallucinated.length).toBeGreaterThanOrEqual(1)
   })
@@ -103,5 +103,150 @@ describe("Citation Verification Filtering", () => {
 
     expect(verified).toHaveLength(0)
     expect(hallucinated.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it("should match section-level Talmud citation to segment chunks", () => {
+    const talmudChunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Berakhot 2a:1",
+        he_ref: "ברכות ב׳ א:א",
+        book: "Berakhot",
+        category: "Talmud",
+        language: "en",
+        version_title: "William Davidson",
+        license: "CC-BY-NC",
+        sefaria_url: "https://www.sefaria.org/Berakhot.2a.1",
+        text_content: "From what time...",
+      },
+    ]
+
+    const fullText = "According to Berakhot 2a"
+
+    const { verified, hallucinated } = verifyCitations(fullText, talmudChunks)
+
+    expect(verified).toHaveLength(1)
+    expect(verified).toContain("Berakhot 2a:1")
+    expect(hallucinated).toHaveLength(0)
+  })
+
+  it("should strip Talmud prefix and match", () => {
+    const talmudChunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Berakhot 2a:1",
+        he_ref: "ברכות ב׳ א:א",
+        book: "Berakhot",
+        category: "Talmud",
+        language: "en",
+        version_title: "William Davidson",
+        license: "CC-BY-NC",
+        sefaria_url: "https://www.sefaria.org/Berakhot.2a.1",
+        text_content: "From what time...",
+      },
+    ]
+
+    const fullText = "According to Talmud Berakhot 2a:1"
+
+    const { verified, hallucinated } = verifyCitations(fullText, talmudChunks)
+
+    expect(verified).toHaveLength(1)
+    expect(hallucinated).toHaveLength(0)
+  })
+
+  it("should map Shulchan Aruch to Arukh", () => {
+    const saChunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Shulchan Arukh, Orach Chayim 1:1",
+        he_ref: "שולחן ערוך, אורח חיים א:א",
+        book: "Shulchan Arukh",
+        category: "Halakhah",
+        language: "en",
+        version_title: "Sefaria Community Translation",
+        license: "CC-BY",
+        sefaria_url: "https://www.sefaria.org/Shulchan_Arukh,_Orach_Chayim.1.1",
+        text_content: "One should strengthen himself...",
+      },
+    ]
+
+    const fullText = "According to Shulchan Aruch, Orach Chayim 1:1"
+
+    const { verified, hallucinated } = verifyCitations(fullText, saChunks)
+
+    expect(verified).toHaveLength(1)
+    expect(hallucinated).toHaveLength(0)
+  })
+
+  it("should NOT match Genesis 1:12 to Genesis 1:1 chunk", () => {
+    const chunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Genesis 1:1",
+        he_ref: "בראשית א:א",
+        book: "Genesis",
+        category: "Tanakh",
+        language: "en",
+        version_title: "JPS",
+        license: "CC-BY",
+        sefaria_url: "https://www.sefaria.org/Genesis.1.1",
+        text_content: "In the beginning...",
+      },
+    ]
+
+    const fullText = "According to Genesis 1:12"
+
+    const { verified, hallucinated } = verifyCitations(fullText, chunks)
+
+    expect(verified).toHaveLength(0)
+    expect(hallucinated).toContain("Genesis 1:12")
+  })
+
+  it("should NOT match Mishnah Berakhot to Talmud Berakhot", () => {
+    const talmudChunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Berakhot 2a:1",
+        he_ref: "ברכות ב׳ א:א",
+        book: "Berakhot",
+        category: "Talmud",
+        language: "en",
+        version_title: "William Davidson",
+        license: "CC-BY-NC",
+        sefaria_url: "https://www.sefaria.org/Berakhot.2a.1",
+        text_content: "From what time...",
+      },
+    ]
+
+    const fullText = "According to Mishnah Berakhot 1:1"
+
+    const { verified, hallucinated } = verifyCitations(fullText, talmudChunks)
+
+    expect(verified).toHaveLength(0)
+    expect(hallucinated).toContain("Mishnah Berakhot 1:1")
+  })
+
+  it("should match section-level Genesis citation to segment chunk", () => {
+    const chunks: SefariaChunk[] = [
+      {
+        id: 1,
+        ref: "Genesis 1:1",
+        he_ref: "בראשית א:א",
+        book: "Genesis",
+        category: "Tanakh",
+        language: "en",
+        version_title: "JPS",
+        license: "CC-BY",
+        sefaria_url: "https://www.sefaria.org/Genesis.1.1",
+        text_content: "In the beginning...",
+      },
+    ]
+
+    const fullText = "According to Genesis 1"
+
+    const { verified, hallucinated } = verifyCitations(fullText, chunks)
+
+    expect(verified).toHaveLength(1)
+    expect(hallucinated).toHaveLength(0)
   })
 })

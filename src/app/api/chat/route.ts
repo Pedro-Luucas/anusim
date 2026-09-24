@@ -2,9 +2,6 @@ import { streamText } from "ai"
 import { searchForQuery } from "@/lib/rag/search"
 import { createChatStream } from "@/lib/rag/stream"
 
-const MAX_MESSAGE_LENGTH = 500
-const MAX_MESSAGES_PER_REQUEST = 10
-
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT = 10
 const RATE_LIMIT_WINDOW = 60 * 1000
@@ -56,7 +53,7 @@ REGRAS IMPORTANTES:
 1. Responda APENAS com base nas passagens fornecidas no contexto. NUNCA invente citações ou fontes.
 
 2. Toda afirmação deve ser fundamentada em pelo menos uma fonte. Cite SEMPRE usando a referência canônica EXATA do Sefaria (em inglês), seguida opcionalmente pelo nome em português entre parênteses.
-   Exemplos corretos: "Genesis 1:1 (Gênesis 1:1)", "Berakhot 2a", "Mishnah Berakhot 1:1", "Shulchan Aruch, Orach Chayim 1:1"
+   Exemplos corretos: "Genesis 1:1 (Gênesis 1:1)", "Berakhot 2a:1", "Mishnah Berakhot 1:1", "Shulchan Arukh, Orach Chayim 1:1"
    Nunca escreva apenas "Berakhot 1:1" se a fonte for "Mishnah Berakhot 1:1", nem "Aruch" para "Arukh".
 
 3. Quando múltiplas fontes relevantes existirem, priorize autoridades sefarditas: Shulchan Arukh (Rav Yosef Karo), Rambam (Maimônides), Kaf HaChaim, Ben Ish Chai, Rif, além da Torá, Talmud, Mishná e comentaristas clássicos como Rashi.
@@ -68,7 +65,7 @@ REGRAS IMPORTANTES:
 6. Seja acolhedor e compreensivo. Muitos leitores estão descobrindo suas raízes Bnei Anusim (cripto-judaicas).
 
 7. Formato das citações:
-   - Nome da fonte com referência canônica do Sefaria exata (ex: "Genesis 1:1", "Talmud Berakhot 2a", "Shulchan Arukh, Orach Chayim 1:1")
+   - Nome da fonte com referência canônica do Sefaria exata (ex: "Genesis 1:1", "Berakhot 2a:1", "Shulchan Arukh, Orach Chayim 1:1")
    - Trecho relevante em hebraico/aramaico (se fornecido)
    - Tradução do trecho
    - Breve explicação de como se aplica à pergunta

@@ -14,7 +14,9 @@ export type Citation = {
 
 function refMatches(textRef: string, chunkRef: string): boolean {
   const translatedTextRef = translatePortugueseBookName(textRef)
-  const textNorm = normalizeRef(translatedTextRef)
+  const textRefClean = translatedTextRef.replace(/Shulchan Aruch/gi, 'Shulchan Arukh')
+  
+  const textNorm = normalizeRef(textRefClean)
   const chunkNorm = normalizeRef(chunkRef)
   
   if (textNorm === chunkNorm) {
@@ -24,19 +26,23 @@ function refMatches(textRef: string, chunkRef: string): boolean {
   const textParts = textNorm.split(".")
   const chunkParts = chunkNorm.split(".")
   
-  if (textParts.length < chunkParts.length) {
-    return false
-  }
+  const minLen = Math.min(textParts.length, chunkParts.length)
   
-  for (let i = 0; i < chunkParts.length; i++) {
+  for (let i = 0; i < minLen; i++) {
     if (textParts[i] !== chunkParts[i]) {
       return false
     }
   }
   
-  const lastChunkPart = chunkParts[chunkParts.length - 1]
-  if (/^\d+[ab]$/.test(lastChunkPart)) {
+  if (textParts.length < chunkParts.length) {
     return true
+  }
+  
+  if (textParts.length > chunkParts.length) {
+    const lastChunkPart = chunkParts[chunkParts.length - 1]
+    if (/^\d+[ab]$/.test(lastChunkPart)) {
+      return true
+    }
   }
   
   return textParts.length === chunkParts.length
@@ -56,8 +62,6 @@ export function verifyCitations(
   const extractedRefs = extractRefsFromText(fullText)
 
   for (const chunk of retrievedChunks) {
-    let foundMatch = false
-    
     for (const extractedRef of extractedRefs) {
       if (refMatches(extractedRef, chunk.ref)) {
         const chunkNorm = normalizeRef(chunk.ref)
@@ -65,7 +69,6 @@ export function verifyCitations(
           citedRefs.add(chunkNorm)
           verified.push(chunk.ref)
         }
-        foundMatch = true
         break
       }
     }
@@ -151,7 +154,14 @@ export function extractRefsFromText(text: string): string[] {
   const refPattern = /(?:^|\s)(?:Talmud\s+)?(?:Mishnah\s+)?(?:Rashi\s+on\s+)?(?:Gênesis|Êxodo|Levítico|Números|Deuteronômio|Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Bereshit|Shemot|Vayikra|Bamidbar|Devarim|Berakhot|Shabbat|Pesachim|Rosh Hashanah|Yoma|Sukkah|Taanit|Megillah|Moed Katan|Chagigah|Yevamot|Ketubot|Nedarim|Nazir|Sotah|Gittin|Kiddushin|Bava Kamma|Bava Metzia|Bava Batra|Sanhedrin|Makkot|Shevuot|Avodah Zarah|Horayot|Zevachim|Menachot|Hullin|Bekhorot|Arakhin|Temurah|Keritot|Meilah|Tamid|Middot|Kinnim|Niddah|Avot|Pirkei Avot|Psalms|Proverbs|Isaiah|Mishneh Torah(?:,\s+[A-Za-z\s]+)?|Shulchan Arukh(?:,\s+[A-Za-z\s]+)?|Shulchan Aruch(?:,\s+[A-Za-z\s]+)?|Kaf HaChaim|Ben Ish Chai|Bereshit Rabbah|Shemot Rabbah|Vayikra Rabbah|Bamidbar Rabbah|Devarim Rabbah)\s+\d+(?:[:\-.]\d+)?[ab]?(?:[:\-.]\d+[ab]?)?/gi
 
   const matches = text.match(refPattern)
-  return matches ? Array.from(new Set(matches.map(m => m.trim()))) : []
+  if (!matches) return []
+  
+  return Array.from(new Set(matches.map(m => {
+    let cleaned = m.trim()
+    cleaned = cleaned.replace(/^Talmud\s+/i, '')
+    cleaned = cleaned.replace(/Shulchan Aruch/gi, 'Shulchan Arukh')
+    return cleaned
+  })))
 }
 
 export function formatCitationForDisplay(citation: Citation): string {

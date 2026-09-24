@@ -1,5 +1,5 @@
 import type { SefariaChunk } from "./db"
-import { extractRefsFromText, verifyCitations, chunksToCitations } from "./citations"
+import { verifyCitations, chunksToCitations } from "./citations"
 import { sanitizeDashes } from "./sanitize"
 
 export type StreamEvent =
