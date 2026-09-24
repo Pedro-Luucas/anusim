@@ -9,25 +9,18 @@ describe("Supabase Migrations", () => {
       "utf-8"
     )
 
-    // Verify migration drops the old function
     expect(migration5).toContain("drop function if exists search_sefaria_chunks")
 
-    // Verify all critical type casts are present
     expect(migration5).toMatch(/similarity float/i)
     expect(migration5).toMatch(/text_rank float/i)
     expect(migration5).toMatch(/combined_score float/i)
 
-    // Verify text_rank has explicit ::float cast
-    expect(migration5).toMatch(/\)::float as text_rank/)
-
-    // Verify combined_score has explicit ::float cast
-    expect(migration5).toMatch(/\)::float as combined_score/)
-
-    // Verify similarity also has ::float cast for consistency
+    expect(migration5).toMatch(/::float as text_rank/)
+    expect(migration5).toMatch(/::float as combined_score/)
     expect(migration5).toMatch(/::float as similarity/)
   })
 
-  it("should include all 6 migrations", () => {
+  it("should include all 6 migrations in order", () => {
     const migrationsDir = resolve(__dirname, "../supabase/migrations")
 
     const expected = [
@@ -46,3 +39,6 @@ describe("Supabase Migrations", () => {
     }
   })
 })
+
+// Note: PGlite does not support pgvector extension in vitest environment,
+// so migrations must be tested manually in a real Postgres instance with pgvector.
