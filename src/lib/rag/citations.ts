@@ -12,6 +12,36 @@ export type Citation = {
   heText?: string
 }
 
+function refMatches(textRef: string, chunkRef: string): boolean {
+  const translatedTextRef = translatePortugueseBookName(textRef)
+  const textNorm = normalizeRef(translatedTextRef)
+  const chunkNorm = normalizeRef(chunkRef)
+  
+  if (textNorm === chunkNorm) {
+    return true
+  }
+  
+  const textParts = textNorm.split(".")
+  const chunkParts = chunkNorm.split(".")
+  
+  if (textParts.length < chunkParts.length) {
+    return false
+  }
+  
+  for (let i = 0; i < chunkParts.length; i++) {
+    if (textParts[i] !== chunkParts[i]) {
+      return false
+    }
+  }
+  
+  const lastChunkPart = chunkParts[chunkParts.length - 1]
+  if (/^\d+[ab]$/.test(lastChunkPart)) {
+    return true
+  }
+  
+  return textParts.length === chunkParts.length
+}
+
 export function verifyCitations(
   fullText: string,
   retrievedChunks: SefariaChunk[]
@@ -19,45 +49,40 @@ export function verifyCitations(
   verified: string[]
   hallucinated: string[]
 } {
-  const normalizedText = fullText.toLowerCase()
   const verified: string[] = []
   const hallucinated: string[] = []
-
   const citedRefs = new Set<string>()
 
-  for (const chunk of retrievedChunks) {
-    const chunkNormalized = normalizeRef(chunk.ref)
-    
-    const refParts = chunk.ref.split(/\s+/)
-    const bookPart = refParts.slice(0, -1).join(" ").toLowerCase()
-    const citationPart = refParts[refParts.length - 1]
-    
-    const refPatterns = [
-      chunk.ref.toLowerCase(),
-      chunkNormalized,
-      `${bookPart} ${citationPart}`,
-      `${bookPart}${citationPart}`,
-    ]
+  const extractedRefs = extractRefsFromText(fullText)
 
-    const chunkSegment = citationPart.split(":")[0]
-    const refPrefix = bookPart + " " + chunkSegment
+  for (const chunk of retrievedChunks) {
+    let foundMatch = false
     
-    if (refPatterns.some((pattern) => {
-      const regex = new RegExp(`(?:^|\\s)${pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$|[,.:;!?])`, 'i')
-      return regex.test(normalizedText)
-    }) || normalizedText.includes(refPrefix)) {
-      if (!citedRefs.has(chunkNormalized)) {
-        citedRefs.add(chunkNormalized)
-        verified.push(chunk.ref)
+    for (const extractedRef of extractedRefs) {
+      if (refMatches(extractedRef, chunk.ref)) {
+        const chunkNorm = normalizeRef(chunk.ref)
+        if (!citedRefs.has(chunkNorm)) {
+          citedRefs.add(chunkNorm)
+          verified.push(chunk.ref)
+        }
+        foundMatch = true
+        break
       }
     }
   }
 
-  const extractedRefs = extractRefsFromText(fullText)
-  for (const ref of extractedRefs) {
-    const normalized = normalizeRef(ref)
-    if (!citedRefs.has(normalized)) {
-      hallucinated.push(ref)
+  for (const extractedRef of extractedRefs) {
+    let found = false
+    
+    for (const chunk of retrievedChunks) {
+      if (refMatches(extractedRef, chunk.ref)) {
+        found = true
+        break
+      }
+    }
+    
+    if (!found) {
+      hallucinated.push(extractedRef)
     }
   }
 
@@ -75,23 +100,37 @@ const PORTUGUESE_BOOK_NAMES: Record<string, string> = {
   "numeros": "Numbers",
   "deuteronômio": "Deuteronomy",
   "deuteronomio": "Deuteronomy",
+  "salmos": "Psalms",
+  "provérbios": "Proverbs",
+  "proverbios": "Proverbs",
+  "isaías": "Isaiah",
+  "isaias": "Isaiah",
 }
 
 function normalizeRef(ref: string): string {
   let normalized = ref
     .replace(/\s+/g, " ")
-    .replace(/[:\-–—]/g, ".")
+    .replace(/[:\-–]/g, ".")
     .toLowerCase()
     .trim()
 
   for (const [pt, en] of Object.entries(PORTUGUESE_BOOK_NAMES)) {
-    if (normalized.startsWith(pt + " ")) {
-      normalized = normalized.replace(pt, en.toLowerCase())
-      break
-    }
+    const ptLower = pt.toLowerCase()
+    const enLower = en.toLowerCase()
+    const regex = new RegExp(`(^|\\s)(${ptLower})\\b`, "gi")
+    normalized = normalized.replace(regex, `$1${enLower}`)
   }
 
-  return normalized
+  return normalized.trim()
+}
+
+function translatePortugueseBookName(text: string): string {
+  let result = text
+  for (const [pt, en] of Object.entries(PORTUGUESE_BOOK_NAMES)) {
+    const regex = new RegExp(`(^|\\s)(${pt})\\b`, "gi")
+    result = result.replace(regex, `$1${en}`)
+  }
+  return result
 }
 
 export function chunksToCitations(chunks: SefariaChunk[]): Citation[] {
@@ -109,10 +148,10 @@ export function chunksToCitations(chunks: SefariaChunk[]): Citation[] {
 }
 
 export function extractRefsFromText(text: string): string[] {
-  const refPattern = /(?:Gênesis|Êxodo|Levítico|Números|Deuteronômio|Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Bereshit|Shemot|Vayikra|Bamidbar|Devarim|Berakhot|Shabbat|Pesachim|Rosh Hashanah|Yoma|Sukkah|Taanit|Megillah|Moed Katan|Chagigah|Yevamot|Ketubot|Nedarim|Nazir|Sotah|Gittin|Kiddushin|Bava Kamma|Bava Metzia|Bava Batra|Sanhedrin|Makkot|Shevuot|Avodah Zarah|Horayot|Zevachim|Menachot|Hullin|Bekhorot|Arakhin|Temurah|Keritot|Meilah|Tamid|Middot|Kinnim|Niddah|Avot|Pirkei Avot|Rashi on [A-Za-z]+|Mishneh Torah(?:,\s+[A-Za-z\s]+)?|Shulchan Arukh(?:,\s+[A-Za-z\s]+)?|Kaf HaChaim|Ben Ish Chai|Bereshit Rabbah|Shemot Rabbah|Vayikra Rabbah|Bamidbar Rabbah|Devarim Rabbah)\s+\d+(?:[:.]\d+)?[ab]?(?:[:.]\d+[ab]?)?/gi
+  const refPattern = /(?:^|\s)(?:Talmud\s+)?(?:Mishnah\s+)?(?:Rashi\s+on\s+)?(?:Gênesis|Êxodo|Levítico|Números|Deuteronômio|Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Bereshit|Shemot|Vayikra|Bamidbar|Devarim|Berakhot|Shabbat|Pesachim|Rosh Hashanah|Yoma|Sukkah|Taanit|Megillah|Moed Katan|Chagigah|Yevamot|Ketubot|Nedarim|Nazir|Sotah|Gittin|Kiddushin|Bava Kamma|Bava Metzia|Bava Batra|Sanhedrin|Makkot|Shevuot|Avodah Zarah|Horayot|Zevachim|Menachot|Hullin|Bekhorot|Arakhin|Temurah|Keritot|Meilah|Tamid|Middot|Kinnim|Niddah|Avot|Pirkei Avot|Psalms|Proverbs|Isaiah|Mishneh Torah(?:,\s+[A-Za-z\s]+)?|Shulchan Arukh(?:,\s+[A-Za-z\s]+)?|Shulchan Aruch(?:,\s+[A-Za-z\s]+)?|Kaf HaChaim|Ben Ish Chai|Bereshit Rabbah|Shemot Rabbah|Vayikra Rabbah|Bamidbar Rabbah|Devarim Rabbah)\s+\d+(?:[:\-.]\d+)?[ab]?(?:[:\-.]\d+[ab]?)?/gi
 
   const matches = text.match(refPattern)
-  return matches ? Array.from(new Set(matches)) : []
+  return matches ? Array.from(new Set(matches.map(m => m.trim()))) : []
 }
 
 export function formatCitationForDisplay(citation: Citation): string {
