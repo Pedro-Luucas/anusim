@@ -133,7 +133,7 @@ export default function AgendaPage() {
           <div className="mt-8 text-center">
             <p className="text-sm text-ink-500">
               <strong className="text-ink-700">Endereço:</strong> R. Joaquim
-              Nabuco, 140 — Centro, Criciúma, SC, 88802-200
+              Nabuco, 140, Centro, Criciúma, SC, 88802-200
             </p>
             <p className="mt-2 text-sm text-ink-500">
               Transmissões ao vivo disponíveis no{" "}

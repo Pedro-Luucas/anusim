@@ -1,12 +1,8 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Pontos de Fé",
-  description:
-    "Os três pilares fundamentais da comunidade Anussim Brasil: Shabat, Torá e Kehilá (comunidade). Conheça o que nos define como judeus Bnei Anusim.",
   openGraph: {
-    title: "Pontos de Fé — Anussim Brasil Criciúma",
-    description: "Shabat, Torá e Comunidade — os três pilares que não negociamos",
+    url: "/pontos-de-fe",
     type: "website",
     images: [
       {
@@ -16,6 +12,9 @@ export const metadata: Metadata = {
         alt: "Anussim Brasil Criciúma",
       },
     ],
+  },
+  alternates: {
+    canonical: "/pontos-de-fe",
   },
 }
 

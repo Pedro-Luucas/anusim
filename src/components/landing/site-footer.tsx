@@ -27,7 +27,7 @@ export function SiteFooter() {
               </div>
             </div>
             <p className="mt-6 max-w-md font-display text-lg italic leading-relaxed text-ink-700">
-              &ldquo;A casa dos Bnei Anusim no Sul do Brasil — onde a chama que
+              &ldquo;A casa dos Bnei Anusim no Sul do Brasil: onde a chama que
               sobreviveu em silêncio voltou a queimar abertamente.&rdquo;
             </p>
             <div className="mt-6 flex gap-3">
@@ -87,7 +87,7 @@ export function SiteFooter() {
             <h4 className="eyebrow">Endereço</h4>
             <p className="mt-5 text-sm leading-relaxed text-ink-700">
               R. Joaquim Nabuco, 140<br />
-              Centro — Criciúma, SC<br />
+              Centro, Criciúma, SC<br />
               88802-200
             </p>
             <p className="mt-5 text-sm leading-relaxed text-ink-700">

@@ -129,7 +129,7 @@ export async function ShabbatSection() {
             Acendimento das velas: {CANDLE_LIGHTING_MINUTES_BEFORE_SUNSET} minutos antes do pôr do sol
           </p>
           <p>Havdalá: {HAVDALAH_DEGREES_BELOW_HORIZON}° abaixo do horizonte</p>
-          <p className="mt-1 italic">(costume sefaradi — a confirmar com o Rabino Malachy)</p>
+          <p className="mt-1 italic">(costume sefaradi, a confirmar com o Rabino Malachy)</p>
         </div>
       </div>
     </section>

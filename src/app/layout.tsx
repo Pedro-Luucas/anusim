@@ -39,8 +39,8 @@ function getMetadataBase(): URL {
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
   title: {
-    default: "Anussim Brasil Criciúma — Sinagoga Bnei Anusim em Santa Catarina",
-    template: "%s — Anussim Brasil Criciúma",
+    default: "Anussim Brasil Criciúma | Sinagoga Bnei Anusim em Santa Catarina",
+    template: "%s | Anussim Brasil Criciúma",
   },
   description:
     "Comunidade judaica Bnei Anusim em Criciúma, SC. Sob a direção do Rabino Malachy Ben Israel. Serviços transmitidos ao vivo, estudo de Torá, shabat e festas. Visite-nos.",

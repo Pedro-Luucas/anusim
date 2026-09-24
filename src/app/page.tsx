@@ -56,7 +56,7 @@ export default function HomePage() {
               <span className="font-medium text-gold-700">
                 Malachy Ben Israel
               </span>
-              . Shabat, festas, Torá — e a chama que voltou a arder em voz alta.
+              . Shabat, festas, Torá: a chama que voltou a arder em voz alta.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -164,7 +164,7 @@ export default function HomePage() {
       {/* ─── SHABAT ─── */}
       <ShabbatSection />
 
-      {/* ─── ESSÊNCIA — SOBRE EM 3 BLOCOS ─── */}
+      {/* ESSÊNCIA: SOBRE EM 3 BLOCOS */}
       <section className="relative py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <div className="text-center">
@@ -181,7 +181,7 @@ export default function HomePage() {
               {
                 title: "Shabat",
                 he: "שַׁבָּת",
-                body: "O dia do descanso completo. Da sexta ao entardecer até o sábado à noite, fechamos o ciclo do tempo — e voltamos a começar.",
+                body: "O dia do descanso completo. Da sexta ao entardecer até o sábado à noite, fechamos o ciclo do tempo e voltamos a começar.",
               },
               {
                 title: "Torá",
@@ -282,7 +282,7 @@ export default function HomePage() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700">
             Se você quer visitar a sinagoga, participar de um Shabat, conhecer o
-            minian ou apenas conversar — ligue para o Rabino Malachy. Cada
+            minian ou apenas conversar, ligue para o Rabino Malachy. Cada
             visita é recebida com cuidado.
           </p>
 
@@ -346,7 +346,7 @@ export default function HomePage() {
               <div className="relative aspect-video overflow-hidden rounded-3xl border border-gold-200 shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]">
                 <iframe
                   src="https://www.youtube.com/embed/live_stream?channel=UCCdlGqSr1iLFvxQ3jKxE0gA"
-                  title="Anussim Brasil — Transmissão ao vivo"
+                  title="Anussim Brasil - Transmissão ao vivo"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0 h-full w-full"

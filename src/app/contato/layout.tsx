@@ -1,13 +1,8 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Contato e Serviços",
-  description:
-    "Entre em contato com a Sinagoga Anussim Brasil em Criciúma. WhatsApp do Rabino Malachy Ben Israel, endereço, transmissões ao vivo no YouTube e redes sociais.",
   openGraph: {
-    title: "Contato — Anussim Brasil Criciúma",
-    description:
-      "Fale com o Rabino Malachy, visite a sinagoga ou assista aos serviços ao vivo",
+    url: "/contato",
     type: "website",
     images: [
       {
@@ -17,6 +12,9 @@ export const metadata: Metadata = {
         alt: "Rabino Malachy Ben Israel",
       },
     ],
+  },
+  alternates: {
+    canonical: "/contato",
   },
 }
 

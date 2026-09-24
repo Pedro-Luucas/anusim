@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Fotos da Comunidade",
+  title: "Fotos da Comunidade | Anussim Brasil Criciúma",
   description:
     "Galeria de fotos da Sinagoga Anussim Brasil em Criciúma, SC. Momentos da comunidade, celebrações de Pessach e serviços com o Rabino Malachy Ben Israel.",
   openGraph: {
-    title: "Fotos da Comunidade — Anussim Brasil Criciúma",
+    title: "Fotos da Comunidade | Anussim Brasil Criciúma",
     description:
       "Momentos da vida comunitária, festas judaicas e serviços na sinagoga",
     type: "website",
