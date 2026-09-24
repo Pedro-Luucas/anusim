@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 type PhotoLightboxProps = {
   photos: string[]
@@ -20,6 +20,8 @@ export function PhotoLightbox({
 }: PhotoLightboxProps) {
   const hasPrev = index > 0
   const hasNext = index < photos.length - 1
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   const goPrev = useCallback(() => {
     if (hasPrev) onNavigate(index - 1)
@@ -30,18 +32,42 @@ export function PhotoLightbox({
   }, [hasNext, index, onNavigate])
 
   useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose()
       if (e.key === "ArrowLeft") goPrev()
       if (e.key === "ArrowRight") goNext()
+      if (e.key === "Tab") {
+        const dialog = dialogRef.current
+        if (!dialog) return
+        
+        const focusableElements = dialog.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement?.focus()
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement?.focus()
+        }
+      }
     }
 
     document.body.style.overflow = "hidden"
     window.addEventListener("keydown", onKeyDown)
 
+    const firstButton = dialogRef.current?.querySelector<HTMLElement>("button")
+    firstButton?.focus()
+
     return () => {
       document.body.style.overflow = ""
       window.removeEventListener("keydown", onKeyDown)
+      previousFocusRef.current?.focus()
     }
   }, [onClose, goPrev, goNext])
 
@@ -49,6 +75,7 @@ export function PhotoLightbox({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/92 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
