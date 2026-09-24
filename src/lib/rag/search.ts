@@ -1,4 +1,3 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { generateText } from "ai"
 import { searchChunks } from "./db"
 import { searchSefaria, fetchSefariaText } from "./sefaria"
@@ -15,33 +14,13 @@ export type SearchResult = {
 export async function translateQueryToSearchTerms(
   portugueseQuery: string
 ): Promise<string> {
-  const gatewayKey = process.env.AI_GATEWAY_API_KEY
-
-  if (!gatewayKey) {
-    return fallbackTranslation(portugueseQuery)
-  }
-
   try {
-    const google = createGoogleGenerativeAI({
-      apiKey: gatewayKey,
-      baseURL: "https://gateway.ai.cloudflare.com/v1",
-    })
+    const modelId = process.env.CHAT_MODEL || "google/gemini-3.5-flash"
 
-    const model = google("gemini-2.5-flash-latest")
-
-    const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).
-
-Portuguese question: "${portugueseQuery}"
-
-Return ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).
-
-Example input: "O que é Shabat?"
-Example output: shabbat sabbath שבת rest holy day seventh
-
-Your translation:`
+    const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).n\nPortuguese question: "${portugueseQuery}"\n\nReturn ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).\n\nExample input: "O que é Shabat?"\nExample output: shabbat sabbath שבת rest holy day seventh\n\nYour translation:`
 
     const { text } = await generateText({
-      model,
+      model: modelId,
       prompt,
       temperature: 0.3,
     })

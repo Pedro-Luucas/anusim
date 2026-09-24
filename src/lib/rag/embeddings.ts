@@ -1,5 +1,3 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google"
-import { createOpenAI } from "@ai-sdk/openai"
 import { embed, embedMany } from "ai"
 import { EMBEDDING_DIMENSIONS } from "./config"
 
@@ -8,56 +6,38 @@ export type EmbedResult = {
   model: string
 }
 
-function getEmbeddingModel() {
-  const gatewayKey = process.env.AI_GATEWAY_API_KEY
-  const modelId = process.env.EMBEDDING_MODEL || "google/gemini-embedding-004"
+function getEmbeddingModelId(): string {
+  return process.env.EMBEDDING_MODEL || "google/gemini-embedding-001"
+}
 
-  if (!gatewayKey) {
-    throw new Error(
-      "AI_GATEWAY_API_KEY is required. Set it in your environment variables."
-    )
-  }
-
-  if (modelId.startsWith("google/")) {
-    const google = createGoogleGenerativeAI({
-      apiKey: gatewayKey,
-      baseURL: "https://gateway.ai.cloudflare.com/v1",
-    })
-    
-    return google.textEmbeddingModel(modelId.replace("google/", ""))
-  }
-
-  if (modelId.startsWith("openai/")) {
-    const openai = createOpenAI({
-      apiKey: gatewayKey,
-      baseURL: "https://gateway.ai.cloudflare.com/v1",
-    })
-    
-    return openai.embedding(modelId.replace("openai/", ""))
-  }
-
-  throw new Error(
-    `Unknown embedding model provider for: ${modelId}. Use google/ or openai/ prefix.`
-  )
+function getEmbeddingDimensions(): number {
+  const envDims = process.env.EMBEDDING_DIMENSIONS
+  return envDims ? parseInt(envDims, 10) : EMBEDDING_DIMENSIONS
 }
 
 export async function embedText(text: string): Promise<EmbedResult> {
-  const model = getEmbeddingModel()
+  const modelId = getEmbeddingModelId()
+  const dimensions = getEmbeddingDimensions()
 
   const { embedding } = await embed({
-    model,
+    model: modelId,
     value: text,
+    providerOptions: {
+      google: {
+        outputDimensionality: dimensions,
+      },
+    },
   })
 
-  if (embedding.length !== EMBEDDING_DIMENSIONS) {
+  if (embedding.length !== dimensions) {
     throw new Error(
-      `Embedding dimension mismatch: expected ${EMBEDDING_DIMENSIONS}, got ${embedding.length}`
+      `Embedding dimension mismatch: expected ${dimensions}, got ${embedding.length}`
     )
   }
 
   return {
     embedding,
-    model: model.modelId,
+    model: modelId,
   }
 }
 
@@ -66,23 +46,29 @@ export async function embedBatch(
 ): Promise<Array<EmbedResult>> {
   if (texts.length === 0) return []
 
-  const model = getEmbeddingModel()
+  const modelId = getEmbeddingModelId()
+  const dimensions = getEmbeddingDimensions()
 
   const { embeddings } = await embedMany({
-    model,
+    model: modelId,
     values: texts,
+    providerOptions: {
+      google: {
+        outputDimensionality: dimensions,
+      },
+    },
   })
 
   embeddings.forEach((embedding, idx) => {
-    if (embedding.length !== EMBEDDING_DIMENSIONS) {
+    if (embedding.length !== dimensions) {
       throw new Error(
-        `Embedding dimension mismatch at index ${idx}: expected ${EMBEDDING_DIMENSIONS}, got ${embedding.length}`
+        `Embedding dimension mismatch at index ${idx}: expected ${dimensions}, got ${embedding.length}`
       )
     }
   })
 
   return embeddings.map((embedding) => ({
     embedding,
-    model: model.modelId,
+    model: modelId,
   }))
 }

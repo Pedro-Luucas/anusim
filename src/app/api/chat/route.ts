@@ -1,8 +1,7 @@
 import { streamText } from "ai"
-import { createGoogleGenerativeAI } from "@ai-sdk/google"
-import { createOpenAI } from "@ai-sdk/openai"
 import { searchForQuery } from "@/lib/rag/search"
 import { chunksToCitations, verifyCitations, extractRefsFromText } from "@/lib/rag/citations"
+import type { Citation } from "@/lib/rag/citations"
 
 const MAX_MESSAGE_LENGTH = 500
 const MAX_MESSAGES_PER_REQUEST = 10
@@ -33,35 +32,8 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-function getChatModel() {
-  const gatewayKey = process.env.AI_GATEWAY_API_KEY
-  const modelId = process.env.CHAT_MODEL || "google/gemini-2.5-flash-latest"
-
-  if (!gatewayKey) {
-    throw new Error(
-      "AI_GATEWAY_API_KEY is required. Set it in your environment variables."
-    )
-  }
-
-  if (modelId.startsWith("google/")) {
-    const google = createGoogleGenerativeAI({
-      apiKey: gatewayKey,
-      baseURL: "https://gateway.ai.cloudflare.com/v1",
-    })
-    return google(modelId.replace("google/", ""))
-  }
-
-  if (modelId.startsWith("openai/")) {
-    const openai = createOpenAI({
-      apiKey: gatewayKey,
-      baseURL: "https://gateway.ai.cloudflare.com/v1",
-    })
-    return openai(modelId.replace("openai/", ""))
-  }
-
-  throw new Error(
-    `Unknown chat model provider for: ${modelId}. Use google/ or openai/ prefix.`
-  )
+function getChatModelId(): string {
+  return process.env.CHAT_MODEL || "google/gemini-3.5-flash"
 }
 
 const SYSTEM_PROMPT = `Você é um assistente de estudos judaicos para a Sinagoga Anussim Brasil em Criciúma, Santa Catarina. Sua função é responder perguntas baseando-se EXCLUSIVAMENTE nos textos sagrados e fontes judaicas fornecidas.
@@ -179,10 +151,12 @@ export async function POST(request: Request) {
       ...messages.slice(-5),
     ]
 
-    const model = getChatModel()
+    const modelId = getChatModelId()
+
+    let verifiedCitations: Citation[] = []
 
     const result = streamText({
-      model,
+      model: modelId,
       messages: enhancedMessages,
       temperature: 0.3,
       onFinish: async ({ text }) => {
@@ -199,16 +173,28 @@ export async function POST(request: Request) {
           )
         }
 
+        verifiedCitations = citations.filter((c) =>
+          verified.some(
+            (vRef) =>
+              c.ref.toLowerCase().replace(/[:\s]/g, ".") ===
+              vRef.toLowerCase().replace(/[:\s]/g, ".")
+          )
+        )
+
         console.log(
           `[Chat] Citation verification: ${verified.length} verified, ${hallucinated.length} hallucinated`
         )
       },
     })
 
-    return result.toTextStreamResponse({
+    const response = result.toTextStreamResponse()
+
+    return new Response(response.body, {
+      status: response.status,
       headers: {
-        "X-Citations": JSON.stringify(
-          citations.map((c) => ({
+        ...Object.fromEntries(response.headers),
+        "X-Verified-Citations": JSON.stringify(
+          verifiedCitations.map((c) => ({
             ref: c.ref,
             url: c.url,
             versionTitle: c.versionTitle,
@@ -221,7 +207,7 @@ export async function POST(request: Request) {
 
     if (
       error instanceof Error &&
-      error.message.includes("AI_GATEWAY_API_KEY")
+      (error.message.includes("API") || error.message.includes("Gateway"))
     ) {
       return new Response(
         JSON.stringify({
