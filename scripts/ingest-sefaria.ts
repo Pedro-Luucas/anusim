@@ -126,6 +126,7 @@ async function ingestTitle(title: string): Promise<number> {
             license: segment.license,
             sefaria_url: buildSefariaUrl(segment.ref),
             text_content: segment.text,
+            he_text: segment.heText,
             embedding,
           })
 
