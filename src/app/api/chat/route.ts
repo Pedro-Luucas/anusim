@@ -65,7 +65,9 @@ REGRAS IMPORTANTES:
    - Tradução do trecho
    - Breve explicação de como se aplica à pergunta
 
-8. Sempre responda em português brasileiro claro e acessível.`
+8. Sempre responda em português brasileiro claro e acessível.
+
+9. NUNCA use travessões longos (—) ou médios (–) no texto. Use vírgulas, pontos, parênteses ou hífens simples (-) quando necessário.`
 
 export async function POST(request: Request) {
   if (!isConfigured()) {

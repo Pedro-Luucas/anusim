@@ -51,7 +51,7 @@ public/
 
 ## Identidade visual (paleta + tipografia)
 
-**Paleta — branca + dourado champagne, SEM dark mode, SEM preto de fundo.**
+**Paleta:** branca + dourado champagne, SEM dark mode, SEM preto de fundo.
 
 | Token | Hex | Uso |
 |---|---|---|
@@ -103,10 +103,10 @@ public/
 - Shacharit: sábado 9h
 
 **Diretrizes editoriais:**
-- O WhatsApp é o canal **oficial** para agendar visita — sempre pré-preencher a mensagem com "Shalom Rabino Malachy!..."
+- O WhatsApp é o canal **oficial** para agendar visita (sempre pré-preencher a mensagem com "Shalom Rabino Malachy!...")
 - Hebraico deve ser renderizado com Frank Ruhl Libre em `dir="rtl"` (ex: שָׁלוֹם, שַׁבָּת, תּוֹרָה, פֶּסַח, קְהִלָּה)
-- A comunidade é Bnei Anusim (não conversos) — preservar isso no texto
-- Fotos em `public/shulphotos/` são reais da comunidade — usar com parcimônia, sempre com `alt` descritivo
+- A comunidade é Bnei Anusim (não conversos), preservar isso no texto
+- Fotos em `public/shulphotos/` são reais da comunidade (usar com parcimônia, sempre com `alt` descritivo)
 
 ## Comandos
 
@@ -120,10 +120,10 @@ npm run lint     # ESLint
 ## Padrões que devem ser mantidos
 
 1. **Componentes da landing** ficam em `src/components/landing/`. Componentes originais do calendário ficam em `src/components/`.
-2. **Header da landing é separado do header do calendário** — não mesclar. `Header` (em `src/components/header.tsx`) é usado SÓ na página `/pages/calendario/`. Páginas da landing usam `SiteHeader` (de `src/components/landing/site-header.tsx`).
+2. **Header da landing é separado do header do calendário** (não mesclar). `Header` (em `src/components/header.tsx`) é usado SÓ na página `/pages/calendario/`. Páginas da landing usam `SiteHeader` (de `src/components/landing/site-header.tsx`).
 3. **Footer da landing** também é separado. Cada landing tem `SiteHeader` + `SiteFooter`.
-4. **Página `/pages/calendario/` NÃO PODE ser quebrada** — integração Hebcal funciona, é sensível. Em mudanças no `layout.tsx` global, sempre testar build pra garantir.
-5. **Estética: branco + dourado, NUNCA dark mode** — usuário foi explícito sobre isso.
+4. **Página `/pages/calendario/` NÃO PODE ser quebrada** (integração Hebcal funciona, é sensível). Em mudanças no `layout.tsx` global, sempre testar build pra garantir.
+5. **Estética: branco + dourado, NUNCA dark mode** (usuário foi explícito sobre isso).
 6. **Backgrounds:** usar `bg-parchment` na home, `bg-cream-50` em seções/cards. Não usar `bg-white` puro (quebra o calor).
 7. **Hebreu sempre com `dir="rtl"` + `font-hebrew`.**
 8. **CTA WhatsApp** sempre presente no header sticky E em seção dedicada.

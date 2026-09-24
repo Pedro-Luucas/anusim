@@ -1,4 +1,4 @@
-# Assistente de Estudos Judaicos — RAG com Sefaria
+# Assistente de Estudos Judaicos: RAG com Sefaria
 
 Sistema de perguntas e respostas (Q&A) em português baseado em textos sagrados judaicos da [Sefaria](https://www.sefaria.org). Usa RAG (Retrieval-Augmented Generation) com busca vetorial (pgvector) e LLMs via Vercel AI SDK.
 
@@ -14,12 +14,12 @@ Usuário → Chat UI → API Route → RAG Search → LLM com contexto → Respo
 
 ### Componentes
 
-- **Frontend**: `/chat` — interface React com streaming de respostas
-- **API**: `/api/chat` — endpoint Next.js com rate limiting e verificação de citações
-- **RAG**: `src/lib/rag/` — busca híbrida (vetor + texto), embeddings, integração Sefaria
+- **Frontend**: `/chat`, interface React com streaming de respostas
+- **API**: `/api/chat`, endpoint Next.js com rate limiting e verificação de citações
+- **RAG**: `src/lib/rag/`, busca híbrida (vetor + texto), embeddings, integração Sefaria
 - **Database**: Supabase Postgres com pgvector (tabela `sefaria_chunks`)
 - **LLM**: Vercel AI SDK + AI Gateway (Gemini ou GPT configurável)
-- **Ingestion**: `scripts/ingest-sefaria.ts` — popula banco com textos da Sefaria
+- **Ingestion**: `scripts/ingest-sefaria.ts`, popula banco com textos da Sefaria
 
 ## Setup
 

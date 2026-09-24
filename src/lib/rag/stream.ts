@@ -1,7 +1,6 @@
-import { streamText } from "ai"
 import type { SefariaChunk } from "./db"
 import { extractRefsFromText, verifyCitations, chunksToCitations } from "./citations"
-import type { Citation } from "./citations"
+import { sanitizeDashes } from "./sanitize"
 
 export type StreamEvent =
   | { type: "text"; delta: string }
@@ -31,7 +30,8 @@ export async function createChatStream(
     async start(controller) {
       try {
         for await (const delta of textStream) {
-          const event: StreamEvent = { type: "text", delta }
+          const sanitized = sanitizeDashes(delta)
+          const event: StreamEvent = { type: "text", delta: sanitized }
           controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
         }
 
@@ -64,8 +64,8 @@ export async function createChatStream(
             url: c.url,
             versionTitle: c.versionTitle,
             license: c.license,
-            excerpt: c.text.substring(0, 200),
-            heExcerpt: c.heRef ? c.text.substring(0, 200) : undefined,
+            excerpt: sanitizeDashes(c.text.substring(0, 200)),
+            heExcerpt: c.heRef ? sanitizeDashes(c.text.substring(0, 200)) : undefined,
           }))
 
           const event: StreamEvent = { type: "citations", items }
