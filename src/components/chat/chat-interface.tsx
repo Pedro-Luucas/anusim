@@ -49,24 +49,36 @@ export function ChatInterface() {
     abortControllerRef.current = new AbortController()
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-              body: JSON.stringify({
-                messages: messagesToSend.map((m) => ({
-                  role: m.role,
-                  content: m.content,
-                })),
-              }),
-        signal: abortControllerRef.current.signal,
-      })
+              const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  messages: messagesToSend.map((m) => ({
+                    role: m.role,
+                    content: m.content,
+                  })),
+                }),
+                signal: abortControllerRef.current.signal,
+              })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || `HTTP ${response.status}`)
-      }
+              if (!response.ok) {
+                let errorMessage = "Erro ao processar sua pergunta. Tente novamente."
+                
+                if (response.status === 503) {
+                  errorMessage = "O assistente ainda não está configurado."
+                } else {
+                  try {
+                    const errorData = await response.json()
+                    errorMessage = errorData.error || errorMessage
+                  } catch {
+                    // Keep default message if JSON parse fails
+                  }
+                }
+
+                throw new Error(errorMessage)
+              }
 
       if (!response.body) {
         throw new Error("No response body")
