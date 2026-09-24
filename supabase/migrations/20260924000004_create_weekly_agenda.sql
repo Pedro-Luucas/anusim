@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS public.weekly_agenda (
   title TEXT NOT NULL,
   description TEXT,
   link TEXT,
+  status TEXT NOT NULL DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'to_confirm')),
+  source TEXT,
   display_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

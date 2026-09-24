@@ -37,7 +37,11 @@ export async function POST(request: Request) {
 
   const { supabase } = check
   const body = await request.json()
-  const { dayOfWeek, time, title, description, link, displayOrder } = body
+  const { dayOfWeek, time, title, description, link, status, source, displayOrder } = body
+
+  if (status && status !== "confirmed" && status !== "to_confirm") {
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 })
+  }
 
   const { error } = await supabase.from("weekly_agenda").insert({
     day_of_week: dayOfWeek,
@@ -45,6 +49,8 @@ export async function POST(request: Request) {
     title,
     description,
     link,
+    status: status || "confirmed",
+    source,
     display_order: displayOrder,
   })
 
@@ -63,7 +69,11 @@ export async function PATCH(request: Request) {
 
   const { supabase } = check
   const body = await request.json()
-  const { id, dayOfWeek, time, title, description, link, displayOrder } = body
+  const { id, dayOfWeek, time, title, description, link, status, source, displayOrder } = body
+
+  if (status && status !== "confirmed" && status !== "to_confirm") {
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 })
+  }
 
   const { error } = await supabase
     .from("weekly_agenda")
@@ -73,6 +83,8 @@ export async function PATCH(request: Request) {
       title,
       description,
       link,
+      status: status || "confirmed",
+      source,
       display_order: displayOrder,
     })
     .eq("id", id)

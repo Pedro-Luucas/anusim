@@ -21,6 +21,8 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [link, setLink] = useState("")
+  const [status, setStatus] = useState<"confirmed" | "to_confirm">("confirmed")
+  const [source, setSource] = useState("")
   const [displayOrder, setDisplayOrder] = useState(0)
   const [loading, setLoading] = useState(false)
 
@@ -31,6 +33,8 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
     setTitle(item.title)
     setDescription(item.description || "")
     setLink(item.link || "")
+    setStatus(item.status)
+    setSource(item.source || "")
     setDisplayOrder(item.display_order)
     setShowForm(true)
   }
@@ -43,6 +47,8 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
     setTitle("")
     setDescription("")
     setLink("")
+    setStatus("confirmed")
+    setSource("")
     setDisplayOrder(0)
   }
 
@@ -61,6 +67,8 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
           title,
           description,
           link,
+          status,
+          source,
           displayOrder,
         }),
       })
@@ -218,6 +226,35 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
                 className="w-full rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
               />
             </div>
+
+            <div>
+              <label htmlFor="status" className="block text-sm font-medium text-ink-900 mb-2">
+                Status
+              </label>
+              <select
+                id="status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as "confirmed" | "to_confirm")}
+                className="w-full rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+              >
+                <option value="confirmed">Confirmado</option>
+                <option value="to_confirm">A confirmar</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="source" className="block text-sm font-medium text-ink-900 mb-2">
+                Fonte (opcional)
+              </label>
+              <input
+                id="source"
+                type="text"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                placeholder="Ex: Comunicado do rabino"
+                className="w-full rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+              />
+            </div>
           </div>
 
           <div className="flex gap-3 mt-6">
@@ -253,10 +290,18 @@ export function WeeklyAgendaTab({ items }: WeeklyAgendaTabProps) {
                     {item.day_of_week}
                   </span>
                   <span className="text-sm font-medium text-ink-700">{item.time}</span>
+                  {item.status === "to_confirm" && (
+                    <span className="inline-flex rounded-full bg-wine-500/20 px-3 py-1 text-xs font-medium text-wine-700">
+                      A confirmar
+                    </span>
+                  )}
                 </div>
                 <h3 className="font-medium text-ink-900 mb-1">{item.title}</h3>
                 {item.description && (
                   <p className="text-sm text-ink-600">{item.description}</p>
+                )}
+                {item.source && (
+                  <p className="text-xs text-ink-500 mt-2">Fonte: {item.source}</p>
                 )}
                 {item.link && (
                   <a

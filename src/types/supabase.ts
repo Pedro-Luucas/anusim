@@ -101,6 +101,8 @@ export type Database = {
           title: string
           description: string | null
           link: string | null
+          status: "confirmed" | "to_confirm"
+          source: string | null
           display_order: number
           created_at: string
           updated_at: string
@@ -112,6 +114,8 @@ export type Database = {
           title: string
           description?: string | null
           link?: string | null
+          status?: "confirmed" | "to_confirm"
+          source?: string | null
           display_order?: number
           created_at?: string
           updated_at?: string
@@ -123,6 +127,8 @@ export type Database = {
           title?: string
           description?: string | null
           link?: string | null
+          status?: "confirmed" | "to_confirm"
+          source?: string | null
           display_order?: number
           created_at?: string
           updated_at?: string
