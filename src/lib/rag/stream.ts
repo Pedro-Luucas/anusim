@@ -35,7 +35,20 @@ export async function createChatStream(
           controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
         }
 
-        const text = await fullText
+        let text: string
+        try {
+          text = await fullText
+        } catch (error) {
+          console.error("[Stream] Error resolving fullText:", error)
+          const errorEvent: StreamEvent = {
+            type: "error",
+            message: "Erro ao processar sua pergunta. Tente novamente.",
+          }
+          controller.enqueue(encoder.encode(JSON.stringify(errorEvent) + "\n"))
+          controller.close()
+          return
+        }
+
         const { verified, hallucinated } = verifyCitations(
           text,
           retrievedChunks
