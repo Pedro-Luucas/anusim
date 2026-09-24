@@ -8,6 +8,8 @@ export type AgendaEvent = {
   description?: string
   status: AgendaEventStatus
   source: string
+  link?: string
+  displayOrder?: number
 }
 
 export const WEEKLY_SCHEDULE: AgendaEvent[] = [
@@ -19,6 +21,7 @@ export const WEEKLY_SCHEDULE: AgendaEvent[] = [
     description: "Recepção do Shabat com orações e canções",
     status: "confirmed",
     source: "CLAUDE.md",
+    displayOrder: 1,
   },
   {
     id: "shacharit-shabat",
@@ -28,6 +31,7 @@ export const WEEKLY_SCHEDULE: AgendaEvent[] = [
     description: "Serviço matinal de Shabat com leitura da Torá",
     status: "confirmed",
     source: "CLAUDE.md",
+    displayOrder: 1,
   },
 ]
 

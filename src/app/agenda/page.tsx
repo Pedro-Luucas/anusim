@@ -3,11 +3,20 @@ import { SiteFooter } from "@/components/landing/site-footer"
 import { WEEKLY_SCHEDULE, DAY_ORDER, DAY_NAMES_PT } from "@/data/agenda"
 
 export default function AgendaPage() {
-  const scheduleByDay = DAY_ORDER.map((day) => ({
-    day,
-    dayName: DAY_NAMES_PT[day],
-    events: WEEKLY_SCHEDULE.filter((e) => e.day === day),
-  }))
+  const scheduleByDay = DAY_ORDER.map((day) => {
+    const dayEvents = WEEKLY_SCHEDULE.filter((e) => e.day === day)
+    const sortedEvents = dayEvents.sort((a, b) => {
+      const orderA = a.displayOrder ?? 999
+      const orderB = b.displayOrder ?? 999
+      return orderA - orderB
+    })
+    
+    return {
+      day,
+      dayName: DAY_NAMES_PT[day],
+      events: sortedEvents,
+    }
+  })
 
   return (
     <>
