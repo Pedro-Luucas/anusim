@@ -33,6 +33,11 @@ export async function translateQueryToSearchTerms(
 }
 
 function fallbackTranslation(portugueseQuery: string): string {
+  const portugueseStopwords = new Set([
+    "por", "que", "o", "a", "de", "do", "da", "e", "no", "na", "os", "as", 
+    "um", "uma", "com", "para", "é", "são", "mais", "em", "ao", "aos"
+  ])
+  
   const commonTerms: Record<string, string> = {
     "shabat": "shabbat sabbath שבת",
     "sábado": "shabbat sabbath שבת",
@@ -69,7 +74,12 @@ function fallbackTranslation(portugueseQuery: string): string {
     translated = translated.replace(regex, en)
   }
 
-  return translated || portugueseQuery
+  const words = translated.split(/\s+/)
+  const filtered = words.filter(word => 
+    word.length > 2 && !portugueseStopwords.has(word.toLowerCase())
+  )
+
+  return filtered.join(" ") || portugueseQuery
 }
 
 export async function searchForQuery(
@@ -122,13 +132,15 @@ export async function searchForQuery(
       const englishTerms = keywords.filter((k) => !/[\u0590-\u05FF]/.test(k))
       const hebrewTerms = keywords.filter((k) => /[\u0590-\u05FF]/.test(k))
       
-      const primaryEnglish = englishTerms.slice(0, 1).join(" ")
+      const primaryEnglish = englishTerms.slice(0, 3).join(" ")
+      const secondaryEnglish = englishTerms.slice(1, 3).join(" ")
       const primaryHebrew = hebrewTerms.slice(0, 1).join(" ")
       
       const queries = [
         primaryEnglish,
+        secondaryEnglish,
         primaryHebrew,
-      ].filter(Boolean)
+      ].filter(q => q && q.trim().length > 0)
 
       const allResults = await Promise.all(
         queries.map((q) => searchSefaria(q, { limit: Math.ceil(matchCount / queries.length) }))
