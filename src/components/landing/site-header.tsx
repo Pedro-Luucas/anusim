@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/bnei-anusim", label: "Bnei Anusim" },
   { href: "/fotos", label: "Fotos" },
   { href: "/pontos-de-fe", label: "Pontos de Fé" },
+  { href: "/chat", label: "Assistente" },
   { href: "/contato", label: "Contato" },
 ]
 
