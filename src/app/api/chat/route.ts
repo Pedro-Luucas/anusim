@@ -186,7 +186,7 @@ export async function POST(request: Request) {
         role: "system" as const,
         content: `CONTEXTO (fontes judaicas relevantes para a pergunta):\n\n${context}`,
       },
-      ...messages.slice(-5),
+      ...validatedMessages.slice(0, -1),
     ]
 
     const modelId = getChatModelId()
