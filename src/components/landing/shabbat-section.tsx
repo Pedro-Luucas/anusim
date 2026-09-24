@@ -7,7 +7,7 @@ export async function ShabbatSection() {
   const kabalatShabat = WEEKLY_SCHEDULE.find((e) => e.id === "kabalat-shabat")
   const shacharit = WEEKLY_SCHEDULE.find((e) => e.id === "shacharit-shabat")
 
-  if (!shabbatTimes) {
+  if (!shabbatTimes || !shabbatTimes.havdalah) {
     return (
       <section className="mx-auto max-w-7xl px-5 py-12 md:px-10">
         <div className="rounded-2xl border border-gold-300/60 bg-cream-50 p-8 text-center">
@@ -18,6 +18,8 @@ export async function ShabbatSection() {
       </section>
     )
   }
+
+  const { candleLighting, havdalah, parasha } = shabbatTimes
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-12 md:px-10">
@@ -32,19 +34,28 @@ export async function ShabbatSection() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-gold-200 bg-white/80 backdrop-blur-sm p-6">
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between mb-4">
               <div>
                 <p className="text-xs uppercase tracking-wider text-gold-700 font-semibold">
-                  Sexta-feira
-                </p>
-                <p className="mt-1 text-lg font-semibold text-ink-900">
                   Acendimento das Velas
-                </p>
-                <p className="mt-4 font-mono text-4xl font-bold text-gold-600 tabular-nums">
-                  {shabbatTimes.candleLighting}
                 </p>
               </div>
               <div className="text-3xl">🕯️</div>
+            </div>
+            <div className="space-y-4">
+              {candleLighting.map((candle, index) => (
+                <div key={index}>
+                  <p className="text-sm text-ink-600 capitalize">
+                    {candle.dayName}, {candle.dateFormatted}
+                  </p>
+                  {candle.occasion && (
+                    <p className="text-xs text-gold-700 mt-0.5">{candle.occasion}</p>
+                  )}
+                  <p className="mt-1 font-mono text-3xl font-bold text-gold-600 tabular-nums">
+                    {candle.time}
+                  </p>
+                </div>
+              ))}
             </div>
             {kabalatShabat && (
               <div className="mt-6 pt-6 border-t border-gold-100">
@@ -60,11 +71,11 @@ export async function ShabbatSection() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs uppercase tracking-wider text-gold-700 font-semibold">
-                  Sábado
+                  {havdalah.dayName}, {havdalah.dateFormatted}
                 </p>
                 <p className="mt-1 text-lg font-semibold text-ink-900">Havdalá</p>
                 <p className="mt-4 font-mono text-4xl font-bold text-gold-600 tabular-nums">
-                  {shabbatTimes.havdalah}
+                  {havdalah.time}
                 </p>
               </div>
               <div className="text-3xl">✨</div>
@@ -72,7 +83,7 @@ export async function ShabbatSection() {
             {shacharit && (
               <div className="mt-6 pt-6 border-t border-gold-100">
                 <p className="text-sm text-ink-700">
-                  <span className="font-semibold">{shacharit.title}</span> às{" "}
+                  <span className="font-semibold">{shacharit.title}</span> aos sábados às{" "}
                   <span className="font-mono font-semibold">{shacharit.time}</span>
                 </p>
               </div>
@@ -80,25 +91,25 @@ export async function ShabbatSection() {
           </div>
         </div>
 
-        {shabbatTimes.parasha && (
+        {parasha && (
           <div className="mt-6 rounded-2xl border border-gold-200 bg-white/80 backdrop-blur-sm p-6">
             <p className="text-xs uppercase tracking-wider text-gold-700 font-semibold mb-3">
-              Parashá da Semana
+              {parasha.isHoliday ? "Leitura da Festa" : "Parashá da Semana"}
             </p>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <p className="text-2xl font-display font-semibold text-ink-900">
-                  {shabbatTimes.parasha.name}
+                  {parasha.name}
                 </p>
-                {shabbatTimes.parasha.hebrew && (
+                {parasha.hebrew && (
                   <p className="mt-1 font-hebrew text-xl text-gold-700" dir="rtl">
-                    {shabbatTimes.parasha.hebrew}
+                    {parasha.hebrew}
                   </p>
                 )}
               </div>
-              {shabbatTimes.parasha.link && (
+              {parasha.link && (
                 <a
-                  href={shabbatTimes.parasha.link}
+                  href={parasha.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-2.5 text-sm font-semibold text-ink-900 transition-all hover:bg-gold-600 hover:border-gold-600 whitespace-nowrap"

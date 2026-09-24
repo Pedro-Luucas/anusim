@@ -24,10 +24,20 @@ const frankRuhl = Frank_Ruhl_Libre({
   weight: ["400", "500", "700", "900"],
 })
 
+function getMetadataBase(): URL {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return new URL(process.env.NEXT_PUBLIC_SITE_URL)
+  }
+  
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
+  }
+  
+  return new URL("http://localhost:3000")
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://anussimbrasil.com.br"
-  ),
+  metadataBase: getMetadataBase(),
   title: {
     default: "Anussim Brasil Criciúma — Sinagoga Bnei Anusim em Santa Catarina",
     template: "%s — Anussim Brasil Criciúma",

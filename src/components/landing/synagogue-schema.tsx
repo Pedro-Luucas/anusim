@@ -1,13 +1,18 @@
 export function SynagogueSchema() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000")
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Synagogue",
-    "@id": "https://anussimbrasil.com.br/#synagogue",
+    "@id": `${siteUrl}/#synagogue`,
     name: "Anussim Brasil Criciúma",
     alternateName: "Sinagoga Anussim Brasil",
     description:
       "Comunidade judaica Bnei Anusim em Criciúma, Santa Catarina. Serviços de Shabat, estudo de Torá e eventos comunitários.",
-    url: "https://anussimbrasil.com.br",
+    url: siteUrl,
     telephone: "+554899231358",
     address: {
       "@type": "PostalAddress",

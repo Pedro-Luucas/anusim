@@ -136,23 +136,15 @@ export default function DoacoesPage() {
             <h3 className="text-lg font-semibold text-ink-900">
               Para que servem as doações?
             </h3>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-ink-700">
-              <p>
-                As contribuições recebidas ajudam a cobrir os custos operacionais da
-                sinagoga, incluindo:
-              </p>
-              <ul className="list-disc list-inside space-y-2 ml-2">
-                <li>Manutenção do espaço físico e aluguel</li>
-                <li>Equipamentos para transmissão ao vivo dos serviços</li>
-                <li>Materiais para estudo de Torá e recursos educacionais</li>
-                <li>Celebração de festas e eventos comunitários</li>
-                <li>Apoio a membros da comunidade em necessidade</li>
-              </ul>
-              <p className="mt-4 text-ink-600">
-                Cada doação, independente do valor, faz diferença na continuidade
-                das atividades da comunidade Anussim Brasil em Criciúma.
-              </p>
-            </div>
+            <p className="mt-4 text-sm leading-relaxed text-ink-700">
+              As contribuições recebidas apoiam as atividades e a manutenção da
+              Sinagoga Anussim Brasil em Criciúma, ajudando a comunidade a continuar
+              servindo seus membros e visitantes.
+            </p>
+            <p className="mt-3 text-sm text-ink-600">
+              Cada doação, independente do valor, faz diferença na continuidade das
+              atividades da comunidade.
+            </p>
           </div>
 
           <div className="mt-8 text-center">
