@@ -13,24 +13,38 @@ export type Citation = {
 }
 
 export function verifyCitations(
-  generatedRefs: string[],
+  fullText: string,
   retrievedChunks: SefariaChunk[]
 ): {
   verified: string[]
   hallucinated: string[]
 } {
-  const retrievedRefs = new Set(
-    retrievedChunks.map((chunk) => normalizeRef(chunk.ref))
-  )
-
+  const normalizedText = fullText.toLowerCase()
   const verified: string[] = []
   const hallucinated: string[] = []
 
-  for (const ref of generatedRefs) {
+  const citedRefs = new Set<string>()
+
+  for (const chunk of retrievedChunks) {
+    const chunkNormalized = normalizeRef(chunk.ref)
+    const refVariants = [
+      chunk.ref.toLowerCase(),
+      chunkNormalized,
+      chunk.ref.toLowerCase().replace(/\s+/g, ""),
+    ]
+
+    if (refVariants.some((variant) => normalizedText.includes(variant))) {
+      if (!citedRefs.has(chunkNormalized)) {
+        citedRefs.add(chunkNormalized)
+        verified.push(chunk.ref)
+      }
+    }
+  }
+
+  const extractedRefs = extractRefsFromText(fullText)
+  for (const ref of extractedRefs) {
     const normalized = normalizeRef(ref)
-    if (retrievedRefs.has(normalized)) {
-      verified.push(ref)
-    } else {
+    if (!citedRefs.has(normalized)) {
       hallucinated.push(ref)
     }
   }
@@ -38,12 +52,34 @@ export function verifyCitations(
   return { verified, hallucinated }
 }
 
+const PORTUGUESE_BOOK_NAMES: Record<string, string> = {
+  "gênesis": "Genesis",
+  "genesis": "Genesis",
+  "êxodo": "Exodus",
+  "exodo": "Exodus",
+  "levítico": "Leviticus",
+  "levitico": "Leviticus",
+  "números": "Numbers",
+  "numeros": "Numbers",
+  "deuteronômio": "Deuteronomy",
+  "deuteronomio": "Deuteronomy",
+}
+
 function normalizeRef(ref: string): string {
-  return ref
+  let normalized = ref
     .replace(/\s+/g, " ")
     .replace(/[:\-–—]/g, ".")
     .toLowerCase()
     .trim()
+
+  for (const [pt, en] of Object.entries(PORTUGUESE_BOOK_NAMES)) {
+    if (normalized.startsWith(pt + " ")) {
+      normalized = normalized.replace(pt, en.toLowerCase())
+      break
+    }
+  }
+
+  return normalized
 }
 
 export function chunksToCitations(chunks: SefariaChunk[]): Citation[] {
@@ -56,6 +92,7 @@ export function chunksToCitations(chunks: SefariaChunk[]): Citation[] {
     license: chunk.license || undefined,
     url: chunk.sefaria_url,
     text: chunk.text_content,
+    heText: chunk.he_text || undefined,
   }))
 }
 

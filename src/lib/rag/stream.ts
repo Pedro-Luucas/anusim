@@ -36,9 +36,8 @@ export async function createChatStream(
         }
 
         const text = await fullText
-        const generatedRefs = extractRefsFromText(text)
         const { verified, hallucinated } = verifyCitations(
-          generatedRefs,
+          text,
           retrievedChunks
         )
 
@@ -57,15 +56,19 @@ export async function createChatStream(
           )
         )
 
-        if (verifiedCitations.length > 0) {
-          const items: VerifiedCitation[] = verifiedCitations.map((c) => ({
+        const uniqueCitations = Array.from(
+          new Map(verifiedCitations.map((c) => [c.ref, c])).values()
+        )
+
+        if (uniqueCitations.length > 0) {
+          const items: VerifiedCitation[] = uniqueCitations.map((c) => ({
             ref: c.ref,
             heRef: c.heRef,
             url: c.url,
             versionTitle: c.versionTitle,
             license: c.license,
             excerpt: sanitizeDashes(c.text.substring(0, 200)),
-            heExcerpt: c.heRef ? sanitizeDashes(c.text.substring(0, 200)) : undefined,
+            heExcerpt: c.heText ? sanitizeDashes(c.heText.substring(0, 200)) : undefined,
           }))
 
           const event: StreamEvent = { type: "citations", items }
