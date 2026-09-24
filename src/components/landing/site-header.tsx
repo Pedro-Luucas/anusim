@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/fotos", label: "Fotos" },
   { href: "/pontos-de-fe", label: "Pontos de Fé" },
   { href: "/contato", label: "Contato" },
+  { href: "/entrar", label: "Entrar" },
 ]
 
 export function SiteHeader() {
@@ -110,11 +111,17 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/entrar"
+            className="mb-2 inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 bg-transparent px-5 py-3 text-sm font-semibold text-gold-700"
+          >
+            Entrar
+          </Link>
           <a
             href="https://wa.me/554899231358"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900"
           >
             Falar com o Rabino
           </a>
