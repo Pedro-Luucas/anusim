@@ -6,38 +6,84 @@ alwaysApply: true
 # Anusim — Project Overview
 
 ## What this app is
-Anusim (ענוסים — Hebrew for "forced ones") is a Next.js web application currently in early development. Domain logic is not yet built; the codebase is a clean scaffold.
+Anussim Brasil Criciúma é o site/landing page oficial da sinagoga Bnei Anusim em Criciúma, Santa Catarina. O site apresenta a comunidade, história dos Bnei Anusim, galeria de fotos, pontos de fé (13 princípios de Maimonides), informações de contato, transmissões ao vivo e calendário judaico integrado com Hebcal API.
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 — App Router |
+| Framework | Next.js 16.1.6 — App Router + Turbopack |
 | Language | TypeScript 5 |
-| UI | React 19 |
-| Styling | Tailwind CSS v4 |
+| UI | React 19.2 |
+| Styling | Tailwind CSS v4 (config via `@theme` em `globals.css`, **não tem `tailwind.config.js`**) |
+| Fonts | `next/font/google`: Cormorant Garamond (display), Frank Ruhl Libre (hebraico), Inter (corpo) |
 | Linting | ESLint 9 |
+
+**Sem dependências extras** — zero libs de UI/animação. Tudo é React + Tailwind + SVG inline.
 
 ## Folder Structure
 
 ```
 src/
-└── app/
-    ├── layout.tsx          # Root layout (metadata, global styles)
-    ├── page.tsx            # Home page
-    ├── globals.css         # Global styles — only `@import "tailwindcss"`
-    ├── pages/              # UI page routes (App Router)
-    │   └── [route]/
-    │       └── page.tsx
-    └── api/                # API route handlers
-        └── [route]/
-            └── route.ts
+├── app/
+│   ├── layout.tsx              # root: fontes + metadata SEO
+│   ├── globals.css             # @theme tokens (paleta dourado/cream), animações
+│   ├── page.tsx                # HOME landing (visual-first)
+│   ├── bnei-anusim/page.tsx    # O que são os Bnei Anusim (editorial)
+│   ├── fotos/page.tsx          # Galeria interativa (6 álbuns)
+│   ├── pontos-de-fe/page.tsx   # 13 princípios de fé
+│   ├── contato/page.tsx        # WhatsApp + endereço + mapa + YouTube
+│   ├── pages/
+│   │   ├── calendario/page.tsx # calendário judaico (Hebcal API) — NÃO MEXA
+│   │   ├── login/page.tsx
+│   │   └── sample/page.tsx
+│   └── api/sample/route.ts
+├── components/
+│   ├── header.tsx              # header original (usado SÓ em /pages/calendario/) — NÃO MEXA
+│   ├── zmanim-section.tsx      # componente do calendário — NÃO MEXA
+│   └── landing/                # componentes da landing (padrão novo)
+│       ├── site-header.tsx     # header sticky + nav + WhatsApp CTA
+│       ├── site-footer.tsx     # footer editorial
+│       ├── photo-lightbox.tsx  # lightbox de fotos com focus trap
+│       └── judaic-symbols.tsx  # SVGs: Estrela de Davi, Menorá, Shofar, Romã, Selo
+├── lib/
+│   ├── hebcal.ts               # integração Hebcal API — NÃO MEXA
+│   └── quotes.ts               # frases do dia — NÃO MEXA
+
+public/
+├── logo.jpg                    # logo Anussim Brasil
+└── shulphotos/                 # 40+ fotos reais (comunidade, pessach, rabino, chanukah, simchat, purim)
 ```
+
+## Key Conventions
+- Páginas da **landing** (/, /bnei-anusim, /fotos, /pontos-de-fe, /contato) usam `SiteHeader` + `SiteFooter`
+- Página `/pages/calendario/` usa `Header` (componente separado) — **não mesclar**
+- Todas as landing pages têm `<main id="main-content" className="bg-parchment text-ink-900">`
+- Sempre incluir skip link no `SiteHeader` (`href="#main-content"`)
+- Estética: **branco + dourado, NUNCA dark mode** (o usuário foi explícito)
+- Hebraico sempre com `dir="rtl"` + `font-hebrew`
+- CTA WhatsApp sempre presente no header sticky
+- Imagens: sempre `<Image>` do Next.js com `alt` descritivo, `sizes` se `fill`, `priority` só na hero
+- Iframes (YouTube/Maps): sempre `loading="lazy"` (exceto acima da dobra)
+- Animações: preferir CSS-only (classes já em `globals.css`), respeitar `prefers-reduced-motion`
 
 ## Path Alias
 `@/*` maps to `src/*` — always use it for imports (never relative `../../`).
 
-## Key Conventions
-- All new pages go under `src/app/pages/[name]/page.tsx`
-- All new API routes go under `src/app/api/[name]/route.ts`
-- Keep `globals.css` minimal — use Tailwind utility classes instead
+## What NOT to touch (unless explicitly requested)
+- `src/components/header.tsx` (header do calendário)
+- `src/components/zmanim-section.tsx`
+- `src/app/pages/calendario/page.tsx`
+- `src/lib/hebcal.ts`
+- `src/lib/quotes.ts`
+- `src/app/api/sample/route.ts`
+- `public/logo.jpg` e `public/shulphotos/*`
+- Metadata/SEO de qualquer página (outro agente cuida disso)
+
+## Commands
+```bash
+npm run dev      # dev server (Turbopack)
+npm run build    # build de produção (Turbopack)
+npm run start    # serve produção na porta 3000
+npm run lint     # ESLint
+```
