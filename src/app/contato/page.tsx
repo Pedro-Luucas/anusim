@@ -57,7 +57,7 @@ export default function ContatoPage() {
                 </h2>
                 <p className="mt-6 text-lg leading-relaxed text-ink-700">
                   A sinagoga não funciona em sistema de &ldquo;porta aberta&rdquo;
-                  — cada visita é combinada com antecedência. É assim para que
+                  cada visita é combinada com antecedência. É assim para que
                   cada pessoa seja recebida com o cuidado que merece.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -90,7 +90,7 @@ export default function ContatoPage() {
                   <p className="mt-4 font-display text-2xl leading-snug text-ink-900 md:text-3xl">
                     R. Joaquim Nabuco, 140
                     <br />
-                    Centro — Criciúma, SC
+                    Centro, Criciúma, SC
                     <br />
                     <span className="text-gold-700">88802-200</span>
                   </p>
@@ -161,7 +161,7 @@ export default function ContatoPage() {
           <div className="relative aspect-video overflow-hidden rounded-3xl border border-gold-200 bg-ink-900 shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]">
             <iframe
               src="https://www.youtube.com/embed/live_stream?channel=UCCdlGqSr1iLFvxQ3jKxE0gA"
-              title="Anussim Brasil — Transmissão ao vivo"
+              title="Anussim Brasil: Transmissão ao vivo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               loading="lazy"

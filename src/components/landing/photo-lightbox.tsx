@@ -79,7 +79,7 @@ export function PhotoLightbox({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/92 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label={`Galeria — ${albumLabel}`}
+      aria-label={`Galeria: ${albumLabel}`}
       onClick={onClose}
     >
       <button
@@ -132,7 +132,7 @@ export function PhotoLightbox({
         <div className="relative max-h-[78vh] w-full overflow-hidden rounded-2xl border border-gold-500/30 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
           <Image
             src={src}
-            alt={`${albumLabel} — foto ${index + 1} de ${photos.length}`}
+            alt={`${albumLabel}, foto ${index + 1} de ${photos.length}`}
             width={1200}
             height={900}
             className="h-auto max-h-[78vh] w-full object-contain"

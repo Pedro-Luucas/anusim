@@ -128,3 +128,4 @@ Todos elementos interativos devem ter no mínimo **44×44px**:
 - Não adicionar dark mode
 - Não usar cores frias (blue, purple) — paleta é quente (gold, cream, ink, wine)
 - Não adicionar bibliotecas de UI/animação — tudo é React + Tailwind + SVG inline
+- **Não usar travessão (— ou –) em textos visíveis ao usuário** — usar vírgula, ponto, dois-pontos ou parênteses conforme o sentido

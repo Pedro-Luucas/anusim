@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/landing/site-footer"
 import { OrnametalDivider, StarOfDavid } from "@/components/landing/judaic-symbols"
 
 export const metadata = {
-  title: "O que são os Bnei Anusim — Anussim Brasil Criciúma",
+  title: "O que são os Bnei Anusim: Anussim Brasil Criciúma",
   description:
     "A história dos Bnei Anusim: os cripto-judeus que sobreviveram à Inquisição preservando a fé em segredo por séculos.",
 }
@@ -25,7 +25,7 @@ export default function BneiAnusimPage() {
             <span className="italic text-gold-shimmer">Bnei Anusim?</span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700 md:text-2xl">
-            São os filhos dos que foram forçados — <em>anusim</em>, em hebraico,
+            São os filhos dos que foram forçados. <em>Anusim</em>, em hebraico,
             significa literalmente &ldquo;os coagidos&rdquo;. É a história de uma fé
             que sobreviveu em silêncio durante cinco séculos.
           </p>
@@ -45,7 +45,7 @@ export default function BneiAnusimPage() {
               A
             </span>
             palavra <em>anusim</em> vem da raiz hebraica de <em>ones</em>{" "}
-            (אונס) — coação. A própria Torá já distingue entre quem peca por
+            (אונס): coação. A própria Torá já distingue entre quem peca por
             vontade própria e quem age sob coação: é do episódio da jovem
             forçada, em{" "}
             <span className="italic text-gold-700">Deuteronômio 22:25–27</span>,
@@ -56,13 +56,13 @@ export default function BneiAnusimPage() {
           </p>
 
           <p className="mt-10 font-display text-2xl leading-snug text-ink-900 md:text-3xl">
-            Os <strong className="font-medium">Bnei Anusim</strong> — literalmente,
-            &ldquo;filhos dos coagidos&rdquo; — são os descendentes desses judeus.
+            Os <strong className="font-medium">Bnei Anusim</strong> (literalmente,
+            &ldquo;filhos dos coagidos&rdquo;) são os descendentes desses judeus.
             Não são conversos, porque nunca escolheram converter-se. Não são
-            assimilados, porque em algum lugar — numa prataria de Pessach
+            assimilados, porque em algum lugar (numa prataria de Pessach
             escondida no fundo de um armário, na recitação de{" "}
             <em>Shemá Israel</em> sussurrada no travesseiro, na luz de uma vela
-            apagada antes do Shabbat — a fé continuou sendo passada.
+            apagada antes do Shabbat) a fé continuou sendo passada.
           </p>
         </div>
       </section>
@@ -136,16 +136,16 @@ export default function BneiAnusimPage() {
               </p>
               <p>
                 Muitos fugiram para o Norte da África, para a Holanda, para a
-                Itália, para o Império Otomano. Outros — talvez a maioria —
+                Itália, para o Império Otomano. Outros (talvez a maioria)
                 ficaram. Tornaram-se <em>cristãos-novos</em>. Continuaram sendo
                 judeus por dentro.
               </p>
               <p>
                 Quando o Brasil colonial recebeu levas de portugueses, trouxe
-                consigo muitos desses cristãos-novos. O Nordeste — de Recife a
-                Salvador — e o interior de Minas Gerais se tornaram refúgio
+                consigo muitos desses cristãos-novos. O Nordeste (de Recife a
+                Salvador) e o interior de Minas Gerais se tornaram refúgio
                 silencioso. Aqui, longe dos olhos da Inquisição, eles puderam
-                manter — em segredo, à noite, em voz baixa — as velas de
+                manter (em segredo, à noite, em voz baixa) as velas de
                 Shabbat, o jejum de Iom Kipur, a matsá de Pessach.
               </p>
             </div>
@@ -161,12 +161,12 @@ export default function BneiAnusimPage() {
                 },
                 {
                   title: "Recife",
-                  state: "Pernambuco · 1630–1654",
+                  state: "Pernambuco: 1630–1654",
                   body: "No Brasil holandês ergueu-se a Kahal Zur Israel, a primeira sinagoga das Américas, onde se podia orar abertamente. Com o retorno dos portugueses em 1654, voltou o segredo.",
                 },
                 {
                   title: "Salvador",
-                  state: "Bahia · séculos XVI–XVII",
+                  state: "Bahia: séculos XVI–XVII",
                   body: "Primeira capital da colônia e principal alvo das visitações do Santo Ofício (1591 e 1618). Cristãos-novos da lavoura açucareira foram denunciados por judaizar.",
                 },
                 {
@@ -214,8 +214,8 @@ export default function BneiAnusimPage() {
             </p>
             <p>
               Não foi um movimento único, centralizado. Foi uma{" "}
-              <strong className="font-medium text-ink-900">maré de memórias</strong>{" "}
-              — avós que revelaram segredos guardados por toda uma vida, mesas
+              <strong className="font-medium text-ink-900">maré de memórias</strong>:
+              avós que revelaram segredos guardados por toda uma vida, mesas
               de Pessach que voltaram a aparecer em casas onde ninguém sabia
               explicar por que se limpava a casa de fermento todo ano, rituais
               de acendimento de velas que de repente ganharam nome e sentido.
@@ -226,7 +226,7 @@ export default function BneiAnusimPage() {
               estabelecida; outras se reúnem em salas, garagens ou casas.
               Todas compartilham algo: a consciência de que a fé que
               carregaram em silêncio por quinhentos anos não é uma herança
-              arqueológica — é uma chama viva, e que a chama merece arder
+              arqueológica, é uma chama viva, e que a chama merece arder
               abertamente.
             </p>
 
@@ -249,7 +249,7 @@ export default function BneiAnusimPage() {
               , abrimos uma casa onde o que era sussurrado agora é cantado, onde
               o que era escondido agora é celebrado, e onde cada novo membro
               encontra o espaço para se reconectar com a tradição de seus
-              antepassados — no seu próprio ritmo, com respeito, com rigor, com
+              antepassados, no seu próprio ritmo, com respeito, com rigor, com
               alegria.
             </p>
           </div>
@@ -266,9 +266,9 @@ export default function BneiAnusimPage() {
             <span className="italic text-gold-shimmer">a porta é sua.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-700">
-            Se essa história ressoa em você — se algum ritual da sua avó, alguma
+            Se essa história ressoa em você (se algum ritual da sua avó, alguma
             tradição da sua família, alguma memória inexplicada da infância
-            faz sentido agora — fale com o Rabino Malachy. Você não precisa
+            faz sentido agora), fale com o Rabino Malachy. Você não precisa
             vir com respostas. Só precisa vir.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -331,7 +331,7 @@ function Timeline() {
       year: "1821",
       title: "Fim da Inquisição em Portugal",
       body:
-        "O tribunal é extinto. Mas o medo e o segredo já passaram a fazer parte da identidade familiar — são passados adiante.",
+        "O tribunal é extinto. Mas o medo e o segredo já passaram a fazer parte da identidade familiar e são passados adiante.",
     },
     {
       year: "séc. XX",
@@ -349,7 +349,7 @@ function Timeline() {
       year: "hoje",
       title: "Criciúma",
       body:
-        "A Anussim Brasil Criciúma, sob o Rabino Malachy Ben Israel, é uma das casas onde essa história continua sendo escrita — abertamente.",
+        "A Anussim Brasil Criciúma, sob o Rabino Malachy Ben Israel, é uma das casas onde essa história continua sendo escrita, abertamente.",
     },
   ]
   return (

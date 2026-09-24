@@ -5,7 +5,7 @@ import { OrnametalDivider, ScrollSeal } from "@/components/landing/judaic-symbol
 export const metadata = {
   title: "Pontos de Fé — Anussim Brasil Criciúma",
   description:
-    "Os treze princípios de fé de Maimonides (Rambam) — a base da crença judaica que a comunidade Anussim Brasil Criciúma professa.",
+    "Os treze princípios de fé de Maimonides (Rambam): a base da crença judaica que a comunidade Anussim Brasil Criciúma professa.",
 }
 
 const PRINCIPLES = [
@@ -35,7 +35,7 @@ const PRINCIPLES = [
   },
   {
     n: "07",
-    body: "Nós acreditamos com fé completa que a profecia do nosso mestre Moisés, que repouse em paz, era verdadeira, e que ele foi o pai de todos os profetas — tanto daqueles que o precederam quanto daqueles que o seguiram.",
+    body: "Nós acreditamos com fé completa que a profecia do nosso mestre Moisés, que repouse em paz, era verdadeira, e que ele foi o pai de todos os profetas, tanto daqueles que o precederam quanto daqueles que o seguiram.",
   },
   {
     n: "08",
@@ -77,7 +77,7 @@ export default function PontosDeFePage() {
             <span className="italic text-gold-shimmer">fé.</span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700 md:text-2xl">
-            Os treze princípios de Maimonides — o Rambam — formulados no século
+            Os treze princípios de Maimonides (o Rambam) formulados no século
             XII e recitados em todo o mundo judaico como fundamento da emuná.
           </p>
           <div className="mt-10">
