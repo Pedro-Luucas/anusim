@@ -7,6 +7,7 @@ type ChatInputProps = {
   handleInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void
   isLoading: boolean
+  onStop?: () => void
 }
 
 export function ChatInput({
@@ -14,6 +15,7 @@ export function ChatInput({
   handleInputChange,
   handleSubmit,
   isLoading,
+  onStop,
 }: ChatInputProps) {
   return (
     <div className="border-t border-gold-200/60 bg-cream-50/80 p-4 backdrop-blur-sm md:p-6">
@@ -37,25 +39,37 @@ export function ChatInput({
           </div>
 
           <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
+            type={isLoading && onStop ? "button" : "submit"}
+            onClick={isLoading && onStop ? onStop : undefined}
+            disabled={!isLoading && !input.trim()}
             className="flex h-12 min-w-[48px] items-center justify-center rounded-full bg-gold-500 px-6 font-medium text-ink-900 transition-all hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-500/50 disabled:cursor-not-allowed disabled:opacity-50"
-            aria-label="Enviar pergunta"
+            aria-label={isLoading ? "Parar geração" : "Enviar pergunta"}
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-              />
-            </svg>
+            {isLoading ? (
+              <svg
+                className="h-5 w-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <rect x="6" y="6" width="12" height="12" rx="1" />
+              </svg>
+            ) : (
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                />
+              </svg>
+            )}
           </button>
         </div>
 

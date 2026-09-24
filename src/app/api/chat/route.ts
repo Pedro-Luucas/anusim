@@ -1,7 +1,6 @@
 import { streamText } from "ai"
 import { searchForQuery } from "@/lib/rag/search"
-import { chunksToCitations, verifyCitations, extractRefsFromText } from "@/lib/rag/citations"
-import type { Citation } from "@/lib/rag/citations"
+import { createChatStream } from "@/lib/rag/stream"
 
 const MAX_MESSAGE_LENGTH = 500
 const MAX_MESSAGES_PER_REQUEST = 10
@@ -36,6 +35,14 @@ function getChatModelId(): string {
   return process.env.CHAT_MODEL || "google/gemini-3.5-flash"
 }
 
+function isConfigured(): boolean {
+  return Boolean(
+    process.env.AI_GATEWAY_API_KEY ||
+    process.env.VERCEL_OIDC_TOKEN ||
+    process.env.VERCEL
+  )
+}
+
 const SYSTEM_PROMPT = `Você é um assistente de estudos judaicos para a Sinagoga Anussim Brasil em Criciúma, Santa Catarina. Sua função é responder perguntas baseando-se EXCLUSIVAMENTE nos textos sagrados e fontes judaicas fornecidas.
 
 REGRAS IMPORTANTES:
@@ -61,6 +68,18 @@ REGRAS IMPORTANTES:
 8. Sempre responda em português brasileiro claro e acessível.`
 
 export async function POST(request: Request) {
+  if (!isConfigured()) {
+    return new Response(
+      JSON.stringify({
+        error: "Assistente não configurado. Configure as chaves de API.",
+      }),
+      {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+  }
+
   try {
     const ip = getClientIp(request)
 
@@ -127,14 +146,12 @@ export async function POST(request: Request) {
       useFallback: true,
     })
 
-    const citations = chunksToCitations(searchResult.chunks)
-
     const context =
-      citations.length > 0
-        ? citations
+      searchResult.chunks.length > 0
+        ? searchResult.chunks
             .map(
               (c, idx) =>
-                `[Fonte ${idx + 1}] ${c.ref}\nTexto: ${c.text}\nVersão: ${c.versionTitle}${c.license ? ` (${c.license})` : ""}`
+                `[Fonte ${idx + 1}] ${c.ref}\nTexto: ${c.text_content}\nVersão: ${c.version_title}${c.license ? ` (${c.license})` : ""}`
             )
             .join("\n\n")
         : "Nenhuma fonte encontrada. Informe o usuário que não há informação suficiente."
@@ -152,73 +169,27 @@ export async function POST(request: Request) {
     ]
 
     const modelId = getChatModelId()
-
-    let verifiedCitations: Citation[] = []
-
-    const result = streamText({
+    const result = await streamText({
       model: modelId,
       messages: enhancedMessages,
       temperature: 0.3,
-      onFinish: async ({ text }) => {
-        const generatedRefs = extractRefsFromText(text)
-        const { verified, hallucinated } = verifyCitations(
-          generatedRefs,
-          searchResult.chunks
-        )
-
-        if (hallucinated.length > 0) {
-          console.warn(
-            `[Chat] Warning: Model generated ${hallucinated.length} unverified citations:`,
-            hallucinated
-          )
-        }
-
-        verifiedCitations = citations.filter((c) =>
-          verified.some(
-            (vRef) =>
-              c.ref.toLowerCase().replace(/[:\s]/g, ".") ===
-              vRef.toLowerCase().replace(/[:\s]/g, ".")
-          )
-        )
-
-        console.log(
-          `[Chat] Citation verification: ${verified.length} verified, ${hallucinated.length} hallucinated`
-        )
-      },
     })
 
-    const response = result.toTextStreamResponse()
+    const stream = await createChatStream(
+      result.textStream,
+      result.text,
+      searchResult.chunks
+    )
 
-    return new Response(response.body, {
-      status: response.status,
+    return new Response(stream, {
       headers: {
-        ...Object.fromEntries(response.headers),
-        "X-Verified-Citations": JSON.stringify(
-          verifiedCitations.map((c) => ({
-            ref: c.ref,
-            url: c.url,
-            versionTitle: c.versionTitle,
-          }))
-        ),
+        "Content-Type": "application/x-ndjson",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     })
   } catch (error) {
     console.error("[Chat API] Error:", error)
-
-    if (
-      error instanceof Error &&
-      (error.message.includes("API") || error.message.includes("Gateway"))
-    ) {
-      return new Response(
-        JSON.stringify({
-          error: "Assistente não configurado. Configure as chaves de API.",
-        }),
-        {
-          status: 503,
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-    }
 
     return new Response(
       JSON.stringify({
