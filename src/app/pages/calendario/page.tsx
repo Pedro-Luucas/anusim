@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Header } from "@/components/header"
+import { SiteHeader } from "@/components/landing/site-header"
+import { SiteFooter } from "@/components/landing/site-footer"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -579,16 +580,16 @@ function bestCellHoliday(events: HebcalEvent[], isShabat: boolean): HolidayInfo 
 // ─── Type colors ──────────────────────────────────────────────────────────────
 
 const TYPE_COLORS: Record<HolidayType, { bg: string; text: string; border: string; cell: string }> = {
-  yomtov:         { bg: "bg-accent-50",   text: "text-accent-700",   border: "border-accent-200",   cell: "bg-accent-50 border-accent-300" },
-  cholhamoed:     { bg: "bg-amber-50",     text: "text-amber-700",    border: "border-amber-200",    cell: "bg-amber-50 border-amber-200" },
-  roshchodesh:    { bg: "bg-emerald-50",   text: "text-emerald-700",  border: "border-emerald-200",  cell: "bg-emerald-50 border-emerald-200" },
-  fast:           { bg: "bg-red-50",       text: "text-red-700",      border: "border-red-200",      cell: "bg-red-50 border-red-200" },
-  minor:          { bg: "bg-sky-50",       text: "text-sky-700",      border: "border-sky-200",      cell: "bg-sky-50 border-sky-200" },
-  shabbat_special:{ bg: "bg-violet-50",    text: "text-violet-700",   border: "border-violet-200",   cell: "bg-violet-50 border-violet-200" },
-  shabbat:        { bg: "bg-primary-50",   text: "text-primary-600",  border: "border-primary-100",  cell: "bg-[#f0f5fb] border-primary-100" },
-  omer:           { bg: "bg-neutral-50",   text: "text-neutral-600",  border: "border-neutral-200",  cell: "bg-neutral-50 border-neutral-100" },
-  modern:         { bg: "bg-slate-50",     text: "text-slate-700",    border: "border-slate-200",    cell: "bg-slate-50 border-slate-200" },
-  parashat:       { bg: "bg-primary-50",   text: "text-primary-600",  border: "border-primary-100",  cell: "bg-primary-50 border-primary-100" },
+  yomtov:         { bg: "bg-gold-50",      text: "text-gold-800",    border: "border-gold-300",     cell: "bg-gold-50 border-gold-300" },
+  cholhamoed:     { bg: "bg-amber-50",     text: "text-amber-800",   border: "border-amber-200",    cell: "bg-amber-50 border-amber-200" },
+  roshchodesh:    { bg: "bg-emerald-50",   text: "text-emerald-800", border: "border-emerald-200",  cell: "bg-emerald-50 border-emerald-200" },
+  fast:           { bg: "bg-red-50",       text: "text-red-800",     border: "border-red-200",      cell: "bg-red-50 border-red-200" },
+  minor:          { bg: "bg-sky-50",       text: "text-sky-800",     border: "border-sky-200",      cell: "bg-sky-50 border-sky-200" },
+  shabbat_special:{ bg: "bg-violet-50",    text: "text-violet-800",  border: "border-violet-200",   cell: "bg-violet-50 border-violet-200" },
+  shabbat:        { bg: "bg-gold-50",      text: "text-gold-700",    border: "border-gold-200",     cell: "bg-gold-50/60 border-gold-200" },
+  omer:           { bg: "bg-cream-200",    text: "text-ink-700",     border: "border-cream-300",    cell: "bg-cream-200 border-cream-300" },
+  modern:         { bg: "bg-slate-50",     text: "text-slate-800",   border: "border-slate-200",    cell: "bg-slate-50 border-slate-200" },
+  parashat:       { bg: "bg-gold-50",      text: "text-gold-700",    border: "border-gold-200",     cell: "bg-gold-50 border-gold-200" },
 }
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -685,7 +686,11 @@ export default function CalendarioPage() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { loadData(year, month) }, [year, month, loadData])
+  useEffect(() => {
+    // Data fetching on mount and when year/month changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData(year, month)
+  }, [year, month, loadData])
 
   function navigate(delta: number) {
     let nm = month + delta, ny = year
@@ -716,18 +721,18 @@ export default function CalendarioPage() {
   const selEvents = selectedKey ? (eventsByDate[selectedKey] ?? []) : []
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
-      <Header />
+    <main className="min-h-screen bg-parchment text-ink-900">
+      <SiteHeader />
 
-      <main className="mx-auto max-w-2xl px-3 py-5 flex flex-col gap-4">
+      <div className="mx-auto max-w-2xl px-5 pt-32 pb-12 flex flex-col gap-6 md:pt-40 md:pb-16">
 
         {/* ── Month header card ── */}
-        <section className="rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 px-5 py-4 text-white shadow-lg">
+        <section className="rounded-3xl bg-gradient-to-br from-gold-600 to-gold-700 px-6 py-5 text-cream-50 shadow-[0_20px_50px_-20px_rgba(168,132,47,0.4)]">
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={() => navigate(-1)}
               aria-label="Mês anterior"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-lg text-white/80 transition hover:bg-white/20 active:scale-95"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cream-50/10 text-lg text-cream-50/90 transition hover:bg-cream-50/20 active:scale-95"
             >
               ‹
             </button>
@@ -735,25 +740,25 @@ export default function CalendarioPage() {
             <div className="flex-1 text-center">
               {mode === "civil" ? (
                 <>
-                  <h1 className="text-xl font-bold sm:text-2xl leading-tight">
+                  <h1 className="font-display text-2xl font-semibold sm:text-3xl leading-tight">
                     {civilLabel} {year}
                   </h1>
-                  <p className="mt-0.5 text-sm text-primary-200">
+                  <p className="mt-1 text-sm text-gold-100">
                     {loading ? "..." : hebrewMonthLabel || "—"}
                     {!loading && hebrewYearVisible
-                      ? <span className="text-primary-300"> · {hebrewYearVisible}</span>
+                      ? <span className="text-gold-200"> · {hebrewYearVisible}</span>
                       : null}
                   </p>
                 </>
               ) : (
                 <>
-                  <h1 className="text-xl font-bold sm:text-2xl leading-tight text-accent-200">
+                  <h1 className="font-display text-2xl font-semibold sm:text-3xl leading-tight text-cream-50">
                     {loading ? "..." : hebrewMonthLabel || "—"}
                     {!loading && hebrewYearVisible
-                      ? <span className="text-accent-300 font-normal text-base"> · {hebrewYearVisible}</span>
+                      ? <span className="text-gold-200 font-normal text-lg"> · {hebrewYearVisible}</span>
                       : null}
                   </h1>
-                  <p className="mt-0.5 text-sm text-primary-200">{civilLabel} {year}</p>
+                  <p className="mt-1 text-sm text-gold-100">{civilLabel} {year}</p>
                 </>
               )}
             </div>
@@ -761,28 +766,28 @@ export default function CalendarioPage() {
             <button
               onClick={() => navigate(1)}
               aria-label="Próximo mês"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-lg text-white/80 transition hover:bg-white/20 active:scale-95"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cream-50/10 text-lg text-cream-50/90 transition hover:bg-cream-50/20 active:scale-95"
             >
               ›
             </button>
           </div>
 
           {/* Toggle */}
-          <div className="mt-4 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <button
               onClick={() => setMode(m => m === "civil" ? "jewish" : "civil")}
-              className="flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/20"
+              className="flex items-center gap-1 rounded-full border border-cream-50/20 bg-cream-50/10 px-5 py-2 text-xs font-semibold text-cream-50/90 transition hover:bg-cream-50/20"
             >
-              <span className={mode === "civil" ? "text-white" : "text-white/40"}>Civil</span>
-              <span className="mx-1 text-white/30">·</span>
-              <span className={mode === "jewish" ? "text-accent-300" : "text-white/40"}>Judaico</span>
+              <span className={mode === "civil" ? "text-cream-50" : "text-cream-50/50"}>Civil</span>
+              <span className="mx-1 text-cream-50/30">·</span>
+              <span className={mode === "jewish" ? "text-cream-50" : "text-cream-50/50"}>Judaico</span>
               <span
                 className={`ml-2 inline-block h-4 w-7 rounded-full transition-colors ${
-                  mode === "jewish" ? "bg-accent-400" : "bg-white/20"
+                  mode === "jewish" ? "bg-cream-50/30" : "bg-cream-50/20"
                 } relative`}
               >
                 <span
-                  className={`absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-all ${
+                  className={`absolute top-0.5 h-3 w-3 rounded-full bg-cream-50 shadow transition-all ${
                     mode === "jewish" ? "left-3.5" : "left-0.5"
                   }`}
                 />
@@ -792,14 +797,14 @@ export default function CalendarioPage() {
         </section>
 
         {/* ── Calendar grid card ── */}
-        <section className="rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
+        <section className="rounded-3xl border border-gold-200 bg-cream-50 shadow-sm overflow-hidden">
           {/* Weekday headers */}
-          <div className="grid grid-cols-7 border-b border-neutral-100">
+          <div className="grid grid-cols-7 border-b border-gold-200">
             {WEEKDAYS_SHORT.map((wd, i) => (
               <div
                 key={wd}
                 className={`py-2 text-center text-[10px] font-semibold tracking-wider uppercase ${
-                  i === 6 ? "text-accent-600" : "text-neutral-400"
+                  i === 6 ? "text-gold-700" : "text-ink-500"
                 }`}
               >
                 {wd}
@@ -809,17 +814,17 @@ export default function CalendarioPage() {
 
           {/* Day grid */}
           {loading ? (
-            <div className="grid grid-cols-7 p-2 gap-1">
+            <div className="grid grid-cols-7 p-2 gap-1.5">
               {Array.from({ length: 35 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-lg bg-neutral-100 animate-pulse"
+                  className="rounded-xl bg-cream-200 animate-pulse"
                   style={{ minHeight: 56 }}
                 />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-7 p-2 gap-1">
+            <div className="grid grid-cols-7 p-2 gap-1.5">
               {gridCells.map((day, idx) => {
                 if (day === null) {
                   return <div key={`e-${idx}`} style={{ minHeight: 56 }} />
@@ -846,13 +851,13 @@ export default function CalendarioPage() {
                     onClick={() => { setSelectedKey(key); setModalOpen(true) }}
                     aria-label={`${day} de ${civilLabel}${hd ? `, ${hd.hd} de ${HEBREW_MONTHS_PT[hd.hm] ?? hd.hm}` : ""}`}
                     className={[
-                      "group flex flex-col items-center rounded-lg border px-0.5 py-1.5 text-center transition-all",
-                      "active:scale-95 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
+                      "group flex flex-col items-center rounded-xl border px-0.5 py-1.5 text-center transition-all",
+                      "active:scale-95 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-gold-500",
                       isToday
-                        ? "bg-primary-700 border-primary-700 text-white shadow-md"
+                        ? "bg-gold-600 border-gold-600 text-cream-50 shadow-md"
                         : colors
                         ? `${colors.cell} hover:brightness-95`
-                        : "border-transparent bg-transparent hover:bg-neutral-50",
+                        : "border-transparent bg-transparent hover:bg-cream-200",
                     ].join(" ")}
                     style={{ minHeight: 56 }}
                   >
@@ -862,10 +867,10 @@ export default function CalendarioPage() {
                         "block leading-none font-bold tabular-nums",
                         "text-base sm:text-lg",
                         isToday
-                          ? "text-white"
+                          ? "text-cream-50"
                           : isShabat
-                          ? "text-primary-600"
-                          : "text-neutral-800",
+                          ? "text-gold-700"
+                          : "text-ink-900",
                       ].join(" ")}
                     >
                       {mode === "civil" ? day : (hd?.hd ?? day)}
@@ -876,7 +881,7 @@ export default function CalendarioPage() {
                       className={[
                         "block leading-none mt-0.5 tabular-nums",
                         "text-[9px] sm:text-[10px]",
-                        isToday ? "text-primary-200" : "text-neutral-400",
+                        isToday ? "text-gold-100" : "text-ink-500",
                       ].join(" ")}
                     >
                       {mode === "civil"
@@ -890,7 +895,7 @@ export default function CalendarioPage() {
                         className={[
                           "mt-1 block w-full truncate px-0.5 leading-tight",
                           "text-[8px] sm:text-[9px] font-semibold",
-                          isToday ? "text-primary-100" : colors?.text ?? "text-neutral-500",
+                          isToday ? "text-gold-100" : colors?.text ?? "text-ink-700",
                         ].join(" ")}
                       >
                         {holiday.shortName}
@@ -901,7 +906,7 @@ export default function CalendarioPage() {
                         className={[
                           "mt-1 block leading-tight",
                           "text-[8px] sm:text-[9px] font-medium",
-                          isToday ? "text-primary-200" : "text-primary-400",
+                          isToday ? "text-gold-100" : "text-gold-600",
                         ].join(" ")}
                       >
                         Shabat
@@ -916,8 +921,8 @@ export default function CalendarioPage() {
 
         {/* ── Legend ── */}
         {!loading && (
-          <section className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+          <section className="rounded-3xl border border-gold-200 bg-cream-50 px-5 py-4 shadow-sm">
+            <p className="mb-3 eyebrow">
               Legenda
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
@@ -935,36 +940,36 @@ export default function CalendarioPage() {
                 return (
                   <div key={type} className="flex items-center gap-1.5">
                     <span className={`inline-block h-3 w-3 rounded-sm border ${c.bg} ${c.border}`} />
-                    <span className="text-[11px] text-neutral-500">{labels[type]}</span>
+                    <span className="text-[11px] text-ink-700">{labels[type]}</span>
                   </div>
                 )
               })}
               <div className="flex items-center gap-1.5">
-                <span className="inline-block h-3 w-3 rounded-sm bg-primary-700 border border-primary-700" />
-                <span className="text-[11px] text-neutral-500">Hoje</span>
+                <span className="inline-block h-3 w-3 rounded-sm bg-gold-600 border border-gold-600" />
+                <span className="text-[11px] text-ink-700">Hoje</span>
               </div>
             </div>
           </section>
         )}
-      </main>
+      </div>
 
       {/* ── Day detail modal (bottom sheet) ── */}
       {modalOpen && selectedKey && (
         <div
           className="fixed inset-0 z-50 flex items-end justify-center"
-          style={{ background: "rgba(15,30,55,0.55)", backdropFilter: "blur(4px)" }}
+          style={{ background: "rgba(42,36,24,0.5)", backdropFilter: "blur(4px)" }}
           onClick={() => setModalOpen(false)}
         >
           <div
-            className="w-full max-w-2xl rounded-t-2xl bg-white flex flex-col"
+            className="w-full max-w-2xl rounded-t-3xl bg-cream-50 flex flex-col"
             style={{ maxHeight: "82dvh" }}
             onClick={e => e.stopPropagation()}
           >
             {/* Handle */}
-            <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-neutral-200 shrink-0" />
+            <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-gold-300 shrink-0" />
 
             {/* Modal header */}
-            <div className="flex items-start justify-between gap-3 border-b border-neutral-100 px-5 py-4 shrink-0">
+            <div className="flex items-start justify-between gap-3 border-b border-gold-200 px-5 py-4 shrink-0">
               <div>
                 {(() => {
                   const [dy, dm, dd] = selectedKey.split("-").map(Number)
@@ -976,13 +981,13 @@ export default function CalendarioPage() {
 
                   return mode === "civil" ? (
                     <>
-                      <h2 className="text-lg font-bold text-neutral-900 sm:text-xl">{civil}</h2>
-                      {hebrew && <p className="mt-0.5 text-sm font-medium text-accent-600">{hebrew}</p>}
+                      <h2 className="font-display text-xl font-semibold text-ink-900 sm:text-2xl">{civil}</h2>
+                      {hebrew && <p className="mt-1 text-sm font-medium text-gold-700">{hebrew}</p>}
                     </>
                   ) : (
                     <>
-                      <h2 className="text-lg font-bold text-accent-700 sm:text-xl">{hebrew ?? "—"}</h2>
-                      <p className="mt-0.5 text-sm text-neutral-500">{civil}</p>
+                      <h2 className="font-display text-xl font-semibold text-gold-800 sm:text-2xl">{hebrew ?? "—"}</h2>
+                      <p className="mt-1 text-sm text-ink-700">{civil}</p>
                     </>
                   )
                 })()}
@@ -990,7 +995,7 @@ export default function CalendarioPage() {
               <button
                 onClick={() => setModalOpen(false)}
                 aria-label="Fechar"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition hover:bg-neutral-200"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cream-200 text-ink-700 transition hover:bg-gold-200"
               >
                 ✕
               </button>
@@ -999,7 +1004,7 @@ export default function CalendarioPage() {
             {/* Events */}
             <div className="overflow-y-auto px-4 py-4 flex flex-col gap-3 pb-8">
               {selEvents.length === 0 && (
-                <div className="py-8 text-center text-sm text-neutral-400">
+                <div className="py-8 text-center text-sm text-ink-500">
                   Nenhum evento especial neste dia.
                 </div>
               )}
@@ -1011,20 +1016,20 @@ export default function CalendarioPage() {
                 return (
                   <div
                     key={i}
-                    className={`rounded-xl border ${colors.border} ${colors.bg} px-4 py-3`}
+                    className={`rounded-2xl border ${colors.border} ${colors.bg} px-4 py-3`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-neutral-900 text-sm leading-snug">
+                        <p className="font-semibold text-ink-900 text-sm leading-snug">
                           {info?.shortName ?? ev.title}
                         </p>
                         {ev.hebrew && (
-                          <p className="mt-0.5 text-base text-accent-600" dir="rtl">
+                          <p className="mt-0.5 font-hebrew text-base text-gold-700" dir="rtl">
                             {ev.hebrew}
                           </p>
                         )}
                         {info?.description && (
-                          <p className="mt-2 text-xs leading-relaxed text-neutral-600">
+                          <p className="mt-2 text-xs leading-relaxed text-ink-700">
                             {info.description}
                           </p>
                         )}
@@ -1046,7 +1051,7 @@ export default function CalendarioPage() {
                         href={ev.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-block text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                        className="mt-2 inline-block text-xs font-medium text-gold-700 hover:text-gold-800 transition-colors"
                       >
                         Saiba mais →
                       </a>
@@ -1058,6 +1063,8 @@ export default function CalendarioPage() {
           </div>
         </div>
       )}
-    </div>
+
+      <SiteFooter />
+    </main>
   )
 }
