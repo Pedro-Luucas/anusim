@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/landing/site-footer"
 import { OrnametalDivider, ScrollSeal } from "@/components/landing/judaic-symbols"
 
 export const metadata = {
-  title: "Pontos de Fé — Anussim Brasil Criciúma",
+  title: "Os 13 princípios da fé",
   description:
     "Os treze princípios de fé de Maimonides (Rambam): a base da crença judaica que a comunidade Anussim Brasil Criciúma professa.",
 }

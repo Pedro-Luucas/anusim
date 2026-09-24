@@ -8,7 +8,7 @@ import {
 } from "@/components/landing/judaic-symbols"
 
 export const metadata = {
-  title: "Contato — Anussim Brasil Criciúma",
+  title: "Contato",
   description:
     "Fale com o Rabino Malachy Ben Israel, veja os serviços transmitidos ao vivo e visite a sinagoga em Criciúma, SC.",
 }

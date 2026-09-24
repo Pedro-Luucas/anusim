@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/landing/site-footer"
 import { OrnametalDivider, StarOfDavid } from "@/components/landing/judaic-symbols"
 
 export const metadata = {
-  title: "O que são os Bnei Anusim: Anussim Brasil Criciúma",
+  title: "O que são os Bnei Anusim",
   description:
     "A história dos Bnei Anusim: os cripto-judeus que sobreviveram à Inquisição preservando a fé em segredo por séculos.",
 }
