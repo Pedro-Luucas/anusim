@@ -22,7 +22,7 @@ export default function ChatPage() {
               <strong>Rabino Malachy Ben Israel</strong> para questões
               halácicas (lei judaica) práticas. Entre em contato pelo WhatsApp:{" "}
               <a
-                href="https://wa.me/5548992313 58?text=Shalom%20Rabino%20Malachy!%20"
+                href="https://wa.me/554899231358?text=Shalom%20Rabino%20Malachy!%20"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-wine-500 hover:underline"
