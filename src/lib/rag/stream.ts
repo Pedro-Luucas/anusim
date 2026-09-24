@@ -19,7 +19,7 @@ export type VerifiedCitation = {
 }
 
 export async function createChatStream(
-  textStream: AsyncIterable<string>,
+  fullStream: AsyncIterable<{ type: string; textDelta?: string; error?: unknown; [key: string]: unknown }>,
   fullText: string | Promise<string> | PromiseLike<string>,
   retrievedChunks: SefariaChunk[]
 ): Promise<ReadableStream<Uint8Array>> {
@@ -29,28 +29,28 @@ export async function createChatStream(
   return new ReadableStream({
     async start(controller) {
       try {
-        for await (const delta of textStream) {
-          const sanitized = sanitizeDashes(delta)
-          const event: StreamEvent = { type: "text", delta: sanitized }
-          controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
-        }
+        let fullTextContent = ""
 
-        let text: string
-        try {
-          text = await fullText
-        } catch (error) {
-          console.error("[Stream] Error resolving fullText:", error)
-          const errorEvent: StreamEvent = {
-            type: "error",
-            message: "Erro ao processar sua pergunta. Tente novamente.",
+        for await (const part of fullStream) {
+          if (part.type === "text-delta" && part.textDelta) {
+            const sanitized = sanitizeDashes(part.textDelta)
+            fullTextContent += part.textDelta
+            const event: StreamEvent = { type: "text", delta: sanitized }
+            controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
+          } else if (part.type === "error") {
+            console.error("[Stream] Model error:", part.error)
+            const errorEvent: StreamEvent = {
+              type: "error",
+              message: "Erro ao processar sua pergunta. Tente novamente.",
+            }
+            controller.enqueue(encoder.encode(JSON.stringify(errorEvent) + "\n"))
+            controller.close()
+            return
           }
-          controller.enqueue(encoder.encode(JSON.stringify(errorEvent) + "\n"))
-          controller.close()
-          return
         }
 
         const { verified, hallucinated } = verifyCitations(
-          text,
+          fullTextContent,
           retrievedChunks
         )
 

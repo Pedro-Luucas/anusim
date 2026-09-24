@@ -222,7 +222,7 @@ ${contextText}`
     })
 
     const stream = await createChatStream(
-      result.textStream,
+      result.fullStream,
       result.text,
       searchResult.chunks
     )

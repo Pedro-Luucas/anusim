@@ -150,13 +150,13 @@ describe("Chat API Route", () => {
       capturedSystem = system
       capturedMessages = messages
 
-      async function* mockTextStream() {
-        yield "Genesis 1:1 "
-        yield "says God created."
+      async function* mockFullStream() {
+        yield { type: "text-delta", textDelta: "Genesis 1:1 " }
+        yield { type: "text-delta", textDelta: "says God created." }
       }
 
       return {
-        textStream: mockTextStream(),
+        fullStream: mockFullStream(),
         text: Promise.resolve("Genesis 1:1 says God created."),
       }
     })

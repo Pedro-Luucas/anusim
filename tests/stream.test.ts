@@ -2,9 +2,9 @@ import { describe, it, expect } from "vitest"
 import { createChatStream } from "../src/lib/rag/stream"
 import type { SefariaChunk } from "../src/lib/rag/db"
 
-async function* createMockTextStream(chunks: string[]) {
+async function* createMockFullStream(chunks: string[]) {
   for (const chunk of chunks) {
-    yield chunk
+    yield { type: "text-delta", textDelta: chunk }
   }
 }
 
@@ -92,10 +92,10 @@ describe("Citation Stream Assembly", () => {
     ]
     
     const fullText = textChunks.join("")
-    const textStream = createMockTextStream(textChunks)
+    const fullStream = createMockFullStream(textChunks)
 
     const stream = await createChatStream(
-      textStream,
+      fullStream,
       Promise.resolve(fullText),
       mockChunks
     )
@@ -125,10 +125,10 @@ describe("Citation Stream Assembly", () => {
     ]
     
     const fullText = textChunks.join("")
-    const textStream = createMockTextStream(textChunks)
+    const fullStream = createMockFullStream(textChunks)
 
     const stream = await createChatStream(
-      textStream,
+      fullStream,
       Promise.resolve(fullText),
       mockChunks
     )
@@ -147,10 +147,10 @@ describe("Citation Stream Assembly", () => {
     const textChunks = ["This is a response with ", "no citations at all."]
     
     const fullText = textChunks.join("")
-    const textStream = createMockTextStream(textChunks)
+    const fullStream = createMockFullStream(textChunks)
 
     const stream = await createChatStream(
-      textStream,
+      fullStream,
       Promise.resolve(fullText),
       mockChunks
     )
@@ -168,10 +168,10 @@ describe("Citation Stream Assembly", () => {
     const textChunks = ["Genesis 1:1 describes creation."]
     
     const fullText = textChunks.join("")
-    const textStream = createMockTextStream(textChunks)
+    const fullStream = createMockFullStream(textChunks)
 
     const stream = await createChatStream(
-      textStream,
+      fullStream,
       Promise.resolve(fullText),
       mockChunks
     )
@@ -192,5 +192,30 @@ describe("Citation Stream Assembly", () => {
     expect(citation?.excerpt).toBeTruthy()
     const excerpt = citation?.excerpt as string | undefined
     expect(excerpt?.length).toBeLessThanOrEqual(200)
+  })
+
+  it("should emit error event on mid-stream error part", async () => {
+    async function* errorStream() {
+      yield { type: "text-delta", textDelta: "Some text " }
+      yield { type: "error", error: new Error("Model failed") }
+    }
+
+    const stream = await createChatStream(
+      errorStream(),
+      Promise.resolve("Should not be used"),
+      mockChunks
+    )
+
+    const events = await streamToEvents(stream)
+
+    const textEvents = events.filter((e) => e.type === "text")
+    expect(textEvents).toHaveLength(1)
+
+    const errorEvents = events.filter((e) => e.type === "error")
+    expect(errorEvents).toHaveLength(1)
+    expect(errorEvents[0].message).toBe("Erro ao processar sua pergunta. Tente novamente.")
+
+    const doneEvents = events.filter((e) => e.type === "done")
+    expect(doneEvents).toHaveLength(0)
   })
 })
