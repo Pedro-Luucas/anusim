@@ -18,7 +18,7 @@ const HERO_PHOTOS = [
 
 export default function HomePage() {
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       {/* ─── HERO ─── */}
@@ -108,6 +108,7 @@ export default function HomePage() {
                   src={HERO_PHOTOS[0]}
                   alt="Comunidade Anussim Brasil em oração"
                   fill
+                  sizes="(max-width: 768px) 80vw, 40vw"
                   priority
                   className="object-cover"
                 />
@@ -119,6 +120,7 @@ export default function HomePage() {
                   src={HERO_PHOTOS[1]}
                   alt="Mesa de Pessach"
                   fill
+                  sizes="(max-width: 768px) 50vw, 30vw"
                   className="object-cover"
                 />
               </div>
@@ -255,6 +257,7 @@ export default function HomePage() {
                   src={src}
                   alt={`Foto da comunidade ${i + 1}`}
                   fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-900/20 to-transparent" />
@@ -346,9 +349,10 @@ export default function HomePage() {
               <div className="relative aspect-video overflow-hidden rounded-3xl border border-gold-200 shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]">
                 <iframe
                   src="https://www.youtube.com/embed/live_stream?channel=UCCdlGqSr1iLFvxQ3jKxE0gA"
-                  title="Anussim Brasil - Transmissão ao vivo"
+                  title="Anussim Brasil: Transmissão ao vivo"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  loading="lazy"
                   className="absolute inset-0 h-full w-full"
                 />
               </div>

@@ -59,7 +59,7 @@ export default function FotosPage() {
   }
 
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       <section className="relative pt-32 pb-14 md:pt-44 md:pb-20">
@@ -86,6 +86,7 @@ export default function FotosPage() {
                 <button
                   key={a.key}
                   onClick={() => switchAlbum(a.key)}
+                  aria-pressed={isActive}
                   className={`group relative rounded-2xl border px-4 py-4 text-left transition-all duration-500 ${
                     isActive
                       ? "border-gold-500 bg-gold-500/10 shadow-[0_10px_30px_-15px_rgba(201,162,83,0.5)]"

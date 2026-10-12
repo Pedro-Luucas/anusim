@@ -3,9 +3,9 @@ import { SiteFooter } from "@/components/landing/site-footer"
 import { OrnametalDivider, ScrollSeal } from "@/components/landing/judaic-symbols"
 
 export const metadata = {
-  title: "Pontos de Fé — Anussim Brasil Criciúma",
+  title: "Os 13 princípios da fé",
   description:
-    "Os treze princípios de fé de Maimonides (Rambam) — a base da crença judaica que a comunidade Anussim Brasil Criciúma professa.",
+    "Os treze princípios de fé de Maimonides (Rambam): a base da crença judaica que a comunidade Anussim Brasil Criciúma professa.",
 }
 
 const PRINCIPLES = [
@@ -35,7 +35,7 @@ const PRINCIPLES = [
   },
   {
     n: "07",
-    body: "Nós acreditamos com fé completa que a profecia do nosso mestre Moisés, que repouse em paz, era verdadeira, e que ele foi o pai de todos os profetas — tanto daqueles que o precederam quanto daqueles que o seguiram.",
+    body: "Nós acreditamos com fé completa que a profecia do nosso mestre Moisés, que repouse em paz, era verdadeira, e que ele foi o pai de todos os profetas, tanto daqueles que o precederam quanto daqueles que o seguiram.",
   },
   {
     n: "08",
@@ -65,7 +65,7 @@ const PRINCIPLES = [
 
 export default function PontosDeFePage() {
   return (
-    <main className="bg-parchment text-ink-900">
+    <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
       <section className="relative pt-32 pb-16 md:pt-44 md:pb-24">
@@ -77,7 +77,7 @@ export default function PontosDeFePage() {
             <span className="italic text-gold-shimmer">fé.</span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700 md:text-2xl">
-            Os treze princípios de Maimonides — o Rambam — formulados no século
+            Os treze princípios de Maimonides (o Rambam) formulados no século
             XII e recitados em todo o mundo judaico como fundamento da emuná.
           </p>
           <div className="mt-10">
