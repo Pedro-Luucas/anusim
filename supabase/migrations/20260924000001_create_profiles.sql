@@ -1,3 +1,16 @@
+-- Create profiles table linked to auth.users
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  name TEXT,
+  role TEXT NOT NULL DEFAULT 'membro' CHECK (role IN ('membro', 'admin')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
 -- Create is_admin() function to avoid recursive RLS checks
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN
@@ -13,19 +26,6 @@ AS $$
     AND role = 'admin'
   );
 $$;
-
--- Create profiles table linked to auth.users
-CREATE TABLE IF NOT EXISTS public.profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT NOT NULL,
-  name TEXT,
-  role TEXT NOT NULL DEFAULT 'membro' CHECK (role IN ('membro', 'admin')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Enable RLS
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Policies: users can read their own profile
 CREATE POLICY "Users can read own profile"
