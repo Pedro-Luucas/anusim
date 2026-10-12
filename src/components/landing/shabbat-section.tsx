@@ -114,7 +114,9 @@ export async function ShabbatSection() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-2.5 text-sm font-semibold text-ink-900 transition-all hover:bg-gold-600 hover:border-gold-600 whitespace-nowrap"
                 >
-                  Ler no Sefaria
+                  {parasha.link.includes("sefaria.org")
+                    ? "Ler no Sefaria"
+                    : "Ver a leitura"}
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>

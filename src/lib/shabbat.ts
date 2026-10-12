@@ -11,6 +11,9 @@ type HebcalShabbatItem = {
   memo?: string
   link?: string
   yomtov?: boolean
+  leyning?: {
+    torah?: string
+  }
 }
 
 type HebcalShabbatResponse = {
@@ -47,6 +50,17 @@ export type ShabbatTimes = {
   candleLighting: CandleLightingEvent[]
   havdalah: HavdalahEvent | null
   parasha: ParashaOrHoliday | null
+}
+
+function sefariaUrlFromTorahRange(torah: string): string {
+  return `https://www.sefaria.org/${torah.trim().replace(/\s+/g, ".").replace(/:/g, ".")}`
+}
+
+function readingLink(item: HebcalShabbatItem): string {
+  if (item.leyning?.torah) {
+    return sefariaUrlFromTorahRange(item.leyning.torah)
+  }
+  return item.link || ""
 }
 
 function formatBrazilianDate(isoDate: string): string {
@@ -88,7 +102,7 @@ export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
     const end = formatDate(new Date(now.getTime() + 14 * 86_400_000))
 
     const res = await fetch(
-      `https://www.hebcal.com/shabbat?cfg=json&geonameid=${GEONAMEID}&M=on&lg=s&start=${start}&end=${end}`,
+      `https://www.hebcal.com/shabbat?cfg=json&geonameid=${GEONAMEID}&M=on&lg=s&leyning=on&start=${start}&end=${end}`,
       { next: { revalidate: 21600 } }
     )
 
@@ -137,14 +151,14 @@ export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
       parasha = {
         name: holidayItem.title,
         hebrew: holidayItem.hebrew || "",
-        link: holidayItem.link || "",
+        link: readingLink(holidayItem),
         isHoliday: true,
       }
     } else if (parashaItem) {
       parasha = {
         name: parashaItem.title.replace("Parashat ", ""),
         hebrew: parashaItem.hebrew || "",
-        link: parashaItem.link || "",
+        link: readingLink(parashaItem),
         isHoliday: false,
       }
     }

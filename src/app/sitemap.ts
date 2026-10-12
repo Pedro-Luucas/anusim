@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next"
-
-const IS_FAQ_DRAFT = true
+import { IS_DRAFT } from "@/app/perguntas-frequentes/draft"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
@@ -19,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/calendario",
   ]
 
-  if (!IS_FAQ_DRAFT) {
+  if (!IS_DRAFT) {
     routes.push("/perguntas-frequentes")
   }
 

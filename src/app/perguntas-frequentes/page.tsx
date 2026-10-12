@@ -2,8 +2,7 @@
 
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
-
-const IS_DRAFT = true
+import { IS_DRAFT } from "@/app/perguntas-frequentes/draft"
 
 const FAQS = [
   {
