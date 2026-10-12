@@ -23,10 +23,13 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
+    "@types/qrcode-generator": "^0.0.16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "playwright": "^1.63.0",
+    "qrcode-generator": "^2.0.4",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",

@@ -27,7 +27,7 @@ export function SiteFooter() {
               </div>
             </div>
             <p className="mt-6 max-w-md font-display text-lg italic leading-relaxed text-ink-700">
-              &ldquo;A casa dos Bnei Anusim no Sul do Brasil — onde a chama que
+              &ldquo;A casa dos Bnei Anusim no Sul do Brasil: onde a chama que
               sobreviveu em silêncio voltou a queimar abertamente.&rdquo;
             </p>
             <div className="mt-6 flex gap-3">
@@ -73,10 +73,13 @@ export function SiteFooter() {
             <h4 className="eyebrow">Navegar</h4>
             <ul className="mt-5 space-y-3 text-sm text-ink-700">
               <li><Link href="/bnei-anusim" className="hover:text-gold-700 transition-colors">O que são os Bnei Anusim</Link></li>
+              <li><Link href="/agenda" className="hover:text-gold-700 transition-colors">Agenda de serviços</Link></li>
               <li><Link href="/fotos" className="hover:text-gold-700 transition-colors">Fotos da comunidade</Link></li>
               <li><Link href="/pontos-de-fe" className="hover:text-gold-700 transition-colors">Pontos de fé</Link></li>
               <li><Link href="/contato" className="hover:text-gold-700 transition-colors">Contato e serviços</Link></li>
-              <li><Link href="/pages/calendario" className="hover:text-gold-700 transition-colors">Calendário judaico</Link></li>
+              <li><Link href="/calendario" className="hover:text-gold-700 transition-colors">Calendário judaico</Link></li>
+              <li><Link href="/doacoes" className="hover:text-gold-700 transition-colors">Doações</Link></li>
+              <li><Link href="/perguntas-frequentes" className="hover:text-gold-700 transition-colors">Perguntas frequentes</Link></li>
             </ul>
           </div>
 
@@ -84,7 +87,7 @@ export function SiteFooter() {
             <h4 className="eyebrow">Endereço</h4>
             <p className="mt-5 text-sm leading-relaxed text-ink-700">
               R. Joaquim Nabuco, 140<br />
-              Centro — Criciúma, SC<br />
+              Centro, Criciúma, SC<br />
               88802-200
             </p>
             <p className="mt-5 text-sm leading-relaxed text-ink-700">
