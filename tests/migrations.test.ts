@@ -5,7 +5,7 @@ import { resolve } from "path"
 describe("Supabase Migrations", () => {
   it("should have correct type casts in search function", () => {
     const migration5 = readFileSync(
-      resolve(__dirname, "../supabase/migrations/20260924000005_fix_search_types.sql"),
+      resolve(__dirname, "../supabase/migrations/20260924000011_fix_search_types.sql"),
       "utf-8"
     )
 
@@ -24,12 +24,12 @@ describe("Supabase Migrations", () => {
     const migrationsDir = resolve(__dirname, "../supabase/migrations")
 
     const expected = [
-      "20260924000000_rag_pgvector.sql",
-      "20260924000001_hebrew_fulltext.sql",
-      "20260924000002_add_he_text.sql",
-      "20260924000003_unique_constraint.sql",
-      "20260924000004_search_he_text.sql",
-      "20260924000005_fix_search_types.sql",
+      "20260924000006_rag_pgvector.sql",
+      "20260924000007_hebrew_fulltext.sql",
+      "20260924000008_add_he_text.sql",
+      "20260924000009_unique_constraint.sql",
+      "20260924000010_search_he_text.sql",
+      "20260924000011_fix_search_types.sql",
     ]
 
     for (const migration of expected) {
