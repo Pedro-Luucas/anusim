@@ -67,10 +67,10 @@ function generateQRCodeSVG(data) {
   qr.make()
 
   const moduleCount = qr.getModuleCount()
-  const size = moduleCount
+  const displaySize = 256
 
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">\n`
-  svg += `  <rect width="${size}" height="${size}" fill="#ffffff"/>\n`
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${displaySize}" height="${displaySize}" viewBox="0 0 ${moduleCount} ${moduleCount}" shape-rendering="crispEdges">\n`
+  svg += `  <rect width="${moduleCount}" height="${moduleCount}" fill="#ffffff"/>\n`
 
   for (let row = 0; row < moduleCount; row++) {
     for (let col = 0; col < moduleCount; col++) {

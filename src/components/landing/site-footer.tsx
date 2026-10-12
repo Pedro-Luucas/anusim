@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { IS_DRAFT } from "@/app/perguntas-frequentes/draft"
 
 export function SiteFooter() {
   const year = new Date().getFullYear()
@@ -79,7 +80,9 @@ export function SiteFooter() {
               <li><Link href="/contato" className="hover:text-gold-700 transition-colors">Contato e serviços</Link></li>
               <li><Link href="/calendario" className="hover:text-gold-700 transition-colors">Calendário judaico</Link></li>
               <li><Link href="/doacoes" className="hover:text-gold-700 transition-colors">Doações</Link></li>
-              <li><Link href="/perguntas-frequentes" className="hover:text-gold-700 transition-colors">Perguntas frequentes</Link></li>
+              {!IS_DRAFT && (
+                <li><Link href="/perguntas-frequentes" className="hover:text-gold-700 transition-colors">Perguntas frequentes</Link></li>
+              )}
             </ul>
           </div>
 

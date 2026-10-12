@@ -123,7 +123,8 @@ export default function DoacoesPage() {
                   alt="QR Code Pix para doação"
                   width={256}
                   height={256}
-                  className="w-64 h-64"
+                  unoptimized
+                  className="h-64 w-64"
                 />
               </div>
               <p className="mt-4 text-center text-xs text-ink-500">
