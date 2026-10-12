@@ -48,6 +48,12 @@ No painel do Supabase, vá em **SQL Editor** e execute **cada migration** na ord
 3. `supabase/migrations/20260924000003_create_materials.sql`
 4. `supabase/migrations/20260924000004_create_weekly_agenda.sql`
 5. `supabase/migrations/20260924000005_create_events.sql`
+6. `supabase/migrations/20260924000006_rag_pgvector.sql` (chat RAG)
+7. `supabase/migrations/20260924000007_hebrew_fulltext.sql`
+8. `supabase/migrations/20260924000008_add_he_text.sql`
+9. `supabase/migrations/20260924000009_unique_constraint.sql`
+10. `supabase/migrations/20260924000010_search_he_text.sql`
+11. `supabase/migrations/20260924000011_fix_search_types.sql`
 
 Ou use a [CLI do Supabase](https://supabase.com/docs/guides/cli):
 

@@ -37,7 +37,7 @@ Execute a migração para criar a tabela de chunks e índices:
 supabase db push
 
 # OU via SQL Editor no dashboard Supabase
-# Copie e execute o conteúdo de: supabase/migrations/20260924000000_rag_pgvector.sql
+# Copie e execute o conteúdo de: supabase/migrations/20260924000006_rag_pgvector.sql
 ```
 
 A migração cria:
