@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
+import { ShabbatSection } from "@/components/landing/shabbat-section"
 import {
   OrnametalDivider,
   StarOfDavid,
@@ -162,7 +163,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── ESSÊNCIA — SOBRE EM 3 BLOCOS ─── */}
+      {/* ─── SHABAT ─── */}
+      <ShabbatSection />
+
+      {/* ESSÊNCIA: SOBRE EM 3 BLOCOS */}
       <section className="relative py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <div className="text-center">
@@ -281,7 +285,7 @@ export default function HomePage() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700">
             Se você quer visitar a sinagoga, participar de um Shabat, conhecer o
-            minian ou apenas conversar: ligue para o Rabino Malachy. Cada
+            minian ou apenas conversar, ligue para o Rabino Malachy. Cada
             visita é recebida com cuidado.
           </p>
 

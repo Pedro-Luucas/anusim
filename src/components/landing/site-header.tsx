@@ -8,9 +8,12 @@ import { usePathname } from "next/navigation"
 const NAV_LINKS = [
   { href: "/", label: "Início" },
   { href: "/bnei-anusim", label: "Bnei Anusim" },
+  { href: "/agenda", label: "Agenda" },
   { href: "/fotos", label: "Fotos" },
   { href: "/pontos-de-fe", label: "Pontos de Fé" },
+  { href: "/chat", label: "Pergunte" },
   { href: "/contato", label: "Contato" },
+  { href: "/entrar", label: "Entrar" },
 ]
 
 export function SiteHeader() {
@@ -129,6 +132,14 @@ export function SiteHeader() {
                 </Link>
               )
             })}
+            <Link
+              href="/entrar"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 bg-transparent px-5 py-3 text-sm font-semibold text-gold-700 min-h-[44px]"
+              tabIndex={open ? 0 : -1}
+            >
+              Entrar
+            </Link>
             <a
               href="https://wa.me/554899231358"
               target="_blank"
