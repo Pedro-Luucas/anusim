@@ -6,16 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ingest": "tsx scripts/ingest-sefaria.ts",
+    "ingest:dry": "DRY_RUN=true tsx scripts/ingest-sefaria.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.1",
+    "ai": "^7.0.114",
     "next": "16.1.6",
+    "p-limit": "^7.3.3",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/qrcode-generator": "^0.0.16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -24,6 +31,8 @@
     "playwright": "^1.63.0",
     "qrcode-generator": "^2.0.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.1"
   }
 }

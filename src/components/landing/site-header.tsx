@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/agenda", label: "Agenda" },
   { href: "/fotos", label: "Fotos" },
   { href: "/pontos-de-fe", label: "Pontos de Fé" },
+  { href: "/chat", label: "Pergunte" },
   { href: "/contato", label: "Contato" },
 ]
 
