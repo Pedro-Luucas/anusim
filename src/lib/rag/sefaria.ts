@@ -3,6 +3,7 @@ export type SefariaSearchResult = {
   heRef: string
   text: string
   lang: string
+  path?: string
 }
 
 export type SefariaTextResponse = {
@@ -85,6 +86,7 @@ export async function searchSefaria(
     field: "naive_lemmatizer",
     source_proj: true,
     filters: filters.length > 0 ? filters : undefined,
+    filter_fields: filters.length > 0 ? filters.map(() => "path") : undefined,
   }
 
   const response = await fetch("https://www.sefaria.org/api/search-wrapper", {
@@ -109,6 +111,7 @@ export async function searchSefaria(
       exact?: string
       naive_lemmatizer?: string
       lang?: string
+      path?: string
     }
   }
 
@@ -117,6 +120,7 @@ export async function searchSefaria(
     heRef: (hit._source?.heRef || "") as string,
     text: stripHtml(((hit._source?.exact || hit._source?.naive_lemmatizer || "") as string)),
     lang: ((hit._source?.lang || "en") as string),
+    path: hit._source?.path,
   }))
 }
 
