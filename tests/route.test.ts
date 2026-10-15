@@ -63,12 +63,27 @@ describe("Chat API Route", () => {
 
   beforeEach(() => {
     vi.resetModules()
-    process.env = { ...originalEnv, AI_GATEWAY_API_KEY: "test-key" }
+    process.env = { ...originalEnv, ANTHROPIC_API_KEY: "test-key" }
   })
 
   afterEach(() => {
     process.env = originalEnv
     vi.restoreAllMocks()
+  })
+
+  it("should return 503 in PT-BR when ANTHROPIC_API_KEY is missing", async () => {
+    delete process.env.ANTHROPIC_API_KEY
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+    const response = await POST(
+      new Request("http://localhost:3000/api/chat", {
+        method: "POST",
+        body: JSON.stringify({ messages: [{ role: "user", content: "Oi" }] }),
+      })
+    )
+    expect(response.status).toBe(503)
+    const body = await response.json()
+    expect(body.error).toContain("não configurado")
+    expect(errSpy).toHaveBeenCalled()
   })
 
   it("should return 400 for invalid JSON", async () => {

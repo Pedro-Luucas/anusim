@@ -3,6 +3,7 @@ import { searchChunks } from "./db"
 import { searchSefaria, fetchSefariaText, isLicenseAllowed, stripHtml } from "./sefaria"
 import { embedText } from "./embeddings"
 import type { SefariaChunk } from "./db"
+import { describeError, getChatModel, isChatConfigured } from "./llm"
 
 export type SearchResult = {
   chunks: SefariaChunk[]
@@ -15,19 +16,18 @@ export async function translateQueryToSearchTerms(
   portugueseQuery: string
 ): Promise<string> {
   try {
-    const modelId = process.env.CHAT_MODEL || "google/gemini-3.5-flash"
+    if (!isChatConfigured()) return fallbackTranslation(portugueseQuery)
 
     const prompt = `You are a translator for Jewish text search. Translate this Portuguese question into English and Hebrew search keywords that would match Jewish religious texts (Torah, Talmud, Mishnah, Halacha, etc.).\n\nPortuguese question: "${portugueseQuery}"\n\nReturn ONLY the search keywords in English and Hebrew, separated by spaces. Include both transliterations and Hebrew script. Keep it concise (max 20 words).\n\nExample input: "O que é Shabat?"\nExample output: shabbat sabbath שבת rest holy day seventh\n\nYour translation:`
 
     const { text } = await generateText({
-      model: modelId,
+      model: getChatModel(),
       prompt,
-      temperature: 0.3,
     })
 
     return text.trim() || fallbackTranslation(portugueseQuery)
   } catch (error) {
-    console.warn("[Search] Model translation failed, using fallback:", error)
+    console.warn("[Search] Model translation failed, using fallback:", describeError(error))
     return fallbackTranslation(portugueseQuery)
   }
 }
@@ -117,7 +117,7 @@ export async function searchForQuery(
         }
       }
     } catch (error) {
-      console.error("[RAG] Database search failed:", error)
+      console.error("[RAG] Database/embedding search failed, falling back to Sefaria:", describeError(error))
       
       if (error instanceof Error && error.message.includes("AI_GATEWAY_API_KEY")) {
         console.log("[RAG] Gateway not configured, skipping database search")

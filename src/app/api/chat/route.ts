@@ -1,6 +1,7 @@
 import { streamText } from "ai"
 import { searchForQuery } from "@/lib/rag/search"
 import { createChatStream } from "@/lib/rag/stream"
+import { describeError, getChatModel, getChatModelId, isChatConfigured } from "@/lib/rag/llm"
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT = 10
@@ -34,17 +35,6 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-function getChatModelId(): string {
-  return process.env.CHAT_MODEL || "google/gemini-3.5-flash"
-}
-
-function isConfigured(): boolean {
-  return Boolean(
-    process.env.AI_GATEWAY_API_KEY ||
-    process.env.VERCEL_OIDC_TOKEN ||
-    process.env.VERCEL
-  )
-}
 
 const SYSTEM_PROMPT = `Você é um assistente de estudos judaicos para a Sinagoga Anussim Brasil em Criciúma, Santa Catarina. Sua função é responder perguntas baseando-se EXCLUSIVAMENTE nos textos sagrados e fontes judaicas fornecidas.
 
@@ -75,7 +65,8 @@ REGRAS IMPORTANTES:
 9. NUNCA use travessões longos (—) ou médios (–) no texto. Use vírgulas, pontos, parênteses ou hífens simples (-) quando necessário.`
 
 export async function POST(request: Request) {
-  if (!isConfigured()) {
+  if (!isChatConfigured()) {
+    console.error("[Chat API] ANTHROPIC_API_KEY não configurada; chat indisponível.")
     return new Response(
       JSON.stringify({
         error: "Assistente não configurado. Configure as chaves de API.",
@@ -212,12 +203,10 @@ CONTEXTO (fontes judaicas relevantes para a pergunta):
 
 ${contextText}`
 
-    const modelId = getChatModelId()
     const result = await streamText({
-      model: modelId,
+      model: getChatModel(),
       system: instructions,
       messages: validatedMessages,
-      temperature: 0.3,
       abortSignal: request.signal,
     })
 
@@ -235,7 +224,7 @@ ${contextText}`
       },
     })
   } catch (error) {
-    console.error("[Chat API] Error:", error)
+    console.error("[Chat API] Error:", { model: getChatModelId(), ...describeError(error) })
 
     return new Response(
       JSON.stringify({
