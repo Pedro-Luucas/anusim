@@ -1,3 +1,5 @@
+import { decodeHTMLStrict } from "entities"
+
 export type SefariaSearchResult = {
   ref: string
   heRef: string
@@ -48,6 +50,9 @@ export function stripHtml(text: string): string {
     .replace(/<sup[^>]*class="footnote-marker"[^>]*>.*?<\/sup>/gi, "")
     .replace(/<i[^>]*class="footnote"[^>]*>.*?<\/i>/gi, "")
     .replace(/<[^>]+>/g, "")
+    // Decode named (&thinsp; &nbsp; &mdash; ...) and numeric entities after
+    // stripping tags, so decoded "<" or ">" are kept as literal text.
+    .replace(/&[#a-zA-Z0-9]+;/g, (entity) => decodeHTMLStrict(entity))
     .replace(/\s+/g, " ")
     .trim()
 }

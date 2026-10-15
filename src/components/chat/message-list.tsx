@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect, useRef } from "react"
+
 import { MessageBubble } from "./message-bubble"
 import { CitationCard } from "./citation-card"
 
@@ -25,9 +27,43 @@ type MessageListProps = {
   isLoading: boolean
 }
 
+export const STICK_TO_BOTTOM_THRESHOLD_PX = 100
+
+export function isNearBottom(
+  el: { scrollHeight: number; scrollTop: number; clientHeight: number },
+  threshold = STICK_TO_BOTTOM_THRESHOLD_PX
+): boolean {
+  return el.scrollHeight - el.scrollTop - el.clientHeight <= threshold
+}
+
 export function MessageList({ messages, isLoading }: MessageListProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  // Whether the user is following the conversation at the bottom. Updated only
+  // by user scrolls, so scrolling up during streaming stops auto-scroll.
+  const stickToBottomRef = useRef(true)
+
+  const handleScroll = () => {
+    const el = containerRef.current
+    if (el) stickToBottomRef.current = isNearBottom(el)
+  }
+
+  useEffect(() => {
+    const el = containerRef.current
+    // Never scroll on initial load / empty state, and only scroll the
+    // messages container (never the window).
+    if (!el || messages.length === 0) return
+    // A question just sent by the user always brings the view down.
+    if (messages[messages.length - 1].role === "user") stickToBottomRef.current = true
+    if (!stickToBottomRef.current) return
+    el.scrollTop = el.scrollHeight
+  }, [messages, isLoading])
+
   return (
-    <div className="flex-1 space-y-6 overflow-y-auto px-4 py-6">
+    <div
+      ref={containerRef}
+      onScroll={handleScroll}
+      className="flex-1 space-y-6 overflow-y-auto px-4 py-6"
+    >
       {messages.map((message) => (
         <div key={message.id} className="space-y-3">
           <MessageBubble message={message} />

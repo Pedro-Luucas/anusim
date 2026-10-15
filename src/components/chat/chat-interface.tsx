@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { MessageList } from "./message-list"
 import { ChatInput } from "./chat-input"
 
@@ -27,11 +27,6 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -188,7 +183,6 @@ export function ChatInterface() {
       </div>
 
       <MessageList messages={messages} isLoading={isLoading} />
-      <div ref={messagesEndRef} />
 
       {error && (
         <div className="mx-4 mb-4 rounded-lg border border-wine-500/30 bg-wine-500/5 p-4">
