@@ -74,11 +74,29 @@ export function verifyCitations(
     }
   }
 
+  // Also accept retrieved chunks whose exact canonical ref appears verbatim in
+  // the answer (covers books outside the extraction pattern, e.g.
+  // "Jerusalem Talmud Beitzah 5:2:2" or "Klein Dictionary, ...").
+  const normalizedText = normalizeRef(fullText)
+  for (const chunk of retrievedChunks) {
+    const chunkNorm = normalizeRef(chunk.ref)
+    if (citedRefs.has(chunkNorm) || chunkNorm.length < 4) continue
+    const escaped = chunkNorm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}]|\\.\\d)`, "u")
+    if (pattern.test(normalizedText)) {
+      citedRefs.add(chunkNorm)
+      verified.push(chunk.ref)
+    }
+  }
+
   for (const extractedRef of extractedRefs) {
     let found = false
     
     for (const chunk of retrievedChunks) {
-      if (refMatches(extractedRef, chunk.ref)) {
+      if (
+        refMatches(extractedRef, chunk.ref) ||
+        normalizeRef(chunk.ref).endsWith(" " + normalizeRef(extractedRef))
+      ) {
         found = true
         break
       }

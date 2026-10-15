@@ -18,7 +18,8 @@ Usuário → Chat UI → API Route → RAG Search → LLM com contexto → Respo
 - **API**: `/api/chat`, endpoint Next.js com rate limiting e verificação de citações
 - **RAG**: `src/lib/rag/`, busca híbrida (vetor + texto), embeddings, integração Sefaria
 - **Database**: Supabase Postgres com pgvector (tabela `sefaria_chunks`)
-- **LLM**: Vercel AI SDK + AI Gateway (Gemini ou GPT configurável)
+- **LLM (chat)**: Claude Sonnet via Anthropic direto (`@ai-sdk/anthropic`), modelo padrão `claude-sonnet-5-5`
+- **Embeddings**: `google/gemini-embedding-001` via Vercel AI Gateway (se falhar, o chat usa a busca ao vivo na Sefaria)
 - **Ingestion**: `scripts/ingest-sefaria.ts`, popula banco com textos da Sefaria
 
 ## Setup
@@ -62,17 +63,16 @@ Preencha as variáveis:
 NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key-aqui
 
-# Modelo de chat (Gemini ou GPT)
-CHAT_MODEL=gemini-2.0-flash-exp
+# Chat (Claude via Anthropic). Obrigatória: sem ela a API responde 503.
+ANTHROPIC_API_KEY=sua-chave-anthropic
+# Necessária para chaves de usuário (sk-ant-usr-...): enviada no header anthropic-workspace-id
+ANTHROPIC_WORKSPACE_ID=
+# Opcional. Padrão: claude-sonnet-5-5 (ids no formato do Gateway, como "google/...", são ignorados)
+CHAT_MODEL=claude-sonnet-5-5
 
-# Modelo de embeddings (recomendado para hebraico)
-EMBEDDING_MODEL=gemini-embedding-001
-
-# Google AI API Key (se usar Gemini)
-GOOGLE_GENERATIVE_AI_API_KEY=sua-chave-google-ai
-
-# Ou OpenAI (se usar GPT)
-# OPENAI_API_KEY=sua-chave-openai
+# Embeddings via Vercel AI Gateway (local: AI_GATEWAY_API_KEY; na Vercel usa OIDC)
+AI_GATEWAY_API_KEY=
+EMBEDDING_MODEL=google/gemini-embedding-001
 ```
 
 **Atenção**: `gemini-embedding-001` tem melhor desempenho em textos hebraicos/aramaicos segundo benchmark da própria Sefaria. OpenAI `text-embedding-3-small` teve resultado pobre neste domínio.
@@ -83,9 +83,10 @@ Adicione as mesmas variáveis em **Project Settings → Environment Variables**:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `CHAT_MODEL`
-- `EMBEDDING_MODEL`
-- `GOOGLE_GENERATIVE_AI_API_KEY` (ou `OPENAI_API_KEY`)
+- `ANTHROPIC_API_KEY` (obrigatória para o chat)
+- `ANTHROPIC_WORKSPACE_ID` (se a chave for de usuário, `sk-ant-usr-`)
+- `CHAT_MODEL` (opcional, padrão `claude-sonnet-5-5`)
+- `EMBEDDING_MODEL` (Gateway autentica via OIDC na Vercel)
 
 ### 5. Ingerir textos da Sefaria
 
@@ -204,6 +205,7 @@ O sistema deve buildar limpo mesmo sem configuração:
 unset NEXT_PUBLIC_SUPABASE_URL
 unset SUPABASE_SERVICE_ROLE_KEY
 unset CHAT_MODEL
+unset ANTHROPIC_API_KEY
 npm run build
 ```
 

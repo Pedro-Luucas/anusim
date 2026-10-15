@@ -250,3 +250,22 @@ describe("Citation Verification Filtering", () => {
     expect(hallucinated).toHaveLength(0)
   })
 })
+
+describe("verifyCitations with full canonical refs", () => {
+  const chunk = (ref: string) => ({
+    id: 0, ref, he_ref: null, book: ref.split(" ")[0], category: null, language: "en",
+    version_title: "v", license: null, sefaria_url: "https://www.sefaria.org/x", text_content: "t", he_text: null,
+  })
+  it("verifies refs outside the extraction pattern when quoted exactly", () => {
+    const chunks = [chunk("Jerusalem Talmud Beitzah 5:2:2"), chunk("Klein Dictionary, שְׁבוּת ᴵᴵ"), chunk("Genesis 1:1")]
+    const text = "**Jerusalem Talmud Beitzah 5:2:2** e **Klein Dictionary, שְׁבוּת ᴵᴵ** mas também Genesis 1:10."
+    const { verified } = verifyCitations(text, chunks as never)
+    expect(verified).toContain("Jerusalem Talmud Beitzah 5:2:2")
+    expect(verified).toContain("Klein Dictionary, שְׁבוּת ᴵᴵ")
+    expect(verified).not.toContain("Genesis 1:1")
+  })
+  it("does not flag a prefixed ref as hallucinated", () => {
+    const { hallucinated } = verifyCitations("Jerusalem Talmud Pesachim 6:2:1", [chunk("Jerusalem Talmud Pesachim 6:2:1")] as never)
+    expect(hallucinated).toHaveLength(0)
+  })
+})

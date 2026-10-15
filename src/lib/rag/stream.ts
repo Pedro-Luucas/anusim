@@ -1,6 +1,7 @@
 import type { SefariaChunk } from "./db"
 import { verifyCitations, chunksToCitations } from "./citations"
 import { sanitizeDashes } from "./sanitize"
+import { describeError } from "./llm"
 
 export type StreamEvent =
   | { type: "text"; delta: string }
@@ -38,7 +39,7 @@ export async function createChatStream(
             const event: StreamEvent = { type: "text", delta: sanitized }
             controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"))
           } else if (part.type === "error") {
-            console.error("[Stream] Model error:", part.error)
+            console.error("[Stream] Model error:", describeError(part.error))
             const errorEvent: StreamEvent = {
               type: "error",
               message: "Erro ao processar sua pergunta. Tente novamente.",
@@ -92,7 +93,7 @@ export async function createChatStream(
         controller.enqueue(encoder.encode(JSON.stringify(doneEvent) + "\n"))
         controller.close()
       } catch (error) {
-        console.error("[Stream] Error during streaming:", error)
+        console.error("[Stream] Error during streaming:", describeError(error))
         const errorEvent: StreamEvent = {
           type: "error",
           message: "Erro ao processar sua pergunta. Tente novamente.",
