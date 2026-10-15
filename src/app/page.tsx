@@ -3,6 +3,10 @@ import Link from "next/link"
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
 import { ShabbatSection } from "@/components/landing/shabbat-section"
+import { HomeStats } from "@/components/landing/home-stats"
+import { Spotlight } from "@/components/aceternity/spotlight"
+import { BlurFade } from "@/components/ui/blur-fade"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   OrnametalDivider,
   StarOfDavid,
@@ -23,7 +27,7 @@ export default function HomePage() {
 
       {/* ─── HERO ─── */}
       <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-        {/* soft gold glow behind */}
+        <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-0"
@@ -32,8 +36,7 @@ export default function HomePage() {
               "radial-gradient(60% 50% at 50% 0%, rgba(201,162,83,0.18) 0%, rgba(250,246,239,0) 70%)",
           }}
         />
-        {/* judaic pattern subtle */}
-        <div className="pointer-events-none absolute inset-0 -z-0 opacity-[0.18] bg-judaic-pattern" />
+        <div className="pointer-events-none absolute inset-0 -z-0 bg-judaic-pattern opacity-[0.18]" />
 
         <div className="relative mx-auto grid max-w-7xl gap-14 px-5 md:grid-cols-12 md:gap-12 md:px-10">
           <div className="md:col-span-7 stagger">
@@ -142,26 +145,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── MARQUEE STAT / IDENTITY BAR ─── */}
-      <section className="border-y border-gold-200/70 bg-cream-50">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-gold-200/70 md:grid-cols-4">
-          {[
-            { n: "500+", l: "Anos de história silenciosa" },
-            { n: "12+", l: "Famílias fundadoras em Criciúma" },
-            { n: "R. Joaquim Nabuco, 140", l: "Centro · Criciúma · SC" },
-            { n: "Ao vivo", l: "Serviços toda semana" },
-          ].map((s) => (
-            <div key={s.l} className="px-5 py-8 text-center md:py-10">
-              <p className="font-display text-2xl font-medium text-gold-700 md:text-3xl">
-                {s.n}
-              </p>
-              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-ink-500">
-                {s.l}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <HomeStats />
 
       {/* ─── SHABAT ─── */}
       <ShabbatSection />
@@ -171,11 +155,13 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <div className="text-center">
             <OrnametalDivider symbol="menorah" />
-            <p className="eyebrow mt-7">O que nos define</p>
-            <h2 className="display-xl mx-auto mt-4 max-w-3xl text-4xl text-ink-900 md:text-5xl lg:text-6xl">
-              Três coisas que{" "}
-              <span className="italic text-gold-shimmer">não negociamos.</span>
-            </h2>
+            <BlurFade>
+              <p className="eyebrow mt-7">O que nos define</p>
+              <h2 className="display-xl mx-auto mt-4 max-w-3xl text-4xl text-ink-900 md:text-5xl lg:text-6xl">
+                Três coisas que{" "}
+                <span className="italic text-gold-shimmer">não negociamos.</span>
+              </h2>
+            </BlurFade>
           </div>
 
           <div className="mt-20 grid gap-8 md:grid-cols-3">
@@ -196,24 +182,26 @@ export default function HomePage() {
                 body: "Minian, festas, Pessach, casamentos, condolências. Ninguém caminha sozinho. Nunca.",
               },
             ].map((card) => (
-              <article
+              <Card
                 key={card.title}
-                className="group relative overflow-hidden rounded-3xl border border-gold-200/70 bg-cream-50 p-8 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500 hover:shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]"
+                className="group relative overflow-hidden rounded-3xl border-gold-200/70 bg-cream-50 py-0 ring-gold-200/40 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500 hover:shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]"
               >
-                <p
-                  className="font-hebrew text-5xl text-gold-500 transition-colors group-hover:text-gold-700"
-                  dir="rtl"
-                >
-                  {card.he}
-                </p>
-                <h3 className="mt-6 font-display text-3xl font-medium text-ink-900">
-                  {card.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-700">
-                  {card.body}
-                </p>
-                <div className="mt-8 h-px w-12 bg-gold-500 transition-all duration-500 group-hover:w-full" />
-              </article>
+                <CardContent className="p-8">
+                  <p
+                    className="font-hebrew text-5xl text-gold-500 transition-colors group-hover:text-gold-700"
+                    dir="rtl"
+                  >
+                    {card.he}
+                  </p>
+                  <h3 className="mt-6 font-display text-3xl font-medium text-ink-900">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-700">
+                    {card.body}
+                  </p>
+                  <div className="mt-8 h-px w-12 bg-gold-500 transition-all duration-500 group-hover:w-full" />
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
