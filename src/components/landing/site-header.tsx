@@ -8,7 +8,6 @@ import { Menu } from "lucide-react"
 
 import { LOGIN_HREF, LOGIN_LABEL, PRIMARY_NAV, WHATSAPP_HREF } from "@/lib/nav"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -116,17 +115,12 @@ export function SiteHeader() {
           </NavigationMenu>
 
           <div className="ml-auto hidden shrink-0 items-center gap-3 xl:flex">
-            <Button
-              nativeButton={false}
-              render={
-                <Link
-                  href={LOGIN_HREF}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold-400 bg-transparent px-4 text-sm font-semibold text-gold-700 hover:border-gold-500 hover:bg-gold-100 hover:text-gold-700"
-                />
-              }
+            <Link
+              href={LOGIN_HREF}
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold-400 bg-transparent px-4 text-sm font-semibold text-gold-700 hover:border-gold-500 hover:bg-gold-100"
             >
               {LOGIN_LABEL}
-            </Button>
+            </Link>
             <a
               href={WHATSAPP_HREF}
               target="_blank"
