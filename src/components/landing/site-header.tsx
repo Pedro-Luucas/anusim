@@ -44,10 +44,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  useEffect(() => {
-    setOpen(false)
-  }, [pathname])
-
   return (
     <>
       <a
