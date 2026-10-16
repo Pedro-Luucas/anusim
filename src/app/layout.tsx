@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, Cormorant_Garamond, Frank_Ruhl_Libre } from "next/font/google"
 import { SynagogueSchema } from "@/components/landing/synagogue-schema"
+import { cn } from "@/lib/utils"
 import "./globals.css"
 
 const inter = Inter({
@@ -28,11 +29,11 @@ function getMetadataBase(): URL {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return new URL(process.env.NEXT_PUBLIC_SITE_URL)
   }
-  
+
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
     return new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
   }
-  
+
   return new URL("http://localhost:3000")
 }
 
@@ -86,9 +87,14 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${cormorant.variable} ${frankRuhl.variable}`}
+      className={cn(inter.variable, cormorant.variable, frankRuhl.variable)}
     >
-      <body className="font-sans antialiased bg-cream-100 text-ink-900">
+      <body className="bg-cream-100 font-sans text-ink-900 antialiased">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add('js')`,
+          }}
+        />
         <SynagogueSchema />
         {children}
       </body>

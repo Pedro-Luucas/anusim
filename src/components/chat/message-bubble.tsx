@@ -51,7 +51,7 @@ const markdownComponents: Components = {
   ol: ({ children }) => <ol className="my-2 list-decimal space-y-1 pl-5">{children}</ol>,
   li: ({ children }) => <li dir="auto" className="leading-relaxed">{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote dir="auto" className="my-2 border-l-2 border-gold-400 bg-white/60 py-1 pl-3 text-ink-700 italic">
+    <blockquote dir="auto" className="my-2 border-l-2 border-gold-400 bg-cream-50/80 py-1 pl-3 text-ink-700 italic">
       {children}
     </blockquote>
   ),

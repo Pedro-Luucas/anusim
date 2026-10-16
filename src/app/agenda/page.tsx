@@ -25,7 +25,7 @@ export default function AgendaPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-cream-100 pt-24 pb-16">
+      <main id="main-content" className="min-h-screen bg-parchment pt-24 pb-16 text-ink-900">
         <div className="mx-auto max-w-4xl px-5 md:px-10">
           <div className="text-center">
             <p className="eyebrow text-gold-700">Horários semanais</p>
@@ -54,7 +54,7 @@ export default function AgendaPage() {
                     {events.map((event) => (
                       <li
                         key={event.id}
-                        className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 rounded-xl bg-white/80 border border-gold-200 p-5"
+                        className="flex flex-col gap-3 rounded-xl border border-gold-200 bg-cream-50 p-5 sm:flex-row sm:items-start sm:justify-between"
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-3 flex-wrap">
@@ -81,7 +81,7 @@ export default function AgendaPage() {
                           )}
                         </div>
                         <div className="flex-shrink-0">
-                          <p className="font-mono text-2xl font-bold text-gold-600 tabular-nums">
+                          <p className="font-display text-2xl font-semibold tracking-tight text-gold-600 tabular-nums">
                             {event.time}
                           </p>
                         </div>
