@@ -44,7 +44,7 @@ export function AdminTabs({
   return (
     <div>
       <div className="border-b border-gold-200/60 mb-8">
-        <nav className="flex gap-1 overflow-x-auto">
+        <nav className="-mx-4 flex snap-x gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0">
           {tabs.map((tab) => (
             <button
               key={tab.id}

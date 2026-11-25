@@ -2,12 +2,16 @@ import Link from "next/link"
 import Image from "next/image"
 import { IS_DRAFT } from "@/app/perguntas-frequentes/draft"
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  className?: string
+}
+
+export function SiteFooter({ className = "mt-16 md:mt-24" }: SiteFooterProps) {
   const year = new Date().getFullYear()
   return (
-    <footer className="relative mt-32 border-t border-gold-200/60 bg-cream-50">
+    <footer className={`relative border-t border-gold-200/60 bg-cream-50 ${className}`}>
       <div className="absolute inset-x-0 top-0 h-px divider-gold" />
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-5 md:px-10 md:py-20">
         <div className="grid gap-12 md:grid-cols-4">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
@@ -22,7 +26,7 @@ export function SiteFooter() {
                 <p className="font-display text-2xl font-medium text-ink-900">
                   Anussim <span className="text-gold-600">Brasil</span>
                 </p>
-                <p className="text-xs uppercase tracking-[0.32em] text-ink-500">
+                <p className="text-[0.68rem] uppercase tracking-[0.18em] text-ink-500 sm:tracking-[0.26em]">
                   Criciúma · SC
                 </p>
               </div>
@@ -72,16 +76,16 @@ export function SiteFooter() {
 
           <div>
             <h3 className="eyebrow">Navegar</h3>
-            <ul className="mt-5 space-y-3 text-sm text-ink-700">
-              <li><Link href="/bnei-anusim" className="hover:text-gold-700 transition-colors">O que são os Bnei Anusim</Link></li>
-              <li><Link href="/agenda" className="hover:text-gold-700 transition-colors">Agenda de serviços</Link></li>
-              <li><Link href="/fotos" className="hover:text-gold-700 transition-colors">Fotos da comunidade</Link></li>
-              <li><Link href="/pontos-de-fe" className="hover:text-gold-700 transition-colors">Pontos de fé</Link></li>
-              <li><Link href="/contato" className="hover:text-gold-700 transition-colors">Contato e serviços</Link></li>
-              <li><Link href="/calendario" className="hover:text-gold-700 transition-colors">Calendário judaico</Link></li>
-              <li><Link href="/doacoes" className="hover:text-gold-700 transition-colors">Doações</Link></li>
+            <ul className="mt-4 text-sm text-ink-700">
+              <li><Link href="/bnei-anusim" className="flex min-h-11 items-center transition-colors hover:text-gold-700">O que são os Bnei Anusim</Link></li>
+              <li><Link href="/agenda" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Agenda de serviços</Link></li>
+              <li><Link href="/fotos" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Fotos da comunidade</Link></li>
+              <li><Link href="/pontos-de-fe" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Pontos de fé</Link></li>
+              <li><Link href="/contato" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Contato e serviços</Link></li>
+              <li><Link href="/calendario" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Calendário judaico</Link></li>
+              <li><Link href="/doacoes" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Doações</Link></li>
               {!IS_DRAFT && (
-                <li><Link href="/perguntas-frequentes" className="hover:text-gold-700 transition-colors">Perguntas frequentes</Link></li>
+                <li><Link href="/perguntas-frequentes" className="flex min-h-11 items-center transition-colors hover:text-gold-700">Perguntas frequentes</Link></li>
               )}
             </ul>
           </div>
@@ -94,7 +98,7 @@ export function SiteFooter() {
               88802-200
             </p>
             <p className="mt-5 text-sm leading-relaxed text-ink-700">
-              <a href="tel:+554899231358" className="hover:text-gold-700 transition-colors">+55 48 9923-1358</a>
+              <a href="tel:+554899231358" className="inline-flex min-h-11 items-center transition-colors hover:text-gold-700">+55 48 9923-1358</a>
               <br />
               <span className="text-xs text-ink-500">Rabino Malachy Ben Israel</span>
             </p>

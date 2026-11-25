@@ -68,7 +68,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+          className="min-h-12 w-full rounded-lg border border-gold-200 bg-cream-100 px-4 py-3 text-base text-ink-900 transition-all focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
           placeholder="Seu nome completo"
         />
       </div>

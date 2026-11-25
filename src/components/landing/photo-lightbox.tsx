@@ -85,7 +85,7 @@ export function PhotoLightbox({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-4 top-4 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20"
+        className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex min-h-11 min-w-11 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20"
         aria-label="Fechar galeria"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -100,7 +100,7 @@ export function PhotoLightbox({
             e.stopPropagation()
             goPrev()
           }}
-          className="absolute left-3 top-1/2 z-10 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 md:left-6"
+          className="absolute left-6 top-1/2 z-10 hidden min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 md:flex"
           aria-label="Foto anterior"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -116,7 +116,7 @@ export function PhotoLightbox({
             e.stopPropagation()
             goNext()
           }}
-          className="absolute right-3 top-1/2 z-10 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 md:right-6"
+          className="absolute right-6 top-1/2 z-10 hidden min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 md:flex"
           aria-label="Próxima foto"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -129,20 +129,44 @@ export function PhotoLightbox({
         className="relative mx-4 flex max-h-[85vh] max-w-5xl flex-col items-center md:mx-16"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative max-h-[78vh] w-full overflow-hidden rounded-2xl border border-gold-500/30 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
+        <div className="relative max-h-[68vh] w-full overflow-hidden rounded-2xl border border-gold-500/30 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] md:max-h-[78vh]">
           <Image
             src={src}
             alt={`${albumLabel}, foto ${index + 1} de ${photos.length}`}
             width={1200}
             height={900}
-            className="h-auto max-h-[78vh] w-full object-contain"
+            className="h-auto max-h-[68vh] w-full object-contain md:max-h-[78vh]"
             priority
           />
         </div>
 
-        <p className="mt-4 text-xs uppercase tracking-[0.28em] text-cream-50/60">
-          {index + 1} / {photos.length}
-        </p>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={goPrev}
+            disabled={!hasPrev}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 disabled:opacity-30 md:hidden"
+            aria-label="Foto anterior"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <p className="min-w-16 text-center text-xs uppercase tracking-[0.18em] text-cream-50/70">
+            {index + 1} / {photos.length}
+          </p>
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={!hasNext}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-cream-50/20 bg-cream-50/10 text-cream-50 transition-colors hover:border-gold-400 hover:bg-gold-500/20 disabled:opacity-30 md:hidden"
+            aria-label="Próxima foto"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   )

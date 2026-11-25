@@ -22,7 +22,7 @@ export default function HomePage() {
       <SiteHeader />
 
       {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+      <section className="relative overflow-hidden pt-28 pb-14 sm:pt-32 sm:pb-20 md:pt-40 md:pb-28">
         {/* soft gold glow behind */}
         <div
           aria-hidden
@@ -35,22 +35,58 @@ export default function HomePage() {
         {/* judaic pattern subtle */}
         <div className="pointer-events-none absolute inset-0 -z-0 opacity-[0.18] bg-judaic-pattern" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-14 px-5 md:grid-cols-12 md:gap-12 md:px-10">
-          <div className="md:col-span-7 stagger">
+        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:px-5 md:grid-cols-12 md:gap-12 md:px-10">
+          <div className="order-1 md:col-span-7">
             <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-gold-500" />
+              <span className="h-px w-8 shrink-0 bg-gold-500 sm:w-10" />
               <span className="eyebrow">Sinagoga · Criciúma · SC</span>
             </div>
 
-            <h1 className="display-xl mt-7 text-[2.85rem] sm:text-6xl md:text-7xl lg:text-[5.4rem] text-ink-900">
-              A casa dos
-              <br />
-              <span className="italic text-gold-shimmer">Bnei Anusim</span>
-              <br />
-              no Sul do Brasil.
+            <h1 className="display-xl mt-5 text-[2rem] leading-[0.96] text-ink-900 min-[390px]:text-[2.3rem] sm:mt-7 sm:text-5xl md:text-[3.2rem] lg:text-[4.15rem] xl:text-[4.85rem]">
+              <span className="block">A casa dos</span>
+              <span className="mt-1 block italic text-gold-shimmer">Bnei Anusim</span>
+              <span className="mt-1 block">no Sul do Brasil.</span>
             </h1>
+          </div>
 
-            <p className="mt-8 max-w-xl font-display text-xl leading-snug text-ink-700 md:text-2xl">
+          <div className="relative order-2 md:col-span-5 md:row-span-2">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[22rem] sm:max-w-md">
+              <div className="absolute right-0 top-0 h-[76%] w-[78%] overflow-hidden rounded-[1.6rem] shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)] sm:rounded-[2rem]">
+                <Image
+                  src={HERO_PHOTOS[0]}
+                  alt="Comunidade Anussim Brasil em oração"
+                  fill
+                  sizes="(max-width: 768px) 78vw, 40vw"
+                  priority
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink-900/30 via-transparent to-transparent" />
+              </div>
+              <div className="absolute bottom-4 left-0 h-[48%] w-[54%] overflow-hidden rounded-[1.35rem] border-4 border-cream-100 shadow-[0_30px_60px_-30px_rgba(168,132,47,0.5)] sm:bottom-6 sm:h-[52%] sm:w-[56%] sm:rounded-[1.7rem]">
+                <Image
+                  src={HERO_PHOTOS[1]}
+                  alt="Mesa de Pessach"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 28vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute right-2 top-2 text-gold-500 animate-float sm:right-3 sm:top-3">
+                <StarOfDavid className="h-14 w-14 sm:h-20 md:h-24" strokeWidth={0.8} />
+              </div>
+              <div className="absolute bottom-5 right-2 text-right sm:bottom-7 sm:right-4">
+                <p className="font-hebrew text-[1.85rem] text-gold-700 sm:text-4xl" dir="rtl">
+                  שָׁלוֹם
+                </p>
+                <p className="mt-0.5 text-[0.65rem] uppercase tracking-[0.22em] text-ink-500">
+                  shalom
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="order-3 md:col-span-7 stagger">
+            <p className="max-w-xl font-display text-lg leading-snug text-ink-700 sm:text-xl md:text-2xl">
               Uma comunidade judaica aberta em Criciúma, Santa Catarina, sob a
               direção do Rabino{" "}
               <span className="font-medium text-gold-700">
@@ -59,12 +95,12 @@ export default function HomePage() {
               . Shabat, festas, Torá: a chama que voltou a arder em voz alta.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center">
               <a
                 href="https://wa.me/554899231358?text=Shalom!%20Gostaria%20de%20visitar%20a%20sinagoga."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-3 rounded-full bg-ink-900 px-7 py-4 text-sm font-semibold text-cream-50 shadow-[0_10px_30px_-8px_rgba(42,36,24,0.5)] transition-all hover:bg-gold-700"
+                className="group relative inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-ink-900 px-6 py-3.5 text-sm font-semibold text-cream-50 shadow-[0_10px_30px_-8px_rgba(42,36,24,0.5)] transition-all hover:bg-gold-700 sm:w-auto"
               >
                 <span className="absolute inset-0 -z-10 rounded-full bg-gold-500 opacity-0 blur-md transition-opacity group-hover:opacity-60" />
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -75,66 +111,27 @@ export default function HomePage() {
 
               <Link
                 href="/bnei-anusim"
-                className="group inline-flex items-center gap-2 text-sm font-medium text-ink-700 transition-colors hover:text-gold-700"
+                className="group inline-flex min-h-12 items-center justify-center gap-2 px-2 text-sm font-medium text-ink-700 transition-colors hover:text-gold-700"
               >
                 Quem somos
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
 
-            {/* shabbat times teaser */}
-            <div className="mt-14 flex max-w-xl items-center gap-5 rounded-2xl border border-gold-200 bg-cream-50/70 p-5 backdrop-blur-sm">
+            <div className="mt-8 flex max-w-xl items-start gap-4 rounded-2xl border border-gold-200 bg-cream-50/80 p-4 sm:mt-12 sm:items-center sm:p-5">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold-500/15">
                 <Menorah className="h-7 w-7 text-gold-700" />
               </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-ink-500">
+              <div className="min-w-0">
+                <p className="text-[0.68rem] uppercase tracking-[0.18em] text-ink-500 sm:tracking-[0.24em]">
                   Próximo Shabat
                 </p>
-                <p className="mt-1 font-display text-xl text-ink-900">
-                  Serviços transmitidos ao vivo ·{" "}
-                  <span className="text-gold-700">sexta 19h · sábado 9h</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Photo composition */}
-          <div className="relative md:col-span-5">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
-              {/* big photo */}
-              <div className="absolute right-0 top-0 h-[78%] w-[78%] overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]">
-                <Image
-                  src={HERO_PHOTOS[0]}
-                  alt="Comunidade Anussim Brasil em oração"
-                  fill
-                  sizes="(max-width: 768px) 80vw, 40vw"
-                  priority
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink-900/30 via-transparent to-transparent" />
-              </div>
-              {/* small overlapping photo */}
-              <div className="absolute -bottom-2 left-0 h-[55%] w-[55%] overflow-hidden rounded-[2rem] border-4 border-cream-100 shadow-[0_30px_60px_-30px_rgba(168,132,47,0.5)]">
-                <Image
-                  src={HERO_PHOTOS[1]}
-                  alt="Mesa de Pessach"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover"
-                />
-              </div>
-              {/* star ornament */}
-              <div className="absolute -right-4 -top-4 text-gold-500 animate-float">
-                <StarOfDavid className="h-20 w-20 md:h-24 md:w-24" strokeWidth={0.8} />
-              </div>
-              {/* hebrew */}
-              <div className="absolute -bottom-8 -right-4 md:-right-8 text-right">
-                <p className="font-hebrew text-3xl md:text-4xl text-gold-700" dir="rtl">
-                  שָׁלוֹם
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.32em] text-ink-500">
-                  shalom
+                <p className="mt-1 font-display text-lg leading-snug text-ink-900 sm:text-xl">
+                  Serviços ao vivo
+                  <span className="mt-0.5 block text-gold-700 sm:mt-0 sm:inline">
+                    {" "}
+                    sexta 19h · sábado 9h
+                  </span>
                 </p>
               </div>
             </div>
@@ -143,42 +140,42 @@ export default function HomePage() {
       </section>
 
       {/* ─── MARQUEE STAT / IDENTITY BAR ─── */}
-      <section className="border-y border-gold-200/70 bg-cream-50">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-gold-200/70 md:grid-cols-4">
+      <section className="border-y border-gold-200/70 bg-gold-200/50">
+        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-px sm:grid-cols-4">
           {[
-            { n: "500+", l: "Anos de história silenciosa" },
-            { n: "12+", l: "Famílias fundadoras em Criciúma" },
-            { n: "R. Joaquim Nabuco, 140", l: "Centro · Criciúma · SC" },
-            { n: "Ao vivo", l: "Serviços toda semana" },
+            { n: "500+", l: "Anos de história" },
+            { n: "12+", l: "Famílias em Criciúma" },
+            { n: "Centro", l: "Joaquim Nabuco, 140" },
+            { n: "Ao vivo", l: "Serviços semanais" },
           ].map((s) => (
-            <div key={s.l} className="px-5 py-8 text-center md:py-10">
-              <p className="font-display text-2xl font-medium text-gold-700 md:text-3xl">
+            <div key={s.l} className="bg-cream-50 px-3 py-6 text-center sm:px-5 sm:py-10">
+              <dt className="font-display text-xl font-medium leading-tight text-gold-700 sm:text-3xl">
                 {s.n}
-              </p>
-              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-ink-500">
+              </dt>
+              <dd className="mt-2 text-[0.68rem] uppercase leading-snug tracking-[0.12em] text-ink-500 sm:text-xs sm:tracking-[0.16em]">
                 {s.l}
-              </p>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </section>
 
       {/* ─── SHABAT ─── */}
       <ShabbatSection />
 
       {/* ESSÊNCIA: SOBRE EM 3 BLOCOS */}
-      <section className="relative py-24 md:py-32">
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <section className="relative py-16 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-10">
           <div className="text-center">
             <OrnametalDivider symbol="menorah" />
             <p className="eyebrow mt-7">O que nos define</p>
-            <h2 className="display-xl mx-auto mt-4 max-w-3xl text-4xl text-ink-900 md:text-5xl lg:text-6xl">
+            <h2 className="display-xl mx-auto mt-4 max-w-3xl text-[2rem] leading-[0.98] text-ink-900 sm:text-4xl md:text-5xl lg:text-6xl">
               Três coisas que{" "}
               <span className="italic text-gold-shimmer">não negociamos.</span>
             </h2>
           </div>
 
-          <div className="mt-20 grid gap-8 md:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:mt-16 sm:gap-8 md:grid-cols-3">
             {[
               {
                 title: "Shabat",
@@ -198,10 +195,10 @@ export default function HomePage() {
             ].map((card) => (
               <article
                 key={card.title}
-                className="group relative overflow-hidden rounded-3xl border border-gold-200/70 bg-cream-50 p-8 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500 hover:shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)]"
+                className="group relative overflow-hidden rounded-3xl border border-gold-200/70 bg-cream-50 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500 hover:shadow-[0_30px_60px_-30px_rgba(168,132,47,0.4)] sm:p-8"
               >
                 <p
-                  className="font-hebrew text-5xl text-gold-500 transition-colors group-hover:text-gold-700"
+                  className="font-hebrew text-4xl text-gold-500 transition-colors group-hover:text-gold-700 sm:text-5xl"
                   dir="rtl"
                 >
                   {card.he}
@@ -220,12 +217,12 @@ export default function HomePage() {
       </section>
 
       {/* ─── FAIXA DE FOTOS ─── */}
-      <section className="relative overflow-hidden border-y border-gold-200/60 bg-cream-50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <section className="relative overflow-hidden border-y border-gold-200/60 bg-cream-50 py-16 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-10">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="eyebrow">Da nossa casa</p>
-              <h2 className="display-xl mt-4 max-w-2xl text-4xl text-ink-900 md:text-5xl">
+              <h2 className="display-xl mt-4 max-w-2xl text-[2rem] leading-[0.98] text-ink-900 sm:text-4xl md:text-5xl">
                 Momentos que valem mais
                 <br />
                 que <span className="italic text-gold-shimmer">mil palavras</span>.
@@ -233,14 +230,14 @@ export default function HomePage() {
             </div>
             <Link
               href="/fotos"
-              className="group inline-flex items-center gap-2 rounded-full border border-gold-300 px-6 py-3 text-sm font-semibold text-ink-900 transition-all hover:border-gold-500 hover:bg-gold-500"
+              className="group inline-flex min-h-12 items-center gap-2 rounded-full border border-gold-300 px-6 py-3 text-sm font-semibold text-ink-900 transition-all hover:border-gold-500 hover:bg-gold-500"
             >
               Ver galeria completa
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </Link>
           </div>
 
-          <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-4 md:grid-cols-4 md:gap-5">
             {[
               "/shulphotos/comunidade1.jpg",
               "/shulphotos/pessach3.jpg",
@@ -268,7 +265,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── CTA VISITAR ─── */}
-      <section className="relative overflow-hidden py-24 md:py-36">
+      <section className="relative overflow-hidden py-16 md:py-32">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10"
@@ -277,24 +274,24 @@ export default function HomePage() {
               "radial-gradient(60% 70% at 50% 50%, rgba(201,162,83,0.22) 0%, rgba(250,246,239,0) 70%)",
           }}
         />
-        <div className="mx-auto max-w-5xl px-5 text-center md:px-10">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-5 md:px-10">
           <StarOfDavid className="mx-auto h-12 w-12 text-gold-500" />
-          <h2 className="display-xl mt-8 text-4xl text-ink-900 md:text-6xl">
+          <h2 className="display-xl mt-6 text-[2.15rem] leading-[0.98] text-ink-900 sm:mt-8 sm:text-5xl md:text-6xl">
             A porta está{" "}
             <span className="italic text-gold-shimmer">aberta.</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700">
+          <p className="mx-auto mt-5 max-w-2xl font-display text-lg italic leading-relaxed text-ink-700 sm:text-xl">
             Se você quer visitar a sinagoga, participar de um Shabat, conhecer o
             minian ou apenas conversar, ligue para o Rabino Malachy. Cada
             visita é recebida com cuidado.
           </p>
 
-          <div className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center">
             <a
               href="https://wa.me/554899231358?text=Shalom%20Rabino%20Malachy!%20Gostaria%20de%20agendar%20uma%20visita%20à%20sinagoga."
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gold-500 px-8 py-4 text-base font-semibold text-ink-900 shadow-[0_10px_30px_-8px_rgba(201,162,83,0.7)] transition-all hover:scale-[1.02]"
+              className="group relative inline-flex min-h-12 items-center justify-center gap-3 overflow-hidden rounded-full bg-gold-500 px-6 py-3.5 text-base font-semibold text-ink-900 shadow-[0_10px_30px_-8px_rgba(201,162,83,0.7)] transition-all hover:scale-[1.02] sm:px-8"
             >
               <span className="absolute inset-0 -z-10 bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 opacity-0 transition-opacity group-hover:opacity-100" />
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -304,25 +301,25 @@ export default function HomePage() {
             </a>
             <a
               href="tel:+554899231358"
-              className="group inline-flex items-center gap-2 rounded-full border border-ink-900/15 px-8 py-4 text-base font-semibold text-ink-900 transition-all hover:border-gold-500 hover:text-gold-700"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-ink-900/15 px-6 py-3.5 text-base font-semibold text-ink-900 transition-all hover:border-gold-500 hover:text-gold-700 sm:px-8"
             >
               +55 48 9923-1358
             </a>
           </div>
 
-          <p className="mt-10 text-xs uppercase tracking-[0.32em] text-ink-500">
+          <p className="mt-8 px-2 text-[0.68rem] uppercase leading-relaxed tracking-[0.16em] text-ink-500 sm:tracking-[0.24em]">
             R. Joaquim Nabuco, 140 · Centro · Criciúma · SC
           </p>
         </div>
       </section>
 
       {/* ─── STREAMS / SERVIÇOS ─── */}
-      <section className="bg-cream-50 py-24 md:py-32">
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <section className="bg-cream-50 py-16 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-10">
           <div className="grid gap-12 md:grid-cols-12 md:items-center">
             <div className="md:col-span-5">
               <p className="eyebrow">Transmissão ao vivo</p>
-              <h2 className="display-xl mt-4 text-4xl text-ink-900 md:text-5xl">
+              <h2 className="display-xl mt-4 text-[2rem] leading-[0.98] text-ink-900 sm:text-4xl md:text-5xl">
                 Serviços em
                 <br />
                 <span className="italic text-gold-shimmer">toda parte.</span>
@@ -336,7 +333,7 @@ export default function HomePage() {
                 href="https://www.youtube.com/@anussimbrasilcriciuma5648/streams"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-3 rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-cream-50 transition-colors hover:bg-gold-700"
+                className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-cream-50 transition-colors hover:bg-gold-700 sm:w-auto"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
                   <path d="M23 7.3a3 3 0 0 0-2.1-2.1C19 4.7 12 4.7 12 4.7s-7 0-8.9.5A3 3 0 0 0 1 7.3 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.7a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.3zM9.8 15.5v-7l5.8 3.5-5.8 3.5z" />

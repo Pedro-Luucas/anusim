@@ -62,15 +62,15 @@ export default function FotosPage() {
     <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
-      <section className="relative pt-32 pb-14 md:pt-44 md:pb-20">
-        <div className="mx-auto max-w-5xl px-5 text-center md:px-10">
+      <section className="relative pt-28 pb-10 sm:pt-32 md:pt-44 md:pb-20">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-5 md:px-10">
           <p className="eyebrow">Capítulo visual</p>
-          <h1 className="display-xl mt-6 text-5xl text-ink-900 md:text-7xl">
+          <h1 className="display-xl mt-5 text-[2.4rem] leading-[0.96] text-ink-900 min-[390px]:text-[2.7rem] sm:text-6xl md:text-7xl">
             Momentos da
             <br />
             <span className="italic text-gold-shimmer">nossa casa.</span>
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700">
+          <p className="mx-auto mt-6 max-w-2xl font-display text-lg italic leading-relaxed text-ink-700 sm:text-xl">
             Shabat, festas, estudos e rostos. A vida da Anussim Brasil
             Criciúma, em imagens reais.
           </p>
@@ -78,8 +78,12 @@ export default function FotosPage() {
       </section>
 
       <section className="relative pb-8">
-        <div className="mx-auto max-w-5xl px-5 md:px-10">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="relative mx-auto max-w-5xl">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-cream-100 to-transparent sm:hidden"
+          />
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-5 sm:pb-0 lg:grid-cols-6 lg:px-10">
             {ALBUMS.map((a) => {
               const isActive = active === a.key
               return (
@@ -87,14 +91,14 @@ export default function FotosPage() {
                   key={a.key}
                   onClick={() => switchAlbum(a.key)}
                   aria-pressed={isActive}
-                  className={`group relative rounded-2xl border px-4 py-4 text-left transition-all duration-500 ${
+                  className={`relative w-[10.5rem] shrink-0 snap-start rounded-2xl border px-4 py-4 text-left transition-all duration-500 sm:w-auto ${
                     isActive
                       ? "border-gold-500 bg-gold-500/10 shadow-[0_10px_30px_-15px_rgba(201,162,83,0.5)]"
                       : "border-gold-200 bg-cream-50 hover:border-gold-400"
                   }`}
                 >
                   <p
-                    className={`font-hebrew text-xl ${isActive ? "text-gold-700" : "text-gold-500/70"}`}
+                    className={`font-hebrew text-lg leading-tight ${isActive ? "text-gold-700" : "text-gold-500/70"}`}
                     dir="rtl"
                   >
                     {a.he}
@@ -117,15 +121,15 @@ export default function FotosPage() {
       </section>
 
       <section className="relative py-12 md:py-20">
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
-          <div className="mb-10 flex items-end justify-between">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-10">
+          <div className="mb-8 flex flex-col items-start gap-2 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">{album.title}</p>
               <h2 className="mt-2 font-display text-3xl text-ink-900 md:text-4xl">
                 {album.subtitle}
               </h2>
             </div>
-            <p className="text-xs uppercase tracking-[0.28em] text-ink-500">
+            <p className="text-xs uppercase tracking-[0.16em] text-ink-500 sm:tracking-[0.24em]">
               {photos.length} imagens
             </p>
           </div>

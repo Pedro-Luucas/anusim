@@ -24,8 +24,11 @@
   --color-ink-50: #f8f3e7;
   --color-ink-100: #e8dcc0;
   --color-ink-300: #a8956d;
+  --color-ink-400: #8a7450;
   --color-ink-500: #6b5a3a;
+  --color-ink-600: #53462e;
   --color-ink-700: #3a2f1c;
+  --color-ink-800: #322818;
   --color-ink-900: #2a2418; /* primary text on cream */
 
   /* Subtle wine accent for special highlights */
@@ -53,6 +56,7 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -76,6 +80,7 @@
     font-feature-settings: "kern", "liga", "calt";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
   }
 
   /* Hebrew text rendering */
@@ -157,11 +162,19 @@
   /* Editorial cap label */
   .eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
-    letter-spacing: 0.32em;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    line-height: 1.45;
     text-transform: uppercase;
     font-weight: 600;
     color: var(--gold-deep);
+  }
+
+  @media (min-width: 640px) {
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.26em;
+    }
   }
 
   /* Display heading */
@@ -217,3 +230,12 @@
 .stagger > *:nth-child(6) { animation-delay: 0.74s; }
 .stagger > *:nth-child(7) { animation-delay: 0.88s; }
 .stagger > *:nth-child(8) { animation-delay: 1.02s; }
+
+/* 16px keeps iOS from zooming the page when a field is focused */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

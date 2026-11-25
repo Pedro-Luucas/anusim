@@ -33,11 +33,11 @@ export default function DoacoesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-cream-100 pt-24 pb-16">
-        <div className="mx-auto max-w-4xl px-5 md:px-10">
+      <main id="main-content" className="min-h-screen bg-cream-100 pt-28 pb-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-5 md:px-10">
           <div className="text-center">
             <p className="eyebrow text-gold-700">Apoiar a comunidade</p>
-            <h1 className="mt-3 font-display text-4xl md:text-5xl font-semibold text-ink-900">
+            <h1 className="mt-3 font-display text-[2.15rem] font-medium leading-tight text-ink-900 sm:text-4xl md:text-5xl">
               Doações via Pix
             </h1>
             <p className="mt-4 text-lg text-ink-600 max-w-2xl mx-auto">
@@ -47,18 +47,18 @@ export default function DoacoesPage() {
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2">
-            <div className="rounded-2xl border border-gold-300/60 bg-cream-50 p-8">
+            <div className="rounded-2xl border border-gold-300/60 bg-cream-50 p-5 sm:p-8">
               <h2 className="text-xl font-semibold text-ink-900">
                 Chave Pix (E-mail)
               </h2>
-              <div className="mt-6 rounded-xl bg-white border border-gold-200 p-4">
+              <div className="mt-6 rounded-xl border border-gold-200 bg-cream-100 p-4">
                 <p className="font-mono text-sm text-ink-700 break-all">
                   {PIX_KEY}
                 </p>
               </div>
               <button
                 onClick={() => copyToClipboard(PIX_KEY, setCopiedKey)}
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900 transition-all hover:bg-gold-600 hover:border-gold-600"
+                className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900 transition-all hover:border-gold-600 hover:bg-gold-600"
               >
                 {copiedKey ? (
                   <>
@@ -79,18 +79,18 @@ export default function DoacoesPage() {
               </button>
             </div>
 
-            <div className="rounded-2xl border border-gold-300/60 bg-cream-50 p-8">
+            <div className="rounded-2xl border border-gold-300/60 bg-cream-50 p-5 sm:p-8">
               <h2 className="text-xl font-semibold text-ink-900">
                 Pix Copia e Cola
               </h2>
-              <div className="mt-6 rounded-xl bg-white border border-gold-200 p-4">
+              <div className="mt-6 max-h-40 overflow-y-auto rounded-xl border border-gold-200 bg-cream-100 p-4">
                 <p className="font-mono text-xs text-ink-700 break-all leading-relaxed">
                   {PIX_PAYLOAD}
                 </p>
               </div>
               <button
                 onClick={() => copyToClipboard(PIX_PAYLOAD, setCopiedPayload)}
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900 transition-all hover:bg-gold-600 hover:border-gold-600"
+                className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-gold-500 bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-900 transition-all hover:border-gold-600 hover:bg-gold-600"
               >
                 {copiedPayload ? (
                   <>
@@ -113,18 +113,18 @@ export default function DoacoesPage() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <div className="rounded-2xl border border-gold-300/60 bg-white p-8 inline-block">
-              <p className="text-center text-sm font-semibold text-ink-700 mb-4">
+            <div className="w-full max-w-sm rounded-2xl border border-gold-300/60 bg-cream-50 p-5 sm:p-8">
+              <p className="mb-4 text-center text-sm font-semibold text-ink-700">
                 QR Code Pix
               </p>
-              <div className="bg-white p-4 rounded-xl">
+              <div className="rounded-xl bg-cream-50 p-3">
                 <Image
                   src="/pix-qrcode.svg"
                   alt="QR Code Pix para doação"
                   width={256}
                   height={256}
                   unoptimized
-                  className="h-64 w-64"
+                  className="mx-auto h-auto w-full max-w-64"
                 />
               </div>
               <p className="mt-4 text-center text-xs text-ink-500">
