@@ -17,7 +17,7 @@ type CitationCardProps = {
 export function CitationCard({ citation }: CitationCardProps) {
   return (
     <div className="rounded-lg border border-gold-300/30 bg-cream-50 p-4 shadow-sm">
-      <div className="mb-2 flex items-start justify-between">
+      <div className="mb-2 flex flex-col items-start gap-1 sm:flex-row sm:items-start sm:justify-between">
         <h4 className="font-display text-base font-semibold text-ink-900">
           {citation.ref}
         </h4>
@@ -25,7 +25,7 @@ export function CitationCard({ citation }: CitationCardProps) {
           href={citation.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-2 shrink-0 text-xs font-medium text-gold-600 hover:text-gold-700 hover:underline"
+          className="inline-flex min-h-11 items-center text-xs font-medium text-gold-600 hover:text-gold-700 hover:underline sm:ml-2 sm:shrink-0"
         >
           Abrir no Sefaria →
         </a>

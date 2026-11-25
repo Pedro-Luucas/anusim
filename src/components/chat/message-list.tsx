@@ -70,7 +70,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           {message.role === "assistant" &&
             message.citations &&
             message.citations.length > 0 && (
-              <div className="ml-12 space-y-2">
+              <div className="space-y-2 sm:ml-10">
                 <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
                   Fontes
                 </p>

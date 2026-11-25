@@ -84,15 +84,15 @@ export default async function AdminPage() {
   return (
     <>
       <SiteHeader />
-      <div className="min-h-screen bg-parchment pt-20">
+      <div className="min-h-screen bg-parchment pt-[calc(4.5rem+env(safe-area-inset-top))]">
         <header className="border-b border-gold-200/60 bg-cream-50/95 backdrop-blur-md">
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
                 <h1 className="font-display text-2xl font-medium text-ink-900">
                   Administração
                 </h1>
-                <p className="text-sm text-ink-600">
+                <p className="truncate text-sm text-ink-500">
                   Bem-vindo, {profile?.name || user.email}
                 </p>
               </div>
@@ -101,7 +101,7 @@ export default async function AdminPage() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <AdminTabs
             profiles={profiles || []}
             announcements={announcements || []}

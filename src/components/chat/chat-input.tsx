@@ -33,7 +33,7 @@ export function ChatInput({
               placeholder="Pergunte sobre a Torá, Talmud, Shabat, kashrut..."
               disabled={isLoading}
               maxLength={500}
-              className="w-full rounded-full border border-gold-300 bg-white px-5 py-3 text-sm text-ink-900 placeholder:text-ink-500/60 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-12 w-full rounded-full border border-gold-300 bg-cream-50 px-5 py-3 text-base text-ink-900 placeholder:text-ink-500/60 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:cursor-not-allowed disabled:opacity-50"
               autoComplete="off"
             />
           </div>
@@ -42,7 +42,7 @@ export function ChatInput({
             type={isLoading && onStop ? "button" : "submit"}
             onClick={isLoading && onStop ? onStop : undefined}
             disabled={!isLoading && !input.trim()}
-            className="flex h-12 min-w-[48px] items-center justify-center rounded-full bg-gold-500 px-6 font-medium text-ink-900 transition-all hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-500/50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold-500 font-medium text-ink-900 transition-all hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-500/50 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label={isLoading ? "Parar geração" : "Enviar pergunta"}
           >
             {isLoading ? (

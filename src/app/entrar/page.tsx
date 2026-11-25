@@ -158,18 +158,18 @@ function LoginForm() {
   return (
     <>
       <SiteHeader />
-      <div className="min-h-screen bg-parchment flex items-center justify-center px-4 py-24">
+      <main id="main-content" className="flex min-h-screen items-center justify-center bg-parchment px-4 py-28">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="font-display text-4xl font-medium text-ink-900 mb-2">
+          <div className="mb-8 text-center">
+            <h1 className="mb-2 font-display text-[2.15rem] font-medium leading-tight text-ink-900 sm:text-4xl">
               Área de Membros
             </h1>
-            <p className="text-ink-600">
+            <p className="text-ink-500">
               Sinagoga Anussim Brasil, Criciúma
             </p>
           </div>
 
-          <div className="bg-cream-50 rounded-2xl border border-gold-200/60 p-8 shadow-lg">
+          <div className="rounded-2xl border border-gold-200/60 bg-cream-50 p-5 shadow-lg sm:p-8">
             <div className="flex gap-2 mb-6 bg-cream-100 rounded-lg p-1">
               <button
                 onClick={() => setMode("password")}
@@ -213,7 +213,7 @@ function LoginForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full min-h-[48px] rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 placeholder:text-ink-400 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+                  className="min-h-12 w-full rounded-lg border border-gold-200 bg-cream-100 px-4 py-3 text-base text-ink-900 transition-all placeholder:text-ink-500/50 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -232,7 +232,7 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full min-h-[48px] rounded-lg border border-gold-200 bg-white px-4 py-3 text-ink-900 placeholder:text-ink-400 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+                    className="min-h-12 w-full rounded-lg border border-gold-200 bg-cream-100 px-4 py-3 text-base text-ink-900 transition-all placeholder:text-ink-500/50 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
                     placeholder="••••••••"
                   />
                 </div>
@@ -248,7 +248,7 @@ function LoginForm() {
             </form>
           </div>
         </div>
-      </div>
+      </main>
       <SiteFooter />
     </>
   )

@@ -68,15 +68,15 @@ export default function PontosDeFePage() {
     <main id="main-content" className="bg-parchment text-ink-900">
       <SiteHeader />
 
-      <section className="relative pt-32 pb-16 md:pt-44 md:pb-24">
-        <div className="mx-auto max-w-5xl px-5 text-center md:px-10">
+      <section className="relative pt-28 pb-12 sm:pt-32 md:pt-44 md:pb-24">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-5 md:px-10">
           <p className="eyebrow">Capítulo teológico</p>
-          <h1 className="display-xl mt-6 text-5xl text-ink-900 md:text-7xl lg:text-8xl">
+          <h1 className="display-xl mt-5 text-[2.4rem] leading-[0.96] text-ink-900 min-[390px]:text-[2.7rem] sm:text-6xl md:text-7xl lg:text-8xl">
             Pontos de
             <br />
             <span className="italic text-gold-shimmer">fé.</span>
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700 md:text-2xl">
+          <p className="mx-auto mt-6 max-w-2xl font-display text-lg italic leading-relaxed text-ink-700 sm:text-xl md:text-2xl">
             Os treze princípios de Maimonides (o Rambam) formulados no século
             XII e recitados em todo o mundo judaico como fundamento da emuná.
           </p>
@@ -87,11 +87,11 @@ export default function PontosDeFePage() {
       </section>
 
       <section className="pb-12">
-        <div className="mx-auto max-w-3xl px-5 md:px-10">
-          <div className="rounded-3xl border border-gold-200 bg-cream-50 p-8 text-center md:p-12">
+        <div className="mx-auto max-w-3xl px-4 sm:px-5 md:px-10">
+          <div className="rounded-3xl border border-gold-200 bg-cream-50 p-5 text-center sm:p-8 md:p-12">
             <ScrollSeal className="mx-auto h-14 w-14 text-gold-600" />
             <p
-              className="mt-6 font-hebrew text-3xl leading-relaxed text-gold-700 md:text-4xl"
+              className="mt-6 font-hebrew text-[1.55rem] leading-snug text-gold-700 sm:text-3xl md:text-4xl"
               dir="rtl"
             >
               אֲנַחְנוּ מַאֲמִינִים בֶּאֱמוּנָה שְׁלֵמָה
@@ -110,21 +110,21 @@ export default function PontosDeFePage() {
       </section>
 
       <section className="relative pb-24 md:pb-32">
-        <div className="mx-auto max-w-4xl px-5 md:px-10">
+        <div className="mx-auto max-w-4xl px-4 sm:px-5 md:px-10">
           <ol className="space-y-6">
             {PRINCIPLES.map((p) => (
               <li
                 key={p.n}
-                className="group rounded-2xl border border-gold-200/80 bg-cream-50 p-6 transition-colors hover:border-gold-300 md:p-8"
+                className="group rounded-2xl border border-gold-200/80 bg-cream-50 p-5 transition-colors hover:border-gold-300 sm:p-6 md:p-8"
               >
-                <div className="flex gap-5 md:gap-8">
+                <div className="flex gap-4 sm:gap-6 md:gap-8">
                   <span
-                    className="shrink-0 font-display text-3xl font-medium text-gold-500/70 md:text-4xl"
+                    className="shrink-0 font-display text-2xl font-medium text-gold-500/70 sm:text-3xl md:text-4xl"
                     aria-hidden="true"
                   >
                     {p.n}
                   </span>
-                  <p className="font-display text-lg leading-relaxed text-ink-900 md:text-xl">
+                  <p className="min-w-0 font-display text-base leading-relaxed text-ink-900 sm:text-lg md:text-xl">
                     {p.body}
                   </p>
                 </div>
@@ -135,14 +135,14 @@ export default function PontosDeFePage() {
       </section>
 
       <section className="relative border-t border-gold-200/60 py-24 md:py-32">
-        <div className="mx-auto max-w-3xl px-5 text-center md:px-10">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-5 md:px-10">
           <OrnametalDivider symbol="menorah" />
-          <blockquote className="mt-10 font-display text-2xl italic leading-snug text-ink-900 md:text-3xl">
+          <blockquote className="mt-8 font-display text-xl italic leading-snug text-ink-900 sm:text-2xl md:text-3xl">
             &ldquo;Quando uma pessoa acredita em todos estes princípios e na
             crença de Moisés, nosso mestre, que repouse em paz, ela entra na
             comunidade de Israel.&rdquo;
           </blockquote>
-          <p className="mt-6 text-xs uppercase tracking-[0.32em] text-gold-700">
+          <p className="mt-6 text-xs uppercase tracking-[0.16em] text-gold-700 sm:tracking-[0.24em]">
             Maimonides · Rambam
           </p>
         </div>

@@ -16,15 +16,15 @@ export default function BneiAnusimPage() {
       <SiteHeader />
 
       {/* ─── HEADER ─── */}
-      <section className="relative pt-32 pb-12 md:pt-44 md:pb-20">
-        <div className="mx-auto max-w-4xl px-5 text-center md:px-10">
+      <section className="relative pt-28 pb-10 sm:pt-32 md:pt-44 md:pb-20">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-5 md:px-10">
           <p className="eyebrow">Capítulo 01 · Nossa origem</p>
-          <h1 className="display-xl mt-6 text-5xl text-ink-900 md:text-7xl lg:text-8xl">
+          <h1 className="display-xl mt-5 text-[2.35rem] leading-[0.96] text-ink-900 min-[390px]:text-[2.6rem] sm:text-6xl md:text-7xl lg:text-8xl">
             O que são os
             <br />
             <span className="italic text-gold-shimmer">Bnei Anusim?</span>
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-ink-700 md:text-2xl">
+          <p className="mx-auto mt-6 max-w-2xl font-display text-lg italic leading-relaxed text-ink-700 sm:text-xl md:text-2xl">
             São os filhos dos que foram forçados. <em>Anusim</em>, em hebraico,
             significa literalmente &ldquo;os coagidos&rdquo;. É a história de uma fé
             que sobreviveu em silêncio durante cinco séculos.
@@ -39,9 +39,9 @@ export default function BneiAnusimPage() {
 
       {/* ─── LEAD: definição + imagem ─── */}
       <section className="relative pb-20 md:pb-28">
-        <div className="mx-auto max-w-3xl px-5 md:px-0">
-          <p className="font-display text-2xl leading-snug text-ink-900 md:text-3xl">
-            <span className="float-left mr-3 mt-2 font-display text-7xl font-medium leading-none text-gold-500 md:text-8xl">
+        <div className="mx-auto max-w-3xl px-4 sm:px-5 md:px-0">
+          <p className="font-display text-xl leading-snug text-ink-900 sm:text-2xl md:text-3xl">
+            <span className="float-left mr-3 mt-1 font-display text-6xl font-medium leading-none text-gold-500 sm:text-7xl md:text-8xl">
               A
             </span>
             palavra <em>anusim</em> vem da raiz hebraica de <em>ones</em>{" "}
@@ -55,7 +55,7 @@ export default function BneiAnusimPage() {
             renunciar publicamente à sua fé judaica, mantendo-a em segredo.
           </p>
 
-          <p className="mt-10 font-display text-2xl leading-snug text-ink-900 md:text-3xl">
+          <p className="mt-8 font-display text-xl leading-snug text-ink-900 sm:text-2xl md:text-3xl">
             Os <strong className="font-medium">Bnei Anusim</strong> (literalmente,
             &ldquo;filhos dos coagidos&rdquo;) são os descendentes desses judeus.
             Não são conversos, porque nunca escolheram converter-se. Não são
@@ -79,12 +79,12 @@ export default function BneiAnusimPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-ink-900/10 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 mx-auto max-w-5xl px-5 pb-10 md:px-10 md:pb-16">
-            <p className="font-display text-2xl italic leading-snug text-cream-50 md:text-4xl">
+            <p className="font-display text-xl italic leading-snug text-cream-50 sm:text-2xl md:text-4xl">
               &ldquo;Eles nos tiraram a sinagoga, mas não tiraram a mesa de
               Pessach. E uma mesa é uma sinagoga onde o judeu se senta à
               cabeceira, mesmo quando ninguém está olhando.&rdquo;
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.32em] text-gold-200">
+            <p className="mt-4 text-[0.68rem] uppercase tracking-[0.14em] text-gold-200 sm:tracking-[0.22em]">
               Sobre as famílias que guardaram a fé em segredo
             </p>
           </div>
@@ -93,13 +93,13 @@ export default function BneiAnusimPage() {
 
       {/* ─── HISTÓRIA EM COLUNAS ─── */}
       <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-5xl px-5 md:px-10">
+        <div className="mx-auto max-w-5xl px-4 sm:px-5 md:px-10">
           <div className="grid gap-16 md:grid-cols-12">
             <aside className="md:col-span-4">
               <div className="sticky top-32">
                 <OrnametalDivider symbol="scroll" />
                 <p className="eyebrow mt-7">Linha do tempo</p>
-                <h2 className="display-xl mt-4 text-4xl text-ink-900">
+                <h2 className="display-xl mt-4 text-[2rem] leading-[0.98] text-ink-900 sm:text-4xl">
                   Cinco séculos de
                   <br />
                   <span className="italic text-gold-shimmer">silêncio.</span>
@@ -116,10 +116,10 @@ export default function BneiAnusimPage() {
 
       {/* ─── DIÁSPORA PORTUGUESA / BRASILEIRA ─── */}
       <section className="border-y border-gold-200/60 bg-cream-50 py-24 md:py-32">
-        <div className="mx-auto grid max-w-6xl gap-14 px-5 md:grid-cols-12 md:gap-16 md:px-10">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:gap-14 sm:px-5 md:grid-cols-12 md:gap-16 md:px-10">
           <div className="md:col-span-5">
             <p className="eyebrow">Capítulo 02 · A diáspora ibérica</p>
-            <h2 className="display-xl mt-4 text-4xl text-ink-900 md:text-5xl">
+            <h2 className="display-xl mt-4 text-[2rem] leading-[0.98] text-ink-900 sm:text-4xl md:text-5xl">
               De Portugal e Espanha
               <br />
               para o <span className="italic text-gold-shimmer">Brasil.</span>
@@ -180,7 +180,7 @@ export default function BneiAnusimPage() {
                   className="rounded-2xl border border-gold-200 bg-cream-50 p-6 transition-all hover:border-gold-500 hover:shadow-md"
                 >
                   <h3 className="font-display text-2xl text-ink-900">{c.title}</h3>
-                  <p className="mt-1 text-xs uppercase tracking-[0.24em] text-gold-700">
+                  <p className="mt-1 text-[0.68rem] uppercase leading-snug tracking-[0.12em] text-gold-700 sm:tracking-[0.18em]">
                     {c.state}
                   </p>
                   <p className="mt-4 text-sm leading-relaxed text-ink-700">
@@ -195,7 +195,7 @@ export default function BneiAnusimPage() {
 
       {/* ─── RETORNO ─── */}
       <section className="py-24 md:py-32">
-        <div className="mx-auto max-w-3xl px-5 md:px-0">
+        <div className="mx-auto max-w-3xl px-4 sm:px-5 md:px-0">
           <div className="text-center">
             <OrnametalDivider symbol="pomegranate" />
             <p className="eyebrow mt-7">Capítulo 03</p>
@@ -230,12 +230,12 @@ export default function BneiAnusimPage() {
               abertamente.
             </p>
 
-            <blockquote className="my-12 border-l-4 border-gold-500 pl-8">
+            <blockquote className="my-10 border-l-4 border-gold-500 pl-5 sm:pl-8">
               <p className="font-display text-2xl italic leading-snug text-ink-900 md:text-3xl">
                 &ldquo;Não somos convertidos. Somos judeus que voltaram. A
                 diferença é tudo.&rdquo;
               </p>
-              <footer className="mt-3 text-xs uppercase tracking-[0.32em] text-ink-500">
+              <footer className="mt-3 text-[0.68rem] uppercase tracking-[0.14em] text-ink-500 sm:tracking-[0.22em]">
                 Comunidade Bnei Anusim Brasil
               </footer>
             </blockquote>
@@ -258,9 +258,9 @@ export default function BneiAnusimPage() {
 
       {/* ─── CTA ─── */}
       <section className="relative overflow-hidden py-24">
-        <div className="mx-auto max-w-4xl px-5 text-center md:px-10">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-5 md:px-10">
           <StarOfDavid className="mx-auto h-12 w-12 text-gold-500" />
-          <h2 className="display-xl mt-7 text-4xl text-ink-900 md:text-5xl">
+          <h2 className="display-xl mt-7 text-[1.85rem] leading-[0.98] text-ink-900 sm:text-4xl md:text-5xl">
             Se você é Bnei Anusim,
             <br />
             <span className="italic text-gold-shimmer">a porta é sua.</span>
@@ -271,18 +271,18 @@ export default function BneiAnusimPage() {
             faz sentido agora), fale com o Rabino Malachy. Você não precisa
             vir com respostas. Só precisa vir.
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <a
               href="https://wa.me/554899231358"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-ink-900 px-7 py-4 text-sm font-semibold text-cream-50 transition-colors hover:bg-gold-700"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink-900 px-7 py-3.5 text-sm font-semibold text-cream-50 transition-colors hover:bg-gold-700"
             >
               Falar com o Rabino
             </a>
             <Link
               href="/contato"
-              className="inline-flex items-center gap-2 rounded-full border border-ink-900/15 px-7 py-4 text-sm font-semibold text-ink-900 transition-colors hover:border-gold-500 hover:text-gold-700"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-ink-900/15 px-7 py-3.5 text-sm font-semibold text-ink-900 transition-colors hover:border-gold-500 hover:text-gold-700"
             >
               Informações de visita
             </Link>
@@ -353,13 +353,13 @@ function Timeline() {
     },
   ]
   return (
-    <ol className="relative space-y-10 border-l-2 border-gold-300/60 pl-8">
+    <ol className="relative space-y-8 border-l-2 border-gold-300/60 pl-6 sm:space-y-10 sm:pl-8">
       {items.map((item) => (
         <li key={item.year} className="relative">
-          <span className="absolute -left-[37px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-cream-100 ring-2 ring-gold-500">
+          <span className="absolute -left-8 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-cream-100 ring-2 ring-gold-500 sm:-left-10">
             <span className="h-2 w-2 rounded-full bg-gold-500" />
           </span>
-          <p className="text-xs uppercase tracking-[0.28em] text-gold-700">
+          <p className="text-xs uppercase tracking-[0.14em] text-gold-700 sm:tracking-[0.22em]">
             {item.year}
           </p>
           <h3 className="mt-2 font-display text-2xl font-medium text-ink-900 md:text-3xl">
